@@ -1,0 +1,7 @@
+return b{
+    $ build/sim/V%: rtl/%.v
+        verilator --binary -j 0 --Mdir build/sim $input
+
+    $ sim-%:B: build/sim/V%
+        ./$input
+}
