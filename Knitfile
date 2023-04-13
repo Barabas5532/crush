@@ -1,7 +1,0 @@
-return b{
-    $ build/sim/V%: rtl/%.v sim/%.v
-        verilator --binary --trace --assert -j 0 --Mdir build/sim $input
-
-    $ sim-%:B: build/sim/V%
-        ./$input
-}

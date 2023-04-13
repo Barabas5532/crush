@@ -1,0 +1,34 @@
+CAPI=2:
+# vim:syntax=yaml:
+
+name: ::crush:0.0.1
+
+filesets:
+  rtl:
+    files:
+      - rtl/inst_immediate_decode.v
+    file_type: verilogSource
+
+  sim_inst_immediate_decode:
+    files:
+     - sim/inst_immediate_decode.v
+    file_type: systemVerilogSource
+
+
+targets:
+  default: &default
+    filesets:
+      - rtl
+    toplevel: crush
+    tools:
+      icarus:
+        iverilog_options:
+          - "-g2012"
+          - "-gassertions"
+
+  sim_inst_immediate_decode:
+    <<: *default
+    filesets_append:
+      - sim_inst_immediate_decode
+    toplevel: inst_immediate_decode_tb
+    default_tool: icarus
