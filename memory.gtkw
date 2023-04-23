@@ -1,0 +1,36 @@
+[*]
+[*] GTKWave Analyzer v3.3.114 (w)1999-2023 BSI
+[*] Sun Apr 23 15:44:41 2023
+[*]
+[dumpfile] "/home/barabas/projects/hardware/risc-v/build/crush_0.0.1/sim_memory-icarus/memory.vcd"
+[dumpfile_mtime] "Sun Apr 23 15:43:52 2023"
+[dumpfile_size] 879
+[savefile] "/home/barabas/projects/hardware/risc-v/memory.gtkw"
+[timestart] 4464
+[size] 1910 935
+[pos] -1 -1
+*-10.403348 7158 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] memory_tb.
+[sst_width] 961
+[signals_width] 240
+[sst_expanded] 1
+[sst_vpaned_height] 273
+@28
+memory_tb.clk
+memory_tb.reset
+@22
+memory_tb.adr_o[31:0]
+@23
+memory_tb.dat_i[31:0]
+@22
+memory_tb.dat_o[31:0]
+@28
+memory_tb.we_o
+@22
+memory_tb.sel_o[3:0]
+@28
+memory_tb.cyc_o
+memory_tb.stb_o
+memory_tb.ack_i
+[pattern_trace] 1
+[pattern_trace] 0

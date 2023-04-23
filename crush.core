@@ -6,12 +6,22 @@ name: ::crush:0.0.1
 filesets:
   rtl:
     files:
-      - rtl/inst_immediate_decode.v
+      - rtl/cpu/alu.v
+      - rtl/cpu/inst_decode_registers.v
+      - rtl/cpu/inst_immediate_decode.v
+      - rtl/cpu/program_counter.v
+      - rtl/cpu/registers.v
+      - rtl/soc/memory.v
     file_type: verilogSource
 
   sim_inst_immediate_decode:
     files:
      - sim/inst_immediate_decode.v
+    file_type: systemVerilogSource
+
+  sim_memory:
+    files:
+     - sim/memory.v
     file_type: systemVerilogSource
 
 
@@ -20,8 +30,10 @@ targets:
     filesets:
       - rtl
     toplevel: crush
+    default_tool: icestorm
     tools:
       icarus:
+        timescale: "1s/100ms"
         iverilog_options:
           - "-g2012"
           - "-gassertions"
@@ -31,4 +43,11 @@ targets:
     filesets_append:
       - sim_inst_immediate_decode
     toplevel: inst_immediate_decode_tb
+    default_tool: icarus
+
+  sim_memory:
+    <<: *default
+    filesets_append:
+      - sim_memory
+    toplevel: memory_tb
     default_tool: icarus
