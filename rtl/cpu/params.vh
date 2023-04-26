@@ -6,14 +6,34 @@
 // Document Version 20191213
 // Chapter 24
 
-localparam OPCODE_OP_IMM   7'b0010011
-localparam OPCODE_LUI      7'b0110111
-localparam OPCODE_AUIPC    7'b0010111
-localparam OPCODE_OP       7'b0010011
-localparam OPCODE_JAL      7'b1101111
-localparam OPCODE_JALR     7'b1100111
-localparam OPCODE_BRANCH   7'b1100011
-localparam OPCODE_LOAD     7'b0000011
-localparam OPCODE_STORE    7'b0100011
-localparam OPCODE_MISC_MEM 7'b0100011
-localparam OPCODE_SYSTEM   7'b1110011
+localparam OPCODE_OP_IMM   = 7'b0010011;
+localparam OPCODE_LUI      = 7'b0110111;
+localparam OPCODE_AUIPC    = 7'b0010111;
+localparam OPCODE_OP       = 7'b0010011;
+localparam OPCODE_JAL      = 7'b1101111;
+localparam OPCODE_JALR     = 7'b1100111;
+localparam OPCODE_BRANCH   = 7'b1100011;
+localparam OPCODE_LOAD     = 7'b0000011;
+localparam OPCODE_STORE    = 7'b0100011;
+localparam OPCODE_MISC_MEM = 7'b0100011;
+localparam OPCODE_SYSTEM   = 7'b1110011;
+
+localparam FUNCT3_ADDI  = 3'b000;
+localparam FUNCT3_SLTI  = 3'b010;
+localparam FUNCT3_SLTIU = 3'b011;
+localparam FUNCT3_XORI  = 3'b100;
+localparam FUNCT3_ORI   = 3'b110;
+localparam FUNCT3_ANDI  = 3'b111;
+localparam FUNCT3_SLLI  = 3'b001;
+localparam FUNCT3_SRLI  = 3'b101;
+localparam FUNCT3_SRAI  = 3'b101;
+localparam FUNCT3_ADD   = 3'b000;
+localparam FUNCT3_SUB   = 3'b000;
+localparam FUNCT3_SLL   = 3'b001;
+localparam FUNCT3_SLT   = 3'b010;
+localparam FUNCT3_SLTU  = 3'b011;
+localparam FUNCT3_XOR   = 3'b100;
+localparam FUNCT3_SRL   = 3'b101;
+localparam FUNCT3_SRA   = 3'b101;
+localparam FUNCT3_OR    = 3'b110;
+localparam FUNCT3_AND   = 3'b111;

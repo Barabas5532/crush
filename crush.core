@@ -11,6 +11,8 @@ filesets:
       - rtl/cpu/inst_immediate_decode.v
       - rtl/cpu/program_counter.v
       - rtl/cpu/registers.v
+      - rtl/cpu/params.vh:
+          is_include_file: true
       - rtl/soc/memory.v
     file_type: verilogSource
 
@@ -22,6 +24,11 @@ filesets:
   sim_memory:
     files:
      - sim/memory.v
+    file_type: systemVerilogSource
+
+  sim_alu:
+    files:
+     - sim/alu.v
     file_type: systemVerilogSource
 
 
@@ -50,4 +57,11 @@ targets:
     filesets_append:
       - sim_memory
     toplevel: memory_tb
+    default_tool: icarus
+
+  sim_alu:
+    <<: *default
+    filesets_append:
+      - sim_alu
+    toplevel: alu_tb
     default_tool: icarus

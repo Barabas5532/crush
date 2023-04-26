@@ -55,7 +55,7 @@ initial begin
     assert(!ack_i);
 
     adr_o = 32'b0;
-    dat_o = 32'h04030201;
+    dat_o = 32'h01234567;
     we_o = 1'b1;
     sel_o = 4'b1111;
 
@@ -91,7 +91,7 @@ initial begin
     // Clock edge 0
     #1
     assert(ack_i);
-    assert(dat_i == 32'h04030201);
+    assert(dat_i == 32'h01234567);
 
     #1
     // Clock edge 2
@@ -99,6 +99,15 @@ initial begin
     cyc_o = 0;
     #0
     assert(!ack_i);
+
+    #1
+    // 8-bit read from 0
+
+    // TODO
+    // 8-bit read from 0
+    // 8-bit read from 1
+    // 8-bit read from 2
+    // 8-bit read from 3
 
     #1
     $stop;
