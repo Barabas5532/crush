@@ -26,6 +26,7 @@ inst_immediate_decode immediate_decode(
 
 wire[7] opcode = instruction[6:0];
 wire[3] funct3 = instruction[14:12];
+wire [4:0] shamt = instruction[24:20];
 
 always @* begin
     out <= 32'hxxxx_xxxx;
@@ -34,7 +35,11 @@ always @* begin
     OPCODE_OP_IMM:
         case (funct3)
         FUNCT3_ADDI: out <= op_a + I_immediate;
-        FUNCT3_SLTI: out <= op_a < I_immediate;
+        FUNCT3_SLTI: out <= $signed(op_a) < $signed(I_immediate);
+        FUNCT3_ANDI: out <= op_a & I_immediate;
+        FUNCT3_ORI: out <= op_a | I_immediate;
+        FUNCT3_XORI: out <= op_a ^ I_immediate;
+        FUNCT3_SLLI: out <= op_a << shamt;
         endcase
     endcase
 end
