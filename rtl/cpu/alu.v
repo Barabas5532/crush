@@ -4,7 +4,7 @@ module alu(
    input wire[31:0] instruction,
    input wire[31:0] op_a,
    input wire[31:0] op_b,
-   input wire[31:0] out
+   output reg[31:0] out
 );
 
 `include "params.vh"
@@ -23,5 +23,20 @@ inst_immediate_decode immediate_decode(
     .U_immediate(U_immediate),
     .J_immediate(J_immediate)
 );
+
+wire[7] opcode = instruction[6:0];
+wire[3] funct3 = instruction[14:12];
+
+always @* begin
+    out <= 32'hxxxx_xxxx;
+
+    case(opcode)
+    OPCODE_OP_IMM:
+        case (funct3)
+        FUNCT3_ADDI: out <= op_a + I_immediate;
+        FUNCT3_SLTI: out <= op_a < I_immediate;
+        endcase
+    endcase
+end
 
 endmodule
