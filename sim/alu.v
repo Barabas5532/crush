@@ -107,6 +107,36 @@ module alu_tb ();
     op_b = 32'hxxxx_xxxx;
     #1 assert (out == 32'h8000_0000);
 
+    instruction = {{7'b000_0000}, {5'b0_0000}, {5'b0_0000}, {FUNCT3_SRLI_SRAI}, {5'b0_0001}, {OPCODE_OP_IMM}};
+    op_a = 32'hFFFF_FFFF;
+    op_b = 32'hxxxx_xxxx;
+    #1 assert (out == 32'hFFFF_FFFF);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0000}, {FUNCT3_SRLI_SRAI}, {5'b0_0001}, {OPCODE_OP_IMM}};
+    op_a = 32'hFFFF_FFFF;
+    op_b = 32'hxxxx_xxxx;
+    #1 assert (out == 32'h7FFF_FFFF);
+
+    instruction = {{7'b000_0000}, {5'b1_1111}, {5'b0_0000}, {FUNCT3_SRLI_SRAI}, {5'b0_0001}, {OPCODE_OP_IMM}};
+    op_a = 32'hFFFF_FFFF;
+    op_b = 32'hxxxx_xxxx;
+    #1 assert (out == 32'h0000_0001);
+
+    instruction = {{7'b010_0000}, {5'b0_0000}, {5'b0_0000}, {FUNCT3_SRLI_SRAI}, {5'b0_0001}, {OPCODE_OP_IMM}};
+    op_a = 32'h8000_0000;
+    op_b = 32'hxxxx_xxxx;
+    #1 assert (out == 32'h8000_0000);
+
+    instruction = {{7'b010_0000}, {5'b0_0001}, {5'b0_0000}, {FUNCT3_SRLI_SRAI}, {5'b0_0001}, {OPCODE_OP_IMM}};
+    op_a = 32'h8000_0000;
+    op_b = 32'hxxxx_xxxx;
+    #1 assert (out == 32'hC000_0000);
+
+    instruction = {{7'b010_0000}, {5'b1_1111}, {5'b0_0000}, {FUNCT3_SRLI_SRAI}, {5'b0_0001}, {OPCODE_OP_IMM}};
+    op_a = 32'h8000_0000;
+    op_b = 32'hxxxx_xxxx;
+    #1 assert (out == 32'hFFFF_FFFF);
+
     $stop;
   end
 

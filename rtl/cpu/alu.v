@@ -40,6 +40,9 @@ always @* begin
         FUNCT3_ORI: out <= op_a | I_immediate;
         FUNCT3_XORI: out <= op_a ^ I_immediate;
         FUNCT3_SLLI: out <= op_a << shamt;
+        // False branch must be signed too for the true branch to actually
+        // perform an arithetic shift instead of logical shift...
+        FUNCT3_SRLI_SRAI: out <= instruction[30] ? $signed(op_a) >>> shamt : $signed(op_a) >> shamt;
         endcase
     endcase
 end
