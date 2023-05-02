@@ -137,6 +137,122 @@ module alu_tb ();
     op_b = 32'hxxxx_xxxx;
     #1 assert (out == 32'hFFFF_FFFF);
 
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_ADD_SUB}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'sd1;
+    op_b = 32'sd3;
+    #1 assert (out == 32'sd4);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_ADD_SUB}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = -32'sd1;
+    op_b = 32'sd3;
+    #1 assert (out == 32'sd2);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_ADD_SUB}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = -32'sd3;
+    op_b = 32'sd1;
+    #1 assert (out == -32'sd2);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_ADD_SUB}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'h8000_0000;
+    op_b = 32'hFFFF_FFFF;
+    #1 assert (out == 32'h7FFF_FFFF);
+
+    instruction = {{7'b010_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_ADD_SUB}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'sd1;
+    op_b = 32'sd3;
+    #1 assert (out == -32'sd2);
+
+    instruction = {{7'b010_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_ADD_SUB}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = -32'sd1;
+    op_b = 32'sd3;
+    #1 assert (out == -32'sd4);
+
+    instruction = {{7'b010_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_ADD_SUB}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = -32'sd3;
+    op_b = 32'sd1;
+    #1 assert (out == -32'sd4);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_SLT}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'sd0;
+    op_b = 32'sd0;
+    #1 assert (out == 32'd0);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_SLT}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'sd0;
+    op_b = 32'sd1;
+    #1 assert (out == 32'd1);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_SLT}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'sd0;
+    op_b = -32'sd1;
+    #1 assert (out == 32'd0);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_SLTU}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'sd0;
+    op_b = 32'sd0;
+    #1 assert (out == 32'd0);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_SLTU}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'sd0;
+    op_b = 32'sd1;
+    #1 assert (out == 32'd1);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_SLTU}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'sd0;
+    op_b = -32'sd1;
+    #1 assert (out == 32'd1);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_AND}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'h0000_F0F0;
+    op_b = 32'h0000_FF00;
+    #1 assert (out == 32'h0000_F000);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_OR}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'h0000_F0F0;
+    op_b = 32'h0000_FF00;
+    #1 assert (out == 32'h0000_FFF0);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_XOR}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'h0000_F0F0;
+    op_b = 32'h0000_FF00;
+    #1 assert (out == 32'h0000_0FF0);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_SLL}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'hFFFF_FFFF;
+    op_b = 32'hFFFF_FFE0;
+    #1 assert (out == 32'hFFFF_FFFF);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_SLL}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'hFFFF_FFFF;
+    op_b = 32'hFFFF_FFFF;
+    #1 assert (out == 32'h8000_0000);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_SRL_SRA}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'hFFFF_FFFF;
+    op_b = 32'hFFFF_FFE0;
+    #1 assert (out == 32'hFFFF_FFFF);
+
+    instruction = {{7'b000_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_SRL_SRA}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'hFFFF_FFFF;
+    op_b = 32'hFFFF_FFFF;
+    #1 assert (out == 32'h0000_0001);
+
+    instruction = {{7'b010_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_SRL_SRA}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'hFFFF_FFFF;
+    op_b = 32'hFFFF_FFE0;
+    #1 assert (out == 32'hFFFF_FFFF);
+
+    instruction = {{7'b010_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_SRL_SRA}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'hFFFF_FFFF;
+    op_b = 32'hFFFF_FFFF;
+    #1 assert (out == 32'hFFFF_FFFF);
+
+    instruction = {{7'b010_0000}, {5'b0_0001}, {5'b0_0010}, {FUNCT3_SRL_SRA}, {5'b0_0011}, {OPCODE_OP}};
+    op_a = 32'h7FFF_FFFF;
+    op_b = 32'hFFFF_FFFF;
+    #1 assert (out == 32'h0000_0000);
+
+    // TODO SUB
     $stop;
   end
 

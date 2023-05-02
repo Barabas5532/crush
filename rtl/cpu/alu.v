@@ -44,6 +44,17 @@ always @* begin
         // perform an arithetic shift instead of logical shift...
         FUNCT3_SRLI_SRAI: out <= instruction[30] ? $signed(op_a) >>> shamt : $signed(op_a) >> shamt;
         endcase
+    OPCODE_OP:
+        case (funct3)
+        FUNCT3_ADD_SUB: out <= instruction[30] ? op_a - op_b : op_a + op_b;
+        FUNCT3_SLT: out <= $signed(op_a) < $signed(op_b);
+        FUNCT3_SLTU: out <= op_a < op_b;
+        FUNCT3_AND: out <= op_a & op_b;
+        FUNCT3_OR: out <= op_a | op_b;
+        FUNCT3_XOR: out <= op_a ^ op_b;
+        FUNCT3_SLL: out <= op_a << op_b[4:0];
+        FUNCT3_SRL_SRA: out <= instruction[30] ? $signed(op_a) >>> op_b[4:0] : $signed(op_a) >> op_b[4:0];
+        endcase
     endcase
 end
 
