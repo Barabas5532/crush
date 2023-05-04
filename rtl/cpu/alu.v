@@ -55,6 +55,15 @@ always @* begin
         FUNCT3_SLL: out <= op_a << op_b[4:0];
         FUNCT3_SRL_SRA: out <= instruction[30] ? $signed(op_a) >>> op_b[4:0] : $signed(op_a) >> op_b[4:0];
         endcase
+    OPCODE_BRANCH:
+        case (funct3)
+        FUNCT3_BEQ: out <= op_a == op_b;
+        FUNCT3_BNE: out <= op_a != op_b;
+        FUNCT3_BLT: out <= $signed(op_a) < $signed(op_b);
+        FUNCT3_BLTU: out <= op_a < op_b;
+        FUNCT3_BGE: out <= $signed(op_a) >= $signed(op_b);
+        FUNCT3_BGEU: out <= op_a >= op_b;
+        endcase
     endcase
 end
 

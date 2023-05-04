@@ -18,6 +18,12 @@ localparam OPCODE_STORE    = 7'b0100011;
 localparam OPCODE_MISC_MEM = 7'b0100011;
 localparam OPCODE_SYSTEM   = 7'b1110011;
 
+localparam FUNCT3_BEQ   = 3'b000;
+localparam FUNCT3_BNE   = 3'b001;
+localparam FUNCT3_BLT   = 3'b100;
+localparam FUNCT3_BGE   = 3'b101;
+localparam FUNCT3_BLTU  = 3'b110;
+localparam FUNCT3_BGEU  = 3'b111;
 localparam FUNCT3_ADDI  = 3'b000;
 localparam FUNCT3_SLTI  = 3'b010;
 localparam FUNCT3_SLTIU = 3'b011;
