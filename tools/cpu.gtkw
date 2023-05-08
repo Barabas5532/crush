@@ -1,17 +1,18 @@
 [*]
 [*] GTKWave Analyzer v3.3.114 (w)1999-2023 BSI
-[*] Mon May  8 14:31:39 2023
+[*] Mon May  8 16:43:01 2023
 [*]
 [dumpfile] "/home/barabas/projects/hardware/risc-v/build/crush_0.0.1/sim_cpu-icarus/cpu.vcd"
-[dumpfile_mtime] "Mon May  8 14:29:52 2023"
-[dumpfile_size] 1483
+[dumpfile_mtime] "Mon May  8 16:42:48 2023"
+[dumpfile_size] 1616
 [savefile] "/home/barabas/projects/hardware/risc-v/tools/cpu.gtkw"
 [timestart] 0
 [size] 1910 957
 [pos] -1 -1
-*-10.683515 1693 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-10.683515 3239 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] cpu_tb.
 [treeopen] cpu_tb.dut.
+[treeopen] cpu_tb.dut.registers.
 [sst_width] 273
 [signals_width] 259
 [sst_expanded] 1
@@ -24,7 +25,10 @@ cpu_tb.dut.rst_i
 cpu_tb.dut.clk_i
 @22
 cpu_tb.dut.adr_o[31:0]
+@4022
+^>1 /home/barabas/projects/hardware/risc-v/tools/riscv-filter.py
 cpu_tb.dut.dat_i[31:0]
+@22
 cpu_tb.dut.dat_o[31:0]
 @28
 cpu_tb.dut.we_o
@@ -54,12 +58,27 @@ cpu_tb.dut.pc_value[31:0]
 @28
 cpu_tb.dut.program_counter.count
 cpu_tb.dut.program_counter.load
-@29
-cpu_tb.dut.state[1:0]
+cpu_tb.dut.state[2:0]
 @200
 -
 @22
 cpu_tb.dut.alu.op_a[31:0]
 cpu_tb.dut.alu.op_b[31:0]
+cpu_tb.dut.alu.out[31:0]
+cpu_tb.dut.alu_out_r[31:0]
+cpu_tb.dut.alu_out_rr[31:0]
+@200
+-
+@28
+cpu_tb.dut.registers.clk
+@22
+cpu_tb.dut.registers.r_address1[4:0]
+cpu_tb.dut.registers.r_address2[4:0]
+cpu_tb.dut.registers.r_out1[31:0]
+cpu_tb.dut.registers.r_out2[31:0]
+cpu_tb.dut.registers.w_address[4:0]
+cpu_tb.dut.registers.w_data[31:0]
+@28
+cpu_tb.dut.registers.w_enable
 [pattern_trace] 1
 [pattern_trace] 0

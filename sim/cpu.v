@@ -6,8 +6,8 @@ module cpu_tb;
 
 reg clk = 1;
 reg reset = 1;
-wire stb_o = 0;
-wire cyc_o = 0;
+wire stb_o;
+wire cyc_o;
 wire[31:0] adr_o;
 wire[3:0] sel_o;
 reg[31:0] dat_i;
@@ -40,16 +40,11 @@ initial begin
     $dumpfile("cpu.vcd");
     $dumpvars;
 
-    $display(cyc_o);
     #0.1
-    $display(cyc_o);
     #1 reset = 0;
-    $display(cyc_o);
     #1
-    $display(cyc_o);
 
     #1
-    $display(cyc_o);
     assert(cyc_o == 1'b1);
     assert(stb_o == 1'b1);
     assert(sel_o == 4'b1111);
@@ -60,15 +55,11 @@ initial begin
 
     #1
     ack_i = 0;
+    dat_i = 32'hxxxx_xxxx;
     assert(cyc_o == 0);
     assert(stb_o == 0);
 
-    #1
-    #1
-    #1
-
-    #1
-    assert(dut.registers.memory[1] == 1);
+    #4 assert(dut.registers.memory[1] == 1);
 
     #10 $stop;
 end
