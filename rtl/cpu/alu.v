@@ -24,8 +24,8 @@ inst_immediate_decode immediate_decode(
     .J_immediate(J_immediate)
 );
 
-wire[7] opcode = instruction[6:0];
-wire[3] funct3 = instruction[14:12];
+wire[6:0] opcode = instruction[6:0];
+wire[2:0] funct3 = instruction[14:12];
 wire [4:0] shamt = instruction[24:20];
 
 always @* begin

@@ -7,6 +7,7 @@ filesets:
   rtl:
     files:
       - rtl/cpu/alu.v
+      - rtl/cpu/cpu.v
       - rtl/cpu/inst_decode_registers.v
       - rtl/cpu/inst_immediate_decode.v
       - rtl/cpu/program_counter.v
@@ -31,6 +32,11 @@ filesets:
      - sim/alu.v
     file_type: systemVerilogSource
 
+  sim_cpu:
+    files:
+     - sim/cpu.v
+    file_type: systemVerilogSource
+
 
 targets:
   default: &default
@@ -44,6 +50,16 @@ targets:
         iverilog_options:
           - "-g2012"
           - "-gassertions"
+
+  lint:
+    default_tool : verilator
+    filesets : [rtl]
+    tools:
+      verilator:
+        mode : lint-only
+        verilator_options:
+          - "-Wall"
+    toplevel : cpu
 
   sim_inst_immediate_decode:
     <<: *default
@@ -64,4 +80,11 @@ targets:
     filesets_append:
       - sim_alu
     toplevel: alu_tb
+    default_tool: icarus
+
+  sim_cpu:
+    <<: *default
+    filesets_append:
+      - sim_cpu
+    toplevel: cpu_tb
     default_tool: icarus

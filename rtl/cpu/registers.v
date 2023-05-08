@@ -5,13 +5,21 @@ module registers(
     input wire[31:0] w_data,
     input wire w_enable,
     input wire[4:0] w_address,
-    output reg[4:0] r_address1,
+    input wire[4:0] r_address1,
     output reg[31:0] r_out1,
-    output reg[4:0] r_address2,
+    input wire[4:0] r_address2,
     output reg[31:0] r_out2
 );
 
-reg memory[31:0][31:0];
+reg[31:0] memory[32];
+
+initial begin
+  $display("initialising memory");
+  for(int i=0; i<32; i++) begin
+    memory[i] = 0;
+    $display(memory[i]);
+  end
+end
 
 always @(posedge clk) begin
     r_out1 = memory[r_address1];
