@@ -1,3 +1,18 @@
+/* This file implements a test that is able to execute programs stored on the
+ * host file system. It can be used along with RISCOF - The RISC-V
+ * Compatibility Framework.
+ *
+ * TODO
+ * - Fake system:
+ * - Wishbone slave that reads binary from file
+ * - wishbone RAM
+ * - wishbone peripheral to terminate execution when accessed (check riscof
+ *   requirements)
+ * using https://steveicarus.github.io/iverilog/usage/vpi.html maybe
+ * - Can fusesoc be configured to run the sim with the binary? Maybe call vvp
+ *   manually in the riscof config after getting fusesoc to build it.
+ */
+
 `default_nettype none
 
 module cpu_tb;
@@ -17,10 +32,40 @@ reg ack_i = 0;
 reg err_i = 0;
 reg rty_i = 0;
 
-cpu dut (
+cpu #(.INITIAL_PC('h1000_0000)) dut (
     .clk_i(clk),
     .dat_i(dat_i),
     .dat_o(dat_o),
+    .rst_i(reset),
+    .ack_i(ack_i),
+    .err_i(err_i),
+    .rty_i(rty_i),
+    .stb_o(stb_o),
+    .cyc_o(cyc_o),
+    .adr_o(adr_o),
+    .sel_o(sel_o),
+    .we_o(we_o)
+);
+
+flash #(.BASE_ADDRESS('h1000_0000), .SIZE('h4000)) flash (
+    .clk_i(clk),
+    .dat_i(dat_o),
+    .dat_o(dat_i),
+    .rst_i(reset),
+    .ack_i(ack_i),
+    .err_i(err_i),
+    .rty_i(rty_i),
+    .stb_o(stb_o),
+    .cyc_o(cyc_o),
+    .adr_o(adr_o),
+    .sel_o(sel_o),
+    .we_o(we_o)
+);
+
+memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
+    .clk_i(clk),
+    .dat_i(dat_o),
+    .dat_o(dat_i),
     .rst_i(reset),
     .ack_i(ack_i),
     .err_i(err_i),

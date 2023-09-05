@@ -1,6 +1,8 @@
 `default_nettype none
 
-module cpu(
+module cpu #(
+    parameter integer INITIAL_PC
+) (
     input wire clk_i,
     input wire[31:0] dat_i,
     output reg[31:0] dat_o,
@@ -33,7 +35,7 @@ reg[31:0] pc_value;
 wire[31:0] pc;
 wire[31:0] pc_inc;
 
-program_counter program_counter(
+program_counter #(INITIAL_PC=INITIAL_PC) program_counter(
     .reset(rst_i),
     .clk(clk_i),
     .count(pc_count),

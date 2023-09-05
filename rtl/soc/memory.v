@@ -26,6 +26,13 @@ always @(posedge clk_i) begin
     rty_o <= 0;
     dat_o <= 32'hxxxxxxxx;
 
+    // TODO need address decoding here, we should only respond to some
+    // addresses, not all addresses. How to implement?
+    // - Directly decode the address in each slave, and ignore write/read
+    // unless the correct address is being used
+    // - Have the individual components ignore the address space, and have
+    // a top level address decoder gating their enables
+    // - Check WB spec for recommended setup
     if (stb_i & cyc_i & !ack_o) begin
         ack_o <= 1;
     end
