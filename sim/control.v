@@ -1,5 +1,8 @@
 `default_nettype none
 
+// TODO implement signature export as required by RISCOF before finish is
+// called
+
 module control #(
     parameter integer BASE_ADDRESS
 ) (
@@ -7,7 +10,6 @@ module control #(
     input wire rst_i,
     input wire stb_i,
     input wire cyc_i,
-    output reg stall_o,
     input wire[31:0] adr_i,
     input wire[3:0] sel_i,
     input wire[31:0] dat_i,
@@ -22,14 +24,10 @@ always @(posedge clk_i) begin
     ack_o <= 0;
     err_o <= 0;
     rty_o <= 0;
-    dat_o <= 32'hxxxxxxxx;
+    dat_o <= 32'hzzzz_zzzz;
 
-    // TODO address decoding, ignore everything unless adr_i is BASE_ADDRESS
-    if (stb_i & cyc_i & !ack_o) begin
-        ack_o <= 1;
-    end
-
-    if (stb_i & cyc_i) begin
+    if (stb_i & cyc_i & adr_i == BASE_ADDRESS) begin
+        $display("Control register accessed, finishing simulation");
         $finish;
     end
 end

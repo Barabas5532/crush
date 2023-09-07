@@ -34,7 +34,9 @@ filesets:
 
   sim_cpu:
     files:
+     - sim/control.v
      - sim/cpu.v
+     - sim/flash_emulator.v
     file_type: systemVerilogSource
 
 

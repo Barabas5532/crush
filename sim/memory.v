@@ -6,7 +6,6 @@ reg clk = 1;
 reg reset = 1;
 reg stb_o = 0;
 reg cyc_o = 0;
-wire stall_i;
 reg[31:0] adr_o;
 reg[3:0] sel_o;
 wire[31:0] dat_i;
@@ -21,7 +20,6 @@ memory dut (
     .rst_i(reset),
     .stb_i(stb_o),
     .cyc_i(cyc_o),
-    .stall_o(stall_i),
     .adr_i(adr_o),
     .sel_i(sel_o),
     .dat_i(dat_o),
