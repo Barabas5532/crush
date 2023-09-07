@@ -15,7 +15,7 @@ def main():
             if not l:
                 return 0
 
-            if "x" in l:
+            if "x" in l or "z" in l:
                 fh_out.write(l)
                 fh_out.flush()
                 continue
@@ -24,7 +24,7 @@ def main():
             asm_temp.write(".word 0x%s\n" % l)
             asm_temp.flush()
             subprocess.run(["riscv32-unknown-elf-as", "-march=rv32i", "-o", obj_temp.name, asm_temp.name])
-            result = subprocess.run(["riscv32-unknown-elf-objdump", "-M", "no-aliases", "-d", obj_temp.name], capture_output=True)
+            result = subprocess.run(["riscv32-unknown-elf-objdump", "-M", "no-aliases", "-M", "numeric", "-d", obj_temp.name], capture_output=True)
             lastline = result.stdout.splitlines()[-1]
             chunks = lastline.decode().split('\t')
 

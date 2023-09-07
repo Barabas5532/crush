@@ -1,84 +1,107 @@
 [*]
-[*] GTKWave Analyzer v3.3.114 (w)1999-2023 BSI
-[*] Mon May  8 16:43:01 2023
+[*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
+[*] Thu Sep  7 22:21:59 2023
 [*]
-[dumpfile] "/home/barabas/projects/hardware/risc-v/build/crush_0.0.1/sim_cpu-icarus/cpu.vcd"
-[dumpfile_mtime] "Mon May  8 16:42:48 2023"
-[dumpfile_size] 1616
+[dumpfile] "/home/barabas/projects/hardware/risc-v/cpu.vcd"
+[dumpfile_mtime] "Thu Sep  7 22:12:02 2023"
+[dumpfile_size] 2521
 [savefile] "/home/barabas/projects/hardware/risc-v/tools/cpu.gtkw"
 [timestart] 0
-[size] 1910 957
-[pos] -1 -1
-*-10.683515 3239 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[size] 1920 1080
+[pos] -648 -6
+*-10.974154 11280 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] cpu_tb.
 [treeopen] cpu_tb.dut.
 [treeopen] cpu_tb.dut.registers.
+[treeopen] cpu_tb.flash_emulator.
 [sst_width] 273
-[signals_width] 259
+[signals_width] 227
 [sst_expanded] 1
-[sst_vpaned_height] 281
-@28
-cpu_tb.dut.rst_i
-@200
--
-@28
-cpu_tb.dut.clk_i
-@22
-cpu_tb.dut.adr_o[31:0]
+[sst_vpaned_height] 322
 @4022
 ^>1 /home/barabas/projects/hardware/risc-v/tools/riscv-filter.py
-cpu_tb.dut.dat_i[31:0]
+cpu_tb.dat_i[31:0]
 @22
-cpu_tb.dut.dat_o[31:0]
-@28
-cpu_tb.dut.we_o
-@22
-cpu_tb.dut.sel_o[3:0]
-@28
-cpu_tb.dut.stb_o
-cpu_tb.dut.ack_i
-cpu_tb.dut.cyc_o
+cpu_tb.dut.registers.x1[31:0]
 @200
 -
 @28
-cpu_tb.dut.rty_i
-cpu_tb.dut.err_i
-@200
--
-@22
-cpu_tb.dut.pc[31:0]
-@28
-cpu_tb.dut.pc_count
-@22
-cpu_tb.dut.pc_inc[31:0]
-@28
-cpu_tb.dut.pc_load
-@22
-cpu_tb.dut.pc_value[31:0]
-@28
-cpu_tb.dut.program_counter.count
-cpu_tb.dut.program_counter.load
 cpu_tb.dut.state[2:0]
-@200
--
-@22
-cpu_tb.dut.alu.op_a[31:0]
-cpu_tb.dut.alu.op_b[31:0]
-cpu_tb.dut.alu.out[31:0]
-cpu_tb.dut.alu_out_r[31:0]
-cpu_tb.dut.alu_out_rr[31:0]
+cpu_tb.dut.ack_i[0]
 @200
 -
 @28
-cpu_tb.dut.registers.clk
+cpu_tb.dut.ack_i[0]
+@200
+-
+@28
+cpu_tb.dut.ack_i[0]
+cpu_tb.flash_emulator.clk_i[0]
+@22
+cpu_tb.flash_emulator.sel_i[3:0]
+@28
+cpu_tb.flash_emulator.cyc_i[0]
+cpu_tb.flash_emulator.stb_i[0]
+cpu_tb.flash_emulator.ack_o[0]
+@22
+cpu_tb.flash_emulator.adr_i[31:0]
+@200
+-
+@28
+cpu_tb.dut.registers.clk[0]
 @22
 cpu_tb.dut.registers.r_address1[4:0]
 cpu_tb.dut.registers.r_address2[4:0]
 cpu_tb.dut.registers.r_out1[31:0]
 cpu_tb.dut.registers.r_out2[31:0]
 cpu_tb.dut.registers.w_address[4:0]
+@c00022
 cpu_tb.dut.registers.w_data[31:0]
 @28
-cpu_tb.dut.registers.w_enable
+(0)cpu_tb.dut.registers.w_data[31:0]
+(1)cpu_tb.dut.registers.w_data[31:0]
+(2)cpu_tb.dut.registers.w_data[31:0]
+(3)cpu_tb.dut.registers.w_data[31:0]
+(4)cpu_tb.dut.registers.w_data[31:0]
+(5)cpu_tb.dut.registers.w_data[31:0]
+(6)cpu_tb.dut.registers.w_data[31:0]
+(7)cpu_tb.dut.registers.w_data[31:0]
+(8)cpu_tb.dut.registers.w_data[31:0]
+(9)cpu_tb.dut.registers.w_data[31:0]
+(10)cpu_tb.dut.registers.w_data[31:0]
+(11)cpu_tb.dut.registers.w_data[31:0]
+(12)cpu_tb.dut.registers.w_data[31:0]
+(13)cpu_tb.dut.registers.w_data[31:0]
+(14)cpu_tb.dut.registers.w_data[31:0]
+(15)cpu_tb.dut.registers.w_data[31:0]
+(16)cpu_tb.dut.registers.w_data[31:0]
+(17)cpu_tb.dut.registers.w_data[31:0]
+(18)cpu_tb.dut.registers.w_data[31:0]
+(19)cpu_tb.dut.registers.w_data[31:0]
+(20)cpu_tb.dut.registers.w_data[31:0]
+(21)cpu_tb.dut.registers.w_data[31:0]
+(22)cpu_tb.dut.registers.w_data[31:0]
+(23)cpu_tb.dut.registers.w_data[31:0]
+(24)cpu_tb.dut.registers.w_data[31:0]
+(25)cpu_tb.dut.registers.w_data[31:0]
+(26)cpu_tb.dut.registers.w_data[31:0]
+(27)cpu_tb.dut.registers.w_data[31:0]
+(28)cpu_tb.dut.registers.w_data[31:0]
+(29)cpu_tb.dut.registers.w_data[31:0]
+(30)cpu_tb.dut.registers.w_data[31:0]
+(31)cpu_tb.dut.registers.w_data[31:0]
+@1401200
+-group_end
+@28
+cpu_tb.dut.registers.w_enable[0]
+@200
+-
+@28
+cpu_tb.dut.alu.funct3[2:0]
+@22
+cpu_tb.dut.alu.U_immediate[31:0]
+cpu_tb.dut.alu.op_a[31:0]
+cpu_tb.dut.alu.op_b[31:0]
+cpu_tb.dut.alu.out[31:0]
 [pattern_trace] 1
 [pattern_trace] 0

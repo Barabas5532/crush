@@ -78,6 +78,7 @@ alu alu(
    .instruction(instruction),
    .op_a(alu_op_a),
    .op_b(alu_op_b),
+   .pc(pc),
    .out(alu_out)
 );
 
@@ -121,6 +122,15 @@ always @(*) begin
     endcase
 end
 
+reg mem_r_en;
+
+always @(*) begin
+    case(instruction[6:0])
+    OPCODE_LOAD: mem_r_en = 1;
+    default: mem_r_en = 0;
+    endcase
+end
+
 always @(*) begin
     pc_count <= 0;
     pc_load <= 0;
@@ -137,7 +147,7 @@ always @(*) begin
     alu_op_b <= 32'hxxxx_xxxx;
 
     w_data <= 32'hxxxx_xxxx;
-    w_enable <= 1'bx;
+    w_enable <= 1'b0;
 
     case(state)
     STATE_FETCH: begin
@@ -154,6 +164,14 @@ always @(*) begin
         alu_op_b <= r_out2;
     end
     STATE_MEMORY: begin
+        if(mem_r_en) begin
+            stb_o <= 1;
+            cyc_o <= 1;
+            adr_o <= alu_out_r;
+            we_o <= 0;
+            // TODO the instruction can encode smaller writes, implement that
+            sel_o <= 4'b1111;
+        end
     end
     STATE_REG_WRITE: begin
         w_data <= alu_out_rr;

@@ -19,11 +19,25 @@ module flash_emulator #(
 );
 
 reg[31:0] flash[SIZE];
+wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < (BASE_ADDRESS + SIZE));
 
 initial begin
     string binary_path;
     if($value$plusargs("BINARY_PATH=%s", binary_path)) begin
-        $readmemh(binary_path, flash);
+        integer file;
+        integer length;
+        integer i;
+
+        $display("Reading flash contents from %s", binary_path);
+
+        file = $fopen(binary_path, "rb");
+        length = $fread(flash, file);
+        $display("Read %0d bytes", length);
+        $fclose(file);
+
+        for (i = 0; i < length / 4; i = i + 1) begin
+            $display("flash[%0d] = 0x%08h", i, flash[i]);
+        end
     end else begin
         $error("The BINARY_PATH plus arg must be set");
         $stop;
@@ -38,12 +52,12 @@ always @(posedge clk_i) begin
 
     // TODO address decoding, ignore everything unless adr_i is in range of
     // [BASE_ADDRESS, BASE_ADDRESS + SIZE - 1]
-    if (stb_i & cyc_i & !ack_o) begin
+    if (stb_i & cyc_i & !ack_o & addressed) begin
         ack_o <= 1;
     end
 
-    if (stb_i & cyc_i & !we_i) begin
-        dat_o <= flash[adr_i];
+    if (stb_i & cyc_i & !we_i & addressed) begin
+        dat_o <= flash[(adr_i - BASE_ADDRESS) >> 2];
     end
 end
 
