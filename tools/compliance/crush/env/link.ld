@@ -1,18 +1,20 @@
 OUTPUT_ARCH( "riscv" )
 ENTRY(rvtest_entry_point)
 
+MEMORY
+{
+    rom (rx): ORIGIN = 0x10000000, LENGTH = 16K
+    ram (rw): ORIGIN = 0x20000000, LENGTH = 16K
+}
+
 SECTIONS
 {
-  . = 0x80000000;
-  .text.init : { *(.text.init) }
-  . = ALIGN(0x1000);
-  .tohost : { *(.tohost) }
-  . = ALIGN(0x1000);
-  .text : { *(.text) }
-  . = ALIGN(0x1000);
-  .data : { *(.data) }
-  .data.string : { *(.data.string)}
-  .bss : { *(.bss) }
-  _end = .;
+    .text : {
+        *(.text*)
+    } > rom
+
+    .rodata : { *(.rodata*) } > rom
+
+    .bss : { *(.bss*) } > ram
 }
 
