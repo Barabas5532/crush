@@ -1,0 +1,4 @@
+nmi:
+  address: 0x10000000
+reset:
+  address: 0x10000000

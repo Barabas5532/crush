@@ -8,6 +8,7 @@ import random
 import string
 from string import Template
 import sys
+import yaml
 
 import riscof.utils as utils
 import riscof.constants as constants
@@ -24,14 +25,19 @@ class crush(pluginTemplate):
 
         config = kwargs['config']
 
-        # TODO grab the version from somewhere else, it should not be hardcoded
-        self.dut_exe = '../../build/crush_0.0.1/sim_cpu-icarus/crush_0.0.1'
+        with open('../../crush.core') as f:
+            core = yaml.load(f)
 
-        # Collect the paths to the  riscv-config absed ISA and platform yaml
-        # files. One can choose to hardcode these here itself instead of
-        # picking it from the config.ini file.
-        self.isa_spec = os.path.abspath(config['ispec'])
-        self.platform_spec = os.path.abspath(config['pspec'])
+        core_name = core['name']
+        self.version = core_name.split(':')[-1]
+
+        self.dut_exe = '../../build/crush_{version}/sim_cpu-icarus/crush_{version}'
+
+        cwd = os.getcwd()
+        logger.debug(f'Current working directory: {cwd}')
+
+        self.isa_spec = os.path.join(cwd, 'crush/crush_isa.yaml')
+        self.platform_spec = os.path.abspath(cwd, 'crush/crush_platform.yaml')
 
     def initialise(self, suite, work_dir, archtest_env):
         self.working_directory = working_directory
@@ -59,22 +65,22 @@ class crush(pluginTemplate):
             compile_macros= ' -D' + " -D".join(testentry['macros'])
 
             logger.debug('Compiling test: {test_source_path}')
-            cmd = ('riscv32-unknown-elf-gcc '
-                    '-march=rv32i '
-                    '-mabi=ilp32 '
-                    '-static '
-                    '-mcmodel=medany '
-                    '-fvisibility=hidden '
-                    '-nostdlib '
-                    '-nostartfiles '
-                    '-g '
-                    '-T crush/env/link.ld '
-                    '-I crush/env/ '
-                    '-I {archtest_env} '
-                    f'{compile_macros} '
-                    '-o test.elf ' +
-                    test_source_path
-                  )
+            # cmd = ('riscv32-unknown-elf-gcc '
+            #         '-march=rv32i '
+            #         '-mabi=ilp32 '
+            #         '-static '
+            #         '-mcmodel=medany '
+            #         '-fvisibility=hidden '
+            #         '-nostdlib '
+            #         '-nostartfiles '
+            #         '-g '
+            #         '-T crush/env/link.ld '
+            #         '-I crush/env/ '
+            #         '-I {archtest_env} '
+            #         f'{compile_macros} '
+            #         '-o test.elf ' +
+            #         test_source_path
+            #       )
             utils.shellCommand(cmd).run(cwd=working_directory)
 
             binary_path = os.path.join(working_directory, 'test.bin')
