@@ -1,5 +1,8 @@
 `default_nettype none
 
+/* Reads a binary from the plus arg +BINARY_PATH, then exposes it over a
+ * big-endian wishbone interconnect.
+ */
 module flash_emulator #(
     parameter integer BASE_ADDRESS,
     parameter integer SIZE
@@ -45,19 +48,22 @@ initial begin
 end
 
 always @(posedge clk_i) begin
+    reg[31:0] read_data = 32'hxxxx_xxxx;
     ack_o <= 0;
     err_o <= 0;
     rty_o <= 0;
     dat_o <= 32'hzzzz_zzzz;
 
-    // TODO address decoding, ignore everything unless adr_i is in range of
-    // [BASE_ADDRESS, BASE_ADDRESS + SIZE - 1]
     if (stb_i & cyc_i & !ack_o & addressed) begin
         ack_o <= 1;
     end
 
     if (stb_i & cyc_i & !we_i & addressed) begin
-        dat_o <= flash[(adr_i - BASE_ADDRESS) >> 2];
+        read_data <= flash[(adr_i - BASE_ADDRESS) >> 2];
+        dat_o <= {{read_data[ 7: 0]},
+                  {read_data[15: 8]},
+                  {read_data[23:16]},
+                  {read_data[31:24]}};
     end
 end
 

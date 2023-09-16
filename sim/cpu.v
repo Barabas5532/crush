@@ -97,9 +97,9 @@ initial begin
     #2.5 reset = 0;
     #0.5
 
-    #100
+    #100_000
 
-    $error("Stop was not called within 100 clock cycles, stopping now");
+    $error("Stop was not called within 100k clock cycles, stopping now");
     $stop;
 end
 
