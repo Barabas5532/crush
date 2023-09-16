@@ -32,10 +32,10 @@ class crush(pluginTemplate):
         logger.info(f'Read fusesoc name: {core_name}')
         version = core_name.split(':')[-1]
 
-        self.dut_exe = f'../../build/crush_{version}/sim_cpu-icarus/crush_{version}'
-
         cwd = os.getcwd()
         logger.info(f'Current working directory: {cwd}')
+
+        self.dut_exe = os.path.join(cwd, f'../../build/crush_{version}/sim_cpu-icarus/crush_{version}')
 
         self.isa_spec = os.path.join(cwd, 'crush/crush_isa.yaml')
         self.platform_spec = os.path.join(cwd, 'crush/crush_platform.yaml')
@@ -88,10 +88,10 @@ class crush(pluginTemplate):
             utils.shellCommand(cmd).run(cwd=working_directory)
 
             binary_path = os.path.join(working_directory, 'test.bin')
-            binary_cmd = 'riscv32-unknown-elf-objcopy -O binary test.elf {binary_path}'
+            binary_cmd = f'riscv32-unknown-elf-objcopy -O binary test.elf {binary_path}'
             logger.info('Convert to binary: ' + binary_cmd)
             utils.shellCommand(binary_cmd).run(cwd=working_directory)
 
-            sim_cmd = f'vvp {self.dut_exe} +SIGNATURE_PATH={sig_file} +BINARY_PATH={binary_path}'
+            sim_cmd = f'vvp -n {self.dut_exe} +SIGNATURE_PATH={sig_file} +BINARY_PATH={binary_path}'
             logger.info(f'Executing simulator: {sim_cmd}')
             utils.shellCommand(sim_cmd).run(cwd=working_directory)

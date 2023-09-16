@@ -41,7 +41,7 @@ cpu #(.INITIAL_PC('h1000_0000)) dut (
     .we_o(we_o)
 );
 
-flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h4000)) flash_emulator (
+flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h8000)) flash_emulator (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),
