@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.117 (w)1999-2023 BSI
-[*] Sat Sep 16 14:27:21 2023
+[*] Sat Sep 16 15:54:31 2023
 [*]
 [dumpfile] "/home/barabas/projects/hardware/risc-v/tools/compliance/riscof_work/rv32i_m/I/src/add-01.S/dut/cpu.vcd"
-[dumpfile_mtime] "Sat Sep 16 13:54:42 2023"
-[dumpfile_size] 1602127
+[dumpfile_mtime] "Sat Sep 16 15:06:40 2023"
+[dumpfile_size] 1351682
 [savefile] "/home/barabas/projects/hardware/risc-v/tools/cpu.gtkw"
-[timestart] 19485040
+[timestart] 18279400
 [size] 1910 1001
 [pos] -1 -1
-*-11.240500 19494930 19487580 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-17.503424 19497199 19487580 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] cpu_tb.
 [treeopen] cpu_tb.dut.
 [treeopen] cpu_tb.dut.registers.
@@ -24,12 +24,54 @@ cpu_tb.dut.state[2:0]
 @22
 cpu_tb.dut.pc[31:0]
 cpu_tb.dat_i[31:0]
-@4022
-^>1 /home/barabas/projects/hardware/risc-v/tools/riscv-filter.py
 cpu_tb.dut.instruction[31:0]
-@22
 cpu_tb.dat_i[31:0]
+@c00022
 cpu_tb.dut.registers.x1[31:0]
+@28
+(0)cpu_tb.dut.registers.x1[31:0]
+(1)cpu_tb.dut.registers.x1[31:0]
+(2)cpu_tb.dut.registers.x1[31:0]
+(3)cpu_tb.dut.registers.x1[31:0]
+(4)cpu_tb.dut.registers.x1[31:0]
+(5)cpu_tb.dut.registers.x1[31:0]
+(6)cpu_tb.dut.registers.x1[31:0]
+(7)cpu_tb.dut.registers.x1[31:0]
+(8)cpu_tb.dut.registers.x1[31:0]
+(9)cpu_tb.dut.registers.x1[31:0]
+(10)cpu_tb.dut.registers.x1[31:0]
+(11)cpu_tb.dut.registers.x1[31:0]
+(12)cpu_tb.dut.registers.x1[31:0]
+(13)cpu_tb.dut.registers.x1[31:0]
+(14)cpu_tb.dut.registers.x1[31:0]
+(15)cpu_tb.dut.registers.x1[31:0]
+(16)cpu_tb.dut.registers.x1[31:0]
+(17)cpu_tb.dut.registers.x1[31:0]
+(18)cpu_tb.dut.registers.x1[31:0]
+(19)cpu_tb.dut.registers.x1[31:0]
+(20)cpu_tb.dut.registers.x1[31:0]
+(21)cpu_tb.dut.registers.x1[31:0]
+(22)cpu_tb.dut.registers.x1[31:0]
+(23)cpu_tb.dut.registers.x1[31:0]
+(24)cpu_tb.dut.registers.x1[31:0]
+(25)cpu_tb.dut.registers.x1[31:0]
+(26)cpu_tb.dut.registers.x1[31:0]
+(27)cpu_tb.dut.registers.x1[31:0]
+(28)cpu_tb.dut.registers.x1[31:0]
+(29)cpu_tb.dut.registers.x1[31:0]
+(30)cpu_tb.dut.registers.x1[31:0]
+(31)cpu_tb.dut.registers.x1[31:0]
+@1401200
+-group_end
+@200
+-
+-ALU
+@22
+cpu_tb.dut.alu.op_a[31:0]
+cpu_tb.dut.alu.op_b[31:0]
+cpu_tb.dut.alu_out[31:0]
+cpu_tb.dut.alu_out_r[31:0]
+cpu_tb.dut.alu_out_rr[31:0]
 @200
 -
 -Wishbone master
@@ -51,6 +93,16 @@ cpu_tb.dut.cyc_o[0]
 cpu_tb.dut.err_i[0]
 cpu_tb.dut.rty_i[0]
 @200
+-
+-Flash
+@28
+cpu_tb.flash_emulator.ack_o[0]
+cpu_tb.flash_emulator.addressed[0]
+@22
+cpu_tb.flash_emulator.dat_o[31:0]
+@200
+-
+@201
 -Memory
 @28
 cpu_tb.memory.ack_o[0]
@@ -58,5 +110,58 @@ cpu_tb.memory.ack_o[0]
 cpu_tb.memory.dat_o[31:0]
 @28
 cpu_tb.memory.err_o[0]
+@200
+-
+-Registers
+@22
+cpu_tb.dut.registers.$ivl_for_loop0.i[31:0]
+@28
+cpu_tb.dut.registers.clk[0]
+@22
+cpu_tb.dut.registers.r_address1[4:0]
+cpu_tb.dut.registers.r_address2[4:0]
+cpu_tb.dut.registers.r_out1[31:0]
+cpu_tb.dut.registers.r_out2[31:0]
+@24
+cpu_tb.dut.registers.w_address[4:0]
+@22
+cpu_tb.dut.registers.w_data[31:0]
+@28
+cpu_tb.dut.registers.w_enable[0]
+@200
+-
+@22
+cpu_tb.dut.registers.x0[31:0]
+cpu_tb.dut.registers.x1[31:0]
+cpu_tb.dut.registers.x2[31:0]
+cpu_tb.dut.registers.x3[31:0]
+cpu_tb.dut.registers.x4[31:0]
+cpu_tb.dut.registers.x5[31:0]
+cpu_tb.dut.registers.x6[31:0]
+cpu_tb.dut.registers.x7[31:0]
+cpu_tb.dut.registers.x8[31:0]
+cpu_tb.dut.registers.x9[31:0]
+cpu_tb.dut.registers.x10[31:0]
+cpu_tb.dut.registers.x11[31:0]
+cpu_tb.dut.registers.x12[31:0]
+cpu_tb.dut.registers.x13[31:0]
+cpu_tb.dut.registers.x14[31:0]
+cpu_tb.dut.registers.x15[31:0]
+cpu_tb.dut.registers.x16[31:0]
+cpu_tb.dut.registers.x17[31:0]
+cpu_tb.dut.registers.x18[31:0]
+cpu_tb.dut.registers.x19[31:0]
+cpu_tb.dut.registers.x20[31:0]
+cpu_tb.dut.registers.x21[31:0]
+cpu_tb.dut.registers.x22[31:0]
+cpu_tb.dut.registers.x23[31:0]
+cpu_tb.dut.registers.x24[31:0]
+cpu_tb.dut.registers.x25[31:0]
+cpu_tb.dut.registers.x26[31:0]
+cpu_tb.dut.registers.x27[31:0]
+cpu_tb.dut.registers.x28[31:0]
+cpu_tb.dut.registers.x29[31:0]
+cpu_tb.dut.registers.x30[31:0]
+cpu_tb.dut.registers.x31[31:0]
 [pattern_trace] 1
 [pattern_trace] 0
