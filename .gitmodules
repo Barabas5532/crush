@@ -1,3 +1,6 @@
 [submodule "tools/compliance/riscv-arch-test"]
 	path = tools/compliance/riscv-arch-test
 	url = https://github.com/riscv-non-isa/riscv-arch-test.git
+[submodule "tools/compliance/riscof-plugins"]
+	path = tools/compliance/riscof-plugins
+	url = https://gitlab.com/incoresemi/riscof-plugins.git

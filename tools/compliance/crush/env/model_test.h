@@ -10,7 +10,7 @@
  */
 #define RVMODEL_DATA_BEGIN \
     .align 4; \
-    .globl begin_signature; begin_signature
+    .globl begin_signature
 
 /* This macros marks the end of the signature-region. The test-target must
  * declare any labels required to indicate the end of the signature region. For
@@ -22,7 +22,7 @@
  */
 #define RVMODEL_DATA_END \
     .align 4; \
-    .globl end_signature; end_signature
+    .globl end_signature
 
 
 /* This macros must define the test-target halt mechanism. This macro is
@@ -32,7 +32,27 @@
  * comparison.
  */
 #define RVMODEL_HALT \
-    la a0, 0x3000_0000 \
+    la a0, 0x30000000; \
     lw a0, 0(a0)
+
+/* contains boot code for the test-target; may include emulation code or trap
+ * stub. If the test-target enforces alignment or value restrictions on the
+ * mtvec csr, it is required that this macro sets the value of mtvec to a
+ * region which is readable and writable by the machine mode. May include code
+ * to copy the data sections from boot device to ram. Or any other code that
+ * needs to be run prior to running the tests.
+ */
+#define RVMODEL_BOOT
+
+/* debug assertion that GPR should have value
+ *
+ * outputs a debug message if Reg!=Value
+ *
+ * ScrReg is a scratch register used by the output routine; its final value
+ * cannot be guaranteed
+ *
+ * Can be used to help debug what tests have passed/failed
+ */
+#define RVMODEL_IO_ASSERT_GPR_EQ(ScrReg, Reg, Value)
 
 #endif // CRUSH_ENV_MODEL_TEST_H
