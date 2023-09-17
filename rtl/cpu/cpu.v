@@ -27,7 +27,7 @@ STATE_REG_WRITE = 3'd4,
 STATE_RESET = 3'd7;
 
 reg[2:0] state;
-reg [31:0] instruction;
+reg[31:0] instruction;
 
 reg pc_load;
 reg pc_count;
@@ -90,6 +90,7 @@ end
 always @(posedge(clk_i)) begin
     if(rst_i) begin
         state <= STATE_RESET;
+        instruction <= 32'hxxxx_xxxx;
     end else begin
         case(state)
         STATE_FETCH:
@@ -99,6 +100,7 @@ always @(posedge(clk_i)) begin
                 instruction <= dat_i;
             end
         STATE_REG_READ: state <= STATE_EXECUTE;
+        // TODO maybe memory can't read in a single cycle ?
         STATE_EXECUTE: state <= STATE_MEMORY;
         STATE_MEMORY: state <= STATE_REG_WRITE;
         STATE_REG_WRITE: state <= STATE_FETCH;
@@ -174,7 +176,11 @@ always @(*) begin
         end
     end
     STATE_REG_WRITE: begin
-        w_data <= alu_out_rr;
+        case(instruction[6:0])
+            OPCODE_LOAD: w_data <= dat_i;
+            default: w_data <= alu_out_rr;
+        endcase
+
         w_enable <= reg_w_en;
         pc_count <= 1;
     end

@@ -32,6 +32,11 @@ filesets:
      - sim/alu.v
     file_type: systemVerilogSource
 
+  sim_load_store:
+    files:
+     - sim/load_store.v
+    file_type: systemVerilogSource
+
   sim_cpu:
     files:
      - sim/control.v
@@ -50,7 +55,7 @@ targets:
       icarus:
         timescale: "1s/100ms"
         iverilog_options:
-          - "-g2012"
+          - "-g2005-sv"
           - "-gassertions"
 
   lint:
@@ -82,6 +87,13 @@ targets:
     filesets_append:
       - sim_alu
     toplevel: alu_tb
+    default_tool: icarus
+
+  sim_load_store:
+    <<: *default
+    filesets_append:
+      - sim_load_store
+    toplevel: load_store
     default_tool: icarus
 
   sim_cpu:

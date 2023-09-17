@@ -22,14 +22,32 @@ module memory #(
   // correctly
   reg [31:0] memory[SIZE];
 
+  // Individal signals so the memory can be observed in VCD output
+  genvar i;
+  generate
+      for(i = 0; i < SIZE && i < 8; i++) begin : g_scope
+          wire[31:0] m;
+          assign m = memory[i];
+      end
+  endgenerate
+
   always @(posedge clk_i) begin
-    ack_o <= 0;
+      integer i;
+      if(rst_i) begin
+        for(i = 0; i < SIZE; i++) begin
+            memory[i] = 32'hxxxx_xxxx;
+        end
+      end
+  end
+
+  always @(posedge clk_i) begin
+    ack_o = 0;
     err_o <= 0;
     rty_o <= 0;
     dat_o <= 32'hzzzz_zzzz;
 
     if (stb_i & cyc_i & !ack_o & (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + SIZE)) begin
-      ack_o <= 1;
+      ack_o = 1;
     end
 
     if (stb_i & cyc_i & ack_o & we_i) begin
@@ -37,7 +55,7 @@ module memory #(
     end
 
     if (stb_i & cyc_i & ack_o & !we_i) begin
-      dat_o <= memory[adr_i];
+      dat_o <= memory[adr_i - BASE_ADDRESS];
     end
   end
 
