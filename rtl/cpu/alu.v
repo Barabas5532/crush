@@ -66,9 +66,10 @@ module alu (
         FUNCT3_BGE:  out <= $signed(op_a) >= $signed(op_b);
         FUNCT3_BGEU: out <= op_a >= op_b;
       endcase
-      OPCODE_LUI: out <= U_immediate;
+      OPCODE_LUI:   out <= U_immediate;
       OPCODE_AUIPC: out <= pc + U_immediate;
       OPCODE_LOAD:  out <= op_a + I_immediate;
+      OPCODE_STORE:  out <= op_a + S_immediate;
     endcase
   end
 

@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.117 (w)1999-2023 BSI
-[*] Sun Sep 17 15:39:23 2023
+[*] Mon Sep 18 20:14:22 2023
 [*]
 [dumpfile] "/home/barabas/projects/hardware/risc-v/build/crush_0.0.1/sim_load_store-icarus/load_store.vcd"
-[dumpfile_mtime] "Sun Sep 17 14:49:01 2023"
-[dumpfile_size] 3267
+[dumpfile_mtime] "Mon Sep 18 20:12:07 2023"
+[dumpfile_size] 4413
 [savefile] "/home/barabas/projects/hardware/risc-v/tools/load_store.gtkw"
-[timestart] 0
+[timestart] 104270
 [size] 1910 1001
 [pos] -1 -1
-*-11.896842 5640 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-12.196842 132520 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] load_store.
 [treeopen] load_store.cpu.
 [sst_width] 312
@@ -28,25 +28,24 @@ load_store.cpu.pc[31:0]
 load_store.cpu.state[2:0]
 @22
 load_store.cpu.instruction[31:0]
+load_store.cpu.immediate_decode.I_immediate[31:0]
+load_store.cpu.immediate_decode.S_immediate[31:0]
 @200
 -
-@28
-load_store.cpu.ack_i
 @22
 load_store.cpu.adr_o[31:0]
-@28
-load_store.cpu.cyc_o
-@22
 load_store.cpu.dat_i[31:0]
 load_store.cpu.dat_o[31:0]
-@28
-load_store.cpu.err_i
-load_store.cpu.rty_i
-@22
 load_store.cpu.sel_o[3:0]
 @28
+load_store.cpu.cyc_o
 load_store.cpu.stb_o
 load_store.cpu.we_o
+@29
+load_store.cpu.ack_i
+@28
+load_store.cpu.rty_i
+load_store.cpu.err_i
 @200
 -Memory
 @420
@@ -89,7 +88,6 @@ load_store.cpu.registers.r_out1[31:0]
 load_store.cpu.registers.r_address2[4:0]
 load_store.cpu.registers.r_out2[31:0]
 load_store.cpu.registers.w_address[4:0]
-@23
 load_store.cpu.registers.w_data[31:0]
 @28
 load_store.cpu.registers.w_enable

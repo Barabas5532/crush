@@ -151,6 +151,15 @@ always @(*) begin
     endcase
 end
 
+reg mem_w_en;
+
+always @(*) begin
+    case(opcode)
+    OPCODE_STORE: mem_w_en = 1;
+    default: mem_w_en = 0;
+    endcase
+end
+
 always @(*) begin
     pc_count <= 0;
     pc_load <= 0;
@@ -191,7 +200,20 @@ always @(*) begin
             we_o <= 0;
             sel_o <= 4'b1111;
         end
-        // TODO implement writes, including driving sel_o correctly
+
+        if(mem_w_en) begin
+            stb_o <= 1;
+            cyc_o <= 1;
+            adr_o <= alu_out_r & ~32'h0000_0003;
+            dat_o <= r_out2;
+            we_o <= 1;
+            case(funct3)
+                FUNCT3_SW: sel_o <= 4'b1111;
+                FUNCT3_SH: sel_o <= 4'b0011 << (2 * S_immediate[1]);
+                FUNCT3_SB: sel_o <= 4'b0001 << I_immediate[0 +: 2];
+                default: sel_o <= 4'bxxxx;
+            endcase
+        end
     end
     STATE_REG_WRITE: begin
         case(opcode)
