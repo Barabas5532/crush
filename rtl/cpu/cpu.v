@@ -187,7 +187,7 @@ always @(*) begin
         if(mem_r_en) begin
             stb_o <= 1;
             cyc_o <= 1;
-            adr_o <= alu_out_r;
+            adr_o <= alu_out_r & 32'hFFFF_FFFC;
             we_o <= 0;
             sel_o <= 4'b1111;
         end
@@ -198,11 +198,8 @@ always @(*) begin
             OPCODE_LOAD: begin
                 case(funct3)
                     FUNCT3_LW: w_data <= dat_i;
-                    FUNCT3_LB: w_data <= {
-                        {24{dat_i[8*I_immediate[1:0] + 7]}},
-                        dat_i[8 * I_immediate[1:0] +: 8]
-                    };
-                    FUNCT3_LBU: w_data <= { dat_i[8 * I_immediate[1:0] +: 8] };
+                    FUNCT3_LB: w_data <= $signed(dat_i[8 * I_immediate[1:0] +: 8]);
+                    FUNCT3_LBU: w_data <= dat_i[8 * I_immediate[1:0] +: 8];
                     default: w_data <= 32'hxxxx_xxxx;
                 endcase
             end

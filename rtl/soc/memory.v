@@ -40,6 +40,7 @@ module memory #(
       end
   end
 
+  wire memory_address = (adr_i - BASE_ADDRESS) >> 2;
   always @(posedge clk_i) begin
     ack_o = 0;
     err_o <= 0;
@@ -51,11 +52,11 @@ module memory #(
     end
 
     if (stb_i & cyc_i & ack_o & we_i) begin
-      memory[adr_i] <= dat_i;
+      memory[memory_address] <= dat_i;
     end
 
     if (stb_i & cyc_i & ack_o & !we_i) begin
-      dat_o <= memory[adr_i - BASE_ADDRESS];
+      dat_o <= memory[memory_address];
     end
   end
 

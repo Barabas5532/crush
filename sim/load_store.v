@@ -122,7 +122,7 @@ initial begin
     cpu.registers.memory[1] = 32'h2000_0000;
     memory.memory[1] = 32'h0000_0002;
 
-    LW(1, 1, 12'h001);
+    LW(1, 1, 12'h004);
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
@@ -130,10 +130,10 @@ initial begin
 
     test_case("load word, with negative offset");
 
-    cpu.registers.memory[1] = 32'h2000_0001;
+    cpu.registers.memory[1] = 32'h2000_0004;
     memory.memory[0] = 32'h0000_0003;
 
-    LW(1, 1, -12'h001);
+    LW(1, 1, -12'h004);
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
@@ -183,14 +183,50 @@ initial begin
     @(posedge clk);
     assert (cpu.registers.x1 == 32'h0000_007F);
 
-    // load byte offset 1
-    // load byte offset 2
-    // load byte offset 3
+    test_case("load byte, offset 1");
 
-    // load byte MSB 1
-    // load byte MSB 0
-    // load unsigned byte MSB 1
-    // load unsigned byte MSB 0
+    cpu.registers.memory[1] = 32'h2000_0000;
+    memory.memory[0] = 32'h0302_0100;
+
+    LB(1, 1, 12'h001);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (cpu.registers.x1 == 32'h0000_0001);
+
+    test_case("load byte, offset 2");
+
+    cpu.registers.memory[1] = 32'h2000_0000;
+    memory.memory[0] = 32'h0302_0100;
+
+    LB(1, 1, 12'h002);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (cpu.registers.x1 == 32'h0000_0002);
+
+    test_case("load byte, offset 3");
+
+    cpu.registers.memory[1] = 32'h2000_0000;
+    memory.memory[0] = 32'h0302_0100;
+
+    LB(1, 1, 12'h003);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (cpu.registers.x1 == 32'h0000_0003);
+
+    test_case("load byte, offset -1");
+
+    cpu.registers.memory[1] = 32'h2000_0004;
+    memory.memory[0] = 32'h0302_0100;
+    memory.memory[1] = 32'hFFFF_FFFF;
+
+    LB(1, 1, -12'h001);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (cpu.registers.x1 == 32'h0000_0003);
 
     // store word, load half word offset 2
 
