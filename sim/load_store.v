@@ -146,6 +146,17 @@ task static SH(input reg[4:0] rs2, input reg[4:0] rs1, input reg[11:0] offset);
     flash_dat_o = 32'hzzzz_zzzz;
 endtask
 
+task static SB(input reg[4:0] rs2, input reg[4:0] rs1, input reg[11:0] offset);
+    // wait for wishbone instruction read
+    @(stb_o & cyc_o);
+    @(posedge clk);
+    flash_ack_o = 1;
+    flash_dat_o = {{offset[11:5]}, {rs2}, {rs1}, {FUNCT3_SB}, {offset[4:0]}, {OPCODE_STORE}};
+    @(posedge clk);
+    flash_ack_o = 1'bz;
+    flash_dat_o = 32'hzzzz_zzzz;
+endtask
+
 initial begin
     $dumpfile("load_store.vcd");
     $dumpvars(0);
@@ -351,10 +362,53 @@ initial begin
     @(posedge clk);
     assert (memory.memory[0] == 32'hF1F0_BEEF);
 
-    // store byte
-    // store byte, offset 1
-    // store byte, offset 2
-    // store byte, offset 3
+    test_case("store byte");
+
+    memory.memory[0] = 32'hDEAD_BEEF;
+    cpu.registers.memory[1] = 32'hF3F2_F1F0;
+    cpu.registers.memory[2] = 32'h2000_0000;
+
+    SB(1, 2, 12'h000);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (memory.memory[0] == 32'hDEAD_BEF0);
+
+    test_case("store byte, offset 1");
+
+    memory.memory[0] = 32'hDEAD_BEEF;
+    cpu.registers.memory[1] = 32'hF3F2_F1F0;
+    cpu.registers.memory[2] = 32'h2000_0000;
+
+    SB(1, 2, 12'h001);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (memory.memory[0] == 32'hDEAD_F0EF);
+
+    test_case("store byte, offset 2");
+
+    memory.memory[0] = 32'hDEAD_BEEF;
+    cpu.registers.memory[1] = 32'hF3F2_F1F0;
+    cpu.registers.memory[2] = 32'h2000_0000;
+
+    SB(1, 2, 12'h002);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (memory.memory[0] == 32'hDEF0_BEEF);
+
+    test_case("store byte, offset 3");
+
+    memory.memory[0] = 32'hDEAD_BEEF;
+    cpu.registers.memory[1] = 32'hF3F2_F1F0;
+    cpu.registers.memory[2] = 32'h2000_0000;
+
+    SB(1, 2, 12'h003);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (memory.memory[0] == 32'hF0AD_BEEF);
 
     // TODO misaligned?
     $stop;

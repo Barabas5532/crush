@@ -205,7 +205,6 @@ always @(*) begin
             stb_o <= 1;
             cyc_o <= 1;
             adr_o <= alu_out_r & ~32'h0000_0003;
-            dat_o <= r_out2;
             case(funct3)
                 FUNCT3_SW: dat_o <= r_out2;
                 FUNCT3_SH: dat_o <= r_out2 << (16 * S_immediate[1]);
