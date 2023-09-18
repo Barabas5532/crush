@@ -28,6 +28,8 @@ STATE_RESET = 3'd7;
 
 reg[2:0] state;
 reg[31:0] instruction;
+wire [6:0] opcode = instruction[6:0];
+wire [2:0] funct3 = instruction[14:12];
 
 reg pc_load;
 reg pc_count;
@@ -74,6 +76,22 @@ wire[31:0] alu_out;
 reg[31:0] alu_out_r;
 reg[31:0] alu_out_rr;
 
+// TODO remove unused signals if possible, just need I and S type
+wire [31:0] I_immediate;
+wire [31:0] S_immediate;
+wire [31:0] B_immediate;
+wire [31:0] U_immediate;
+wire [31:0] J_immediate;
+
+inst_immediate_decode immediate_decode (
+  .inst(instruction),
+  .I_immediate(I_immediate),
+  .S_immediate(S_immediate),
+  .B_immediate(B_immediate),
+  .U_immediate(U_immediate),
+  .J_immediate(J_immediate)
+);
+
 alu alu(
    .instruction(instruction),
    .op_a(alu_op_a),
@@ -112,7 +130,7 @@ end
 reg reg_w_en;
 
 always @(*) begin
-    case(instruction[6:0])
+    case(opcode)
     OPCODE_OP_IMM,
     OPCODE_LUI,
     OPCODE_AUIPC,
@@ -127,7 +145,7 @@ end
 reg mem_r_en;
 
 always @(*) begin
-    case(instruction[6:0])
+    case(opcode)
     OPCODE_LOAD: mem_r_en = 1;
     default: mem_r_en = 0;
     endcase
@@ -171,13 +189,23 @@ always @(*) begin
             cyc_o <= 1;
             adr_o <= alu_out_r;
             we_o <= 0;
-            // TODO the instruction can encode smaller writes, implement that
             sel_o <= 4'b1111;
         end
+        // TODO implement writes, including driving sel_o correctly
     end
     STATE_REG_WRITE: begin
-        case(instruction[6:0])
-            OPCODE_LOAD: w_data <= dat_i;
+        case(opcode)
+            OPCODE_LOAD: begin
+                case(funct3)
+                    FUNCT3_LW: w_data <= dat_i;
+                    FUNCT3_LB: w_data <= {
+                        {24{dat_i[8*I_immediate[1:0] + 7]}},
+                        dat_i[8 * I_immediate[1:0] +: 8]
+                    };
+                    FUNCT3_LBU: w_data <= { dat_i[8 * I_immediate[1:0] +: 8] };
+                    default: w_data <= 32'hxxxx_xxxx;
+                endcase
+            end
             default: w_data <= alu_out_rr;
         endcase
 

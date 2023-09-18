@@ -38,8 +38,6 @@ cpu #(.INITIAL_PC('h1000_0000)) cpu (
     .we_o(we_o)
 );
 
-// TODO fake wishbone flash, outputting instructions to test with
-
 memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
     .clk_i(clk),
     .rst_i(reset),
@@ -82,6 +80,27 @@ task static LW(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
     flash_dat_o = 32'hzzzz_zzzz;
 endtask
 
+task static LB(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
+    // wait for wishbone instruction read
+    @(stb_o & cyc_o);
+    @(posedge clk);
+    flash_ack_o = 1;
+    flash_dat_o = {{offset}, {rs1}, {FUNCT3_LB}, {rd}, {OPCODE_LOAD}};
+    @(posedge clk);
+    flash_ack_o = 1'bz;
+    flash_dat_o = 32'hzzzz_zzzz;
+endtask
+
+task static LBU(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
+    // wait for wishbone instruction read
+    @(stb_o & cyc_o);
+    @(posedge clk);
+    flash_ack_o = 1;
+    flash_dat_o = {{offset}, {rs1}, {FUNCT3_LBU}, {rd}, {OPCODE_LOAD}};
+    @(posedge clk);
+    flash_ack_o = 1'bz;
+    flash_dat_o = 32'hzzzz_zzzz;
+endtask
 
 initial begin
     $dumpfile("load_store.vcd");
@@ -120,10 +139,49 @@ initial begin
     @(posedge clk);
     assert (cpu.registers.x1 == 32'h0000_0003);
 
-    // load byte MSB 1
-    // load byte MSB 0
-    // load unsigned byte MSB 1
-    // load unsigned byte MSB 0
+    test_case("load byte, negative value");
+
+    cpu.registers.memory[1] = 32'h2000_0000;
+    memory.memory[0] = 32'h8382_8180;
+
+    LB(1, 1, 12'h000);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (cpu.registers.x1 == 32'hFFFF_FF80);
+
+    test_case("load byte, positive value");
+
+    cpu.registers.memory[1] = 32'h2000_0000;
+    memory.memory[0] = 32'h0302_017F;
+
+    LB(1, 1, 12'h000);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (cpu.registers.x1 == 32'h0000_007F);
+
+    test_case("load unsigned byte, negative value");
+
+    cpu.registers.memory[1] = 32'h2000_0000;
+    memory.memory[0] = 32'h8382_8180;
+
+    LBU(1, 1, 12'h000);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (cpu.registers.x1 == 32'h0000_0080);
+
+    test_case("load unsigned byte, positive value");
+
+    cpu.registers.memory[1] = 32'h2000_0000;
+    memory.memory[0] = 32'h0302_017F;
+
+    LBU(1, 1, 12'h000);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (cpu.registers.x1 == 32'h0000_007F);
 
     // load byte offset 1
     // load byte offset 2
