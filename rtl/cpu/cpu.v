@@ -206,11 +206,17 @@ always @(*) begin
             cyc_o <= 1;
             adr_o <= alu_out_r & ~32'h0000_0003;
             dat_o <= r_out2;
+            case(funct3)
+                FUNCT3_SW: dat_o <= r_out2;
+                FUNCT3_SH: dat_o <= r_out2 << (16 * S_immediate[1]);
+                FUNCT3_SB: dat_o <= r_out2 << (8 * S_immediate[0 +: 2]);
+                default: dat_o <= r_out2;
+            endcase
             we_o <= 1;
             case(funct3)
                 FUNCT3_SW: sel_o <= 4'b1111;
                 FUNCT3_SH: sel_o <= 4'b0011 << (2 * S_immediate[1]);
-                FUNCT3_SB: sel_o <= 4'b0001 << I_immediate[0 +: 2];
+                FUNCT3_SB: sel_o <= 4'b0001 << S_immediate[0 +: 2];
                 default: sel_o <= 4'bxxxx;
             endcase
         end

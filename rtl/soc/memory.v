@@ -22,6 +22,9 @@ module memory #(
   // correctly
   reg [31:0] memory[SIZE];
 
+  wire[31:0] mask = {{8{sel_i[3]}}, {8{sel_i[2]}}, {8{sel_i[1]}}, {8{sel_i[0]}}};
+  wire[31:0] value = memory[memory_address];
+
   // Individal signals so the memory can be observed in VCD output
   genvar i;
   generate
@@ -52,7 +55,7 @@ module memory #(
     end
 
     if (stb_i & cyc_i & ack_o & we_i) begin
-      memory[memory_address] <= dat_i;
+     memory[memory_address] <= (value & ~mask) | (dat_i & mask);
     end
 
     if (stb_i & cyc_i & ack_o & !we_i) begin
