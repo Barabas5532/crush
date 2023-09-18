@@ -1,17 +1,18 @@
 [*]
 [*] GTKWave Analyzer v3.3.117 (w)1999-2023 BSI
-[*] Mon Sep 18 20:14:22 2023
+[*] Mon Sep 18 20:49:19 2023
 [*]
 [dumpfile] "/home/barabas/projects/hardware/risc-v/build/crush_0.0.1/sim_load_store-icarus/load_store.vcd"
-[dumpfile_mtime] "Mon Sep 18 20:12:07 2023"
-[dumpfile_size] 4413
+[dumpfile_mtime] "Mon Sep 18 20:44:28 2023"
+[dumpfile_size] 5159
 [savefile] "/home/barabas/projects/hardware/risc-v/tools/load_store.gtkw"
-[timestart] 104270
+[timestart] 0
 [size] 1910 1001
 [pos] -1 -1
-*-12.196842 132520 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-14.599666 18430 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] load_store.
 [treeopen] load_store.cpu.
+[treeopen] load_store.memory.
 [sst_width] 312
 [signals_width] 265
 [sst_expanded] 1
@@ -41,9 +42,7 @@ load_store.cpu.sel_o[3:0]
 load_store.cpu.cyc_o
 load_store.cpu.stb_o
 load_store.cpu.we_o
-@29
 load_store.cpu.ack_i
-@28
 load_store.cpu.rty_i
 load_store.cpu.err_i
 @200
