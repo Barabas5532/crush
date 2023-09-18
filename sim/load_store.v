@@ -102,6 +102,28 @@ task static LBU(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
     flash_dat_o = 32'hzzzz_zzzz;
 endtask
 
+task static LH(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
+    // wait for wishbone instruction read
+    @(stb_o & cyc_o);
+    @(posedge clk);
+    flash_ack_o = 1;
+    flash_dat_o = {{offset}, {rs1}, {FUNCT3_LH}, {rd}, {OPCODE_LOAD}};
+    @(posedge clk);
+    flash_ack_o = 1'bz;
+    flash_dat_o = 32'hzzzz_zzzz;
+endtask
+
+task static LHU(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
+    // wait for wishbone instruction read
+    @(stb_o & cyc_o);
+    @(posedge clk);
+    flash_ack_o = 1;
+    flash_dat_o = {{offset}, {rs1}, {FUNCT3_LHU}, {rd}, {OPCODE_LOAD}};
+    @(posedge clk);
+    flash_ack_o = 1'bz;
+    flash_dat_o = 32'hzzzz_zzzz;
+endtask
+
 initial begin
     $dumpfile("load_store.vcd");
     $dumpvars(0);
@@ -228,7 +250,38 @@ initial begin
     @(posedge clk);
     assert (cpu.registers.x1 == 32'h0000_0003);
 
-    // store word, load half word offset 2
+    test_case("load half word");
+
+    cpu.registers.memory[1] = 32'h2000_0000;
+    memory.memory[0] = 32'h8382_8180;
+
+    LH(1, 1, 12'h000);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (cpu.registers.x1 == 32'hFFFF_8180);
+
+    test_case("load unsigned half word");
+
+    cpu.registers.memory[1] = 32'h2000_0000;
+    memory.memory[0] = 32'h8382_8180;
+
+    LHU(1, 1, 12'h000);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (cpu.registers.x1 == 32'h0000_8180);
+
+    test_case("load half word, offset 2");
+
+    cpu.registers.memory[1] = 32'h2000_0000;
+    memory.memory[0] = 32'h8382_8180;
+
+    LH(1, 1, 12'h002);
+    @(ack_i);
+    @(posedge clk);
+    @(posedge clk);
+    assert (cpu.registers.x1 == 32'hFFFF_8382);
 
     // TODO misaligned?
     // TODO test all store instructions
