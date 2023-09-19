@@ -161,10 +161,6 @@ always @(*) begin
 end
 
 always @(*) begin
-    pc_count <= 0;
-    pc_load <= 0;
-    pc_value <= 32'hxxxx_xxxx;
-
     stb_o <= 0;
     cyc_o <= 0;
     sel_o <= 4'hx;
@@ -221,6 +217,8 @@ always @(*) begin
         end
     end
     STATE_REG_WRITE: begin
+        w_enable <= reg_w_en;
+
         case(opcode)
             OPCODE_LOAD: begin
                 case(funct3)
@@ -232,11 +230,24 @@ always @(*) begin
                     default: w_data <= 32'hxxxx_xxxx;
                 endcase
             end
+            OPCODE_JAL: begin
+                w_data <= pc_inc;
+            end
             default: w_data <= alu_out_rr;
         endcase
 
-        w_enable <= reg_w_en;
-        pc_count <= 1;
+        case(opcode)
+            OPCODE_JAL: begin
+                pc_count <= 1'bx;
+                pc_load <= 1;
+                pc_value <= alu_out_rr;
+            end
+            default: begin
+                pc_count <= 1;
+                pc_load <= 0;
+                pc_value <= 32'hxxxx_xxxx;
+            end
+        endcase
     end
     endcase
 end

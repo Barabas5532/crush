@@ -70,7 +70,8 @@ module alu (
       OPCODE_LUI:   out <= U_immediate;
       OPCODE_AUIPC: out <= pc + U_immediate;
       OPCODE_LOAD:  out <= op_a + I_immediate;
-      OPCODE_STORE:  out <= op_a + S_immediate;
+      OPCODE_STORE: out <= op_a + S_immediate;
+      OPCODE_JAL:   out <= pc + J_immediate;
     endcase
   end
 
