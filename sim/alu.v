@@ -77,6 +77,36 @@ module alu_tb ();
     op_b = 32'hxxxx_xxxx;
     #1 assert (out == 32'd0);
 
+    instruction = {{12'b0000_0000_0000}, {5'b0_0000}, {FUNCT3_SLTIU}, {5'b0_0001}, {OPCODE_OP_IMM}};
+    op_a = 32'h0000_0001;
+    op_b = 32'hxxxx_xxxx;
+    #1 assert (out == 32'd0);
+
+    instruction = {{12'b1111_1111_1111}, {5'b0_0000}, {FUNCT3_SLTIU}, {5'b0_0001}, {OPCODE_OP_IMM}};
+    op_a = 32'hffff_fffe;
+    op_b = 32'hxxxx_xxxx;
+    #1 assert (out == 32'd1);
+
+    instruction = {{12'b1111_1111_1111}, {5'b0_0000}, {FUNCT3_SLTIU}, {5'b0_0001}, {OPCODE_OP_IMM}};
+    op_a = 32'hffff_ffff;
+    op_b = 32'hxxxx_xxxx;
+    #1 assert (out == 32'd0);
+
+    instruction = {{12'b0000_0000_0001}, {5'b0_0000}, {FUNCT3_SLTIU}, {5'b0_0001}, {OPCODE_OP_IMM}};
+    op_a = 32'h0000_0000;
+    op_b = 32'hxxxx_xxxx;
+    #1 assert (out == 32'd1);
+
+    instruction = {{12'b0000_0000_0000}, {5'b0_0000}, {FUNCT3_SLTIU}, {5'b0_0001}, {OPCODE_OP_IMM}};
+    op_a = 32'h0000_0001;
+    op_b = 32'hxxxx_xxxx;
+    #1 assert (out == 32'd0);
+
+    instruction = {{12'b0000_0000_0000}, {5'b0_0000}, {FUNCT3_SLTIU}, {5'b0_0001}, {OPCODE_OP_IMM}};
+    op_a = 32'h0000_0001;
+    op_b = 32'hxxxx_xxxx;
+    #1 assert (out == 32'd0);
+
     instruction = {{12'b1000_0000_0110}, {5'b0_0000}, {FUNCT3_ANDI}, {5'b0_0001}, {OPCODE_OP_IMM}};
     op_a = 32'hFFFF_F80A;
     op_b = 32'hxxxx_xxxx;

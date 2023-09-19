@@ -37,6 +37,7 @@ module alu (
       case (funct3)
         FUNCT3_ADDI: out <= op_a + I_immediate;
         FUNCT3_SLTI: out <= $signed(op_a) < $signed(I_immediate);
+        FUNCT3_SLTIU: out <= op_a < I_immediate;
         FUNCT3_ANDI: out <= op_a & I_immediate;
         FUNCT3_ORI: out <= op_a | I_immediate;
         FUNCT3_XORI: out <= op_a ^ I_immediate;
