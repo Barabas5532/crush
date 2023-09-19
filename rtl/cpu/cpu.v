@@ -76,6 +76,31 @@ wire[31:0] alu_out;
 reg[31:0] alu_out_r;
 reg[31:0] alu_out_rr;
 
+// TODO only register a single flag, the one that is reveleant for the current
+// instructions. The others will be ignored.
+//
+// These can be x if opcode is not branch as well.
+wire alu_eq;
+wire alu_neq;
+wire alu_lt;
+wire alu_ltu;
+wire alu_ge;
+wire alu_geu;
+
+reg alu_eq_r;
+reg alu_neq_r;
+reg alu_lt_r;
+reg alu_ltu_r;
+reg alu_ge_r;
+reg alu_geu_r;
+
+reg alu_eq_rr;
+reg alu_neq_rr;
+reg alu_lt_rr;
+reg alu_ltu_rr;
+reg alu_ge_rr;
+reg alu_geu_rr;
+
 // TODO remove unused signals if possible, just need I and S type
 wire [31:0] I_immediate;
 wire [31:0] S_immediate;
@@ -97,12 +122,36 @@ alu alu(
    .op_a(alu_op_a),
    .op_b(alu_op_b),
    .pc(pc),
-   .out(alu_out)
+   .out(alu_out),
+   .eq(alu_eq),
+   .neq(alu_neq),
+   .lt(alu_lt),
+   .ltu(alu_ltu),
+   .ge(alu_ge),
+   .geu(alu_geu)
 );
 
 always @(posedge(clk_i)) begin
     alu_out_r <= alu_out;
     alu_out_rr <= alu_out_r;
+
+    alu_eq_r <= alu_eq;
+    alu_eq_rr <= alu_eq_r;
+
+    alu_neq_r <= alu_neq;
+    alu_neq_rr <= alu_neq_r;
+
+    alu_lt_r <= alu_lt;
+    alu_lt_rr <= alu_lt_r;
+
+    alu_ltu_r <= alu_ltu;
+    alu_ltu_rr <= alu_ltu_r;
+
+    alu_ge_r <= alu_ge;
+    alu_ge_rr <= alu_ge_r;
+
+    alu_geu_r <= alu_geu;
+    alu_geu_rr <= alu_geu_r;
 end
 
 always @(posedge(clk_i)) begin
@@ -243,6 +292,22 @@ always @(*) begin
                 pc_count <= 1'bx;
                 pc_load <= 1;
                 pc_value <= alu_out_rr;
+            end
+            OPCODE_BRANCH: begin
+                if((funct3 == FUNCT3_BEQ && alu_eq_rr) ||
+                   (funct3 == FUNCT3_BNE && alu_neq_rr) ||
+                   (funct3 == FUNCT3_BLT && alu_lt_rr) ||
+                   (funct3 == FUNCT3_BLTU && alu_ltu_rr) ||
+                   (funct3 == FUNCT3_BGE && alu_ge_rr) ||
+                   (funct3 == FUNCT3_BGEU && alu_geu_rr)) begin
+                    pc_count <= 1'bx;
+                    pc_load <= 1;
+                    pc_value <= alu_out_rr;
+                end else begin
+                    pc_count <= 1;
+                    pc_load <= 0;
+                    pc_value <= 32'hxxxx_xxxx;
+                end
             end
             default: begin
                 pc_count <= 1;

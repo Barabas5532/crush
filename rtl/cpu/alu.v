@@ -5,7 +5,16 @@ module alu (
     input  wire [31:0] op_a,
     input  wire [31:0] op_b,
     input  wire [31:0] pc,
-    output reg  [31:0] out
+    output reg  [31:0] out,
+    // TODO can we optimise this?
+    // e.g. lt implies !ge and eq implies !neq, we don't need a full circuit
+    // for both in a pair.
+    output reg eq,
+    output reg neq,
+    output reg lt,
+    output reg ltu,
+    output reg ge,
+    output reg geu
 );
 
   `include "params.vh"
@@ -28,6 +37,13 @@ module alu (
   wire [6:0] opcode = instruction[6:0];
   wire [2:0] funct3 = instruction[14:12];
   wire [4:0] shamt = instruction[24:20];
+
+  assign eq = op_a == op_b;
+  assign neq = op_a != op_b;
+  assign lt = $signed(op_a) < $signed(op_b);
+  assign ltu = op_a < op_b;
+  assign ge = $signed(op_a) >= $signed(op_b);
+  assign geu = op_a >= op_b;
 
   always @* begin
     out <= 32'hxxxx_xxxx;
@@ -58,21 +74,13 @@ module alu (
         FUNCT3_SRL_SRA:
         out <= instruction[30] ? $signed(op_a) >>> op_b[4:0] : $signed(op_a) >> op_b[4:0];
       endcase
-      OPCODE_BRANCH:
-      case (funct3)
-        FUNCT3_BEQ:  out <= op_a == op_b;
-        FUNCT3_BNE:  out <= op_a != op_b;
-        FUNCT3_BLT:  out <= $signed(op_a) < $signed(op_b);
-        FUNCT3_BLTU: out <= op_a < op_b;
-        FUNCT3_BGE:  out <= $signed(op_a) >= $signed(op_b);
-        FUNCT3_BGEU: out <= op_a >= op_b;
-      endcase
-      OPCODE_LUI:   out <= U_immediate;
-      OPCODE_AUIPC: out <= pc + U_immediate;
-      OPCODE_LOAD:  out <= op_a + I_immediate;
-      OPCODE_STORE: out <= op_a + S_immediate;
-      OPCODE_JAL:   out <= pc + J_immediate;
-      OPCODE_JALR:  out <= (op_a + I_immediate) & ~1;
+      OPCODE_BRANCH: out <= pc + B_immediate;
+      OPCODE_LUI:    out <= U_immediate;
+      OPCODE_AUIPC:  out <= pc + U_immediate;
+      OPCODE_LOAD:   out <= op_a + I_immediate;
+      OPCODE_STORE:  out <= op_a + S_immediate;
+      OPCODE_JAL:    out <= pc + J_immediate;
+      OPCODE_JALR:   out <= (op_a + I_immediate) & ~1;
     endcase
   end
 
