@@ -230,14 +230,16 @@ always @(*) begin
                     default: w_data <= 32'hxxxx_xxxx;
                 endcase
             end
-            OPCODE_JAL: begin
+            OPCODE_JAL,
+            OPCODE_JALR: begin
                 w_data <= pc_inc;
             end
             default: w_data <= alu_out_rr;
         endcase
 
         case(opcode)
-            OPCODE_JAL: begin
+            OPCODE_JAL,
+            OPCODE_JALR: begin
                 pc_count <= 1'bx;
                 pc_load <= 1;
                 pc_value <= alu_out_rr;
