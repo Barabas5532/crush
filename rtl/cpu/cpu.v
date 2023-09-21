@@ -210,6 +210,10 @@ always @(*) begin
 end
 
 always @(*) begin
+    pc_count <= 0;
+    pc_load <= 0;
+    pc_value <= 32'hxxxx_xxxx;
+
     stb_o <= 0;
     cyc_o <= 0;
     sel_o <= 4'hx;

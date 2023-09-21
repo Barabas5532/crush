@@ -54,16 +54,18 @@ always @(posedge clk_i) begin
     rty_o <= 0;
     dat_o <= 32'hzzzz_zzzz;
 
-    if (stb_i & cyc_i & !ack_o & addressed) begin
+    if (stb_i & cyc_i & !we_i & !ack_o & addressed) begin
         ack_o <= 1;
-    end
 
-    if (stb_i & cyc_i & !we_i & addressed) begin
-        read_data <= flash[(adr_i - BASE_ADDRESS) >> 2];
+        read_data = flash[(adr_i - BASE_ADDRESS) >> 2];
         dat_o <= {{read_data[ 7: 0]},
                   {read_data[15: 8]},
                   {read_data[23:16]},
                   {read_data[31:24]}};
+    end
+
+    if (stb_i & cyc_i & we_i & addressed) begin
+        $fatal(1, "Flash is not writable");
     end
 end
 
