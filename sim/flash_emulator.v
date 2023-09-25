@@ -29,18 +29,14 @@ initial begin
     if($value$plusargs("BINARY_PATH=%s", binary_path)) begin
         integer file;
         integer length;
-        integer i;
 
         $display("Reading flash contents from %s", binary_path);
 
         file = $fopen(binary_path, "rb");
         length = $fread(flash, file);
-        $display("Read %0d bytes", length);
         $fclose(file);
 
-        for (i = 0; i < length / 4; i = i + 1) begin
-            $display("flash[%0d] = 0x%08h", i, flash[i]);
-        end
+        $display("Read %0d bytes", length);
     end else begin
         $error("The BINARY_PATH plus arg must be set");
         $stop;

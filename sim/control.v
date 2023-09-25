@@ -1,10 +1,14 @@
 `default_nettype none
 
 // TODO implement signature export as required by RISCOF before finish is
-// called
+// called.
+//
+// Connect the entire CPU memory module to this one. When the finish register
+// is accessed, then save the entire memory contents to a file.
 
 module control #(
-    parameter integer BASE_ADDRESS
+    parameter integer BASE_ADDRESS,
+    parameter integer MEMORY_SIZE
 ) (
     input wire clk_i,
     input wire rst_i,
@@ -17,7 +21,8 @@ module control #(
     input wire we_i,
     output reg ack_o,
     output reg err_o,
-    output reg rty_o
+    output reg rty_o,
+    input wire[31:0] memory[MEMORY_SIZE]
 );
 
 always @(posedge clk_i) begin
@@ -27,7 +32,17 @@ always @(posedge clk_i) begin
     dat_o <= 32'hzzzz_zzzz;
 
     if (stb_i & cyc_i & adr_i == BASE_ADDRESS) begin
+        integer file;
+        integer i;
+
         $display("Control register accessed, finishing simulation");
+
+        file = $fopen("memory_dump", "w");
+        for (i = 0; i < MEMORY_SIZE; i++) begin
+            $fwrite(file, "%08h\n", memory[i]);
+        end
+        $fclose(file);
+
         $finish;
     end
 end

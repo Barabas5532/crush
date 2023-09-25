@@ -32,8 +32,8 @@
  * comparison.
  */
 #define RVMODEL_HALT \
-    la a0, 0x30000000; \
-    lw a0, 0(a0)
+    la x1, 0x30000000; \
+    lw x1, 0(x1)
 
 /* contains boot code for the test-target; may include emulation code or trap
  * stub. If the test-target enforces alignment or value restrictions on the
@@ -42,7 +42,19 @@
  * to copy the data sections from boot device to ram. Or any other code that
  * needs to be run prior to running the tests.
  */
-#define RVMODEL_BOOT
+#define RVMODEL_BOOT \
+    /* Copy data section from flash to RAM */ \
+    la x1, _srelocate; \
+    la x2, _erelocate; \
+    la x3, _etext; \
+rvmodel_boot_loop: \
+    beq x1, x2, rvmodel_boot_done; \
+    lw x31, 0(x3); \
+    sw x31, 0(x1); \
+    addi x1, x1, 4; \
+    addi x3, x3, 4; \
+    j rvmodel_boot_loop; \
+rvmodel_boot_done:
 
 /* debug assertion that GPR should have value
  *

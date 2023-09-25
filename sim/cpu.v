@@ -1,10 +1,6 @@
 /* This file implements a test that is able to execute programs stored on the
  * host file system. It can be used along with RISCOF - The RISC-V
  * Compatibility Framework.
- *
- * TODO
- * - Can fusesoc be configured to run the sim with the binary? Maybe call vvp
- *   manually in the riscof config after getting fusesoc to build it.
  */
 
 `default_nettype none
@@ -71,7 +67,7 @@ memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
     .rty_o(rty_i)
 );
 
-control #(.BASE_ADDRESS('h3000_0000)) control (
+control #(.BASE_ADDRESS('h3000_0000), .MEMORY_SIZE('h4000)) control (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),
@@ -83,7 +79,8 @@ control #(.BASE_ADDRESS('h3000_0000)) control (
     .we_i(we_o),
     .ack_o(ack_i),
     .err_o(err_i),
-    .rty_o(rty_i)
+    .rty_o(rty_i),
+    .memory(memory.memory)
 );
 
 always begin
@@ -97,9 +94,9 @@ initial begin
     #2.5 reset = 0;
     #0.5
 
-    #100_000
+    #200_000
 
-    $error("Stop was not called within 100k clock cycles, stopping now");
+    $error("Stop was not called within 200k clock cycles, stopping now");
     $stop;
 end
 
