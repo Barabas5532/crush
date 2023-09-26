@@ -37,7 +37,7 @@ cpu #(.INITIAL_PC('h1000_0000)) dut (
     .we_o(we_o)
 );
 
-flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h8000)) flash_emulator (
+flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h20_0000)) flash_emulator (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),
@@ -67,7 +67,11 @@ memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
     .rty_o(rty_i)
 );
 
-control #(.BASE_ADDRESS('h3000_0000), .MEMORY_SIZE('h4000)) control (
+control #(
+    .BASE_ADDRESS('h3000_0000),
+    .MEMORY_BASE_ADDRESS('h2000_0000),
+    .MEMORY_SIZE('h4000)
+) control (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),

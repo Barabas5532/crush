@@ -32,8 +32,12 @@
  * comparison.
  */
 #define RVMODEL_HALT \
-    la x1, 0x30000000; \
-    lw x1, 0(x1)
+    la x1, rvtest_sig_begin; \
+    la x2, 0x30000000; \
+    sw x1, 0(x2); \
+    la x1, rvtest_sig_end; \
+    sw x1, 4(x2); \
+    lw x1, 8(x2)
 
 /* contains boot code for the test-target; may include emulation code or trap
  * stub. If the test-target enforces alignment or value restrictions on the
