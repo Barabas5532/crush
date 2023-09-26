@@ -43,7 +43,7 @@ module memory #(
       end
   end
 
-  wire memory_address = (adr_i - BASE_ADDRESS) >> 2;
+  wire[31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
   always @(posedge clk_i) begin
     ack_o = 0;
     err_o <= 0;
