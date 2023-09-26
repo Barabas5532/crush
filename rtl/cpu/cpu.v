@@ -98,13 +98,6 @@ reg alu_ltu_rr;
 reg alu_ge_rr;
 reg alu_geu_rr;
 
-wire [31:0] I_immediate;
-
-inst_immediate_decode immediate_decode (
-  .inst(instruction),
-  .I_immediate(I_immediate)
-);
-
 alu alu(
    .instruction(instruction),
    .op_a(alu_op_a),
@@ -266,10 +259,10 @@ always @(*) begin
             OPCODE_LOAD: begin
                 case(funct3)
                     FUNCT3_LW: w_data <= read_data;
-                    FUNCT3_LB: w_data <= $signed(read_data[8 * I_immediate[1:0] +: 8]);
-                    FUNCT3_LBU: w_data <= read_data[8 * I_immediate[1:0] +: 8];
-                    FUNCT3_LH: w_data <= $signed(read_data[16 * I_immediate[1] +: 16]);
-                    FUNCT3_LHU: w_data <= read_data[16 * I_immediate[1] +: 16];
+                    FUNCT3_LB: w_data <= $signed(read_data[8 * alu_out_rr[1:0] +: 8]);
+                    FUNCT3_LBU: w_data <= read_data[8 * alu_out_rr[1:0] +: 8];
+                    FUNCT3_LH: w_data <= $signed(read_data[16 * alu_out_rr[1] +: 16]);
+                    FUNCT3_LHU: w_data <= read_data[16 * alu_out_rr[1] +: 16];
                     default: w_data <= 32'hxxxx_xxxx;
                 endcase
             end
