@@ -410,7 +410,6 @@ initial begin
     @(posedge clk);
     assert (memory.memory[0] == 32'hF0AD_BEEF);
 
-    // TODO misaligned?
     $stop;
 end
 

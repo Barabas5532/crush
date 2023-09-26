@@ -6,9 +6,6 @@ module alu (
     input  wire [31:0] op_b,
     input  wire [31:0] pc,
     output reg  [31:0] out,
-    // TODO can we optimise this?
-    // e.g. lt implies !ge and eq implies !neq, we don't need a full circuit
-    // for both in a pair.
     output reg eq,
     output reg neq,
     output reg lt,

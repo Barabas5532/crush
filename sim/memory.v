@@ -99,15 +99,6 @@ initial begin
     assert(!ack_i);
 
     #1
-    // 8-bit read from 0
-
-    // TODO
-    // 8-bit read from 0
-    // 8-bit read from 1
-    // 8-bit read from 2
-    // 8-bit read from 3
-
-    #1
     $stop;
 end
 

@@ -76,10 +76,6 @@ wire[31:0] alu_out;
 reg[31:0] alu_out_r;
 reg[31:0] alu_out_rr;
 
-// TODO only register a single flag, the one that is reveleant for the current
-// instructions. The others will be ignored.
-//
-// These can be x if opcode is not branch as well.
 wire alu_eq;
 wire alu_neq;
 wire alu_lt;
@@ -101,20 +97,13 @@ reg alu_ltu_rr;
 reg alu_ge_rr;
 reg alu_geu_rr;
 
-// TODO remove unused signals if possible, just need I and S type
 wire [31:0] I_immediate;
 wire [31:0] S_immediate;
-wire [31:0] B_immediate;
-wire [31:0] U_immediate;
-wire [31:0] J_immediate;
 
 inst_immediate_decode immediate_decode (
   .inst(instruction),
   .I_immediate(I_immediate),
-  .S_immediate(S_immediate),
-  .B_immediate(B_immediate),
-  .U_immediate(U_immediate),
-  .J_immediate(J_immediate)
+  .S_immediate(S_immediate)
 );
 
 alu alu(
@@ -161,13 +150,11 @@ always @(posedge(clk_i)) begin
     end else begin
         case(state)
         STATE_FETCH:
-            // TODO handle error, retry correctly
             if(ack_i) begin
                 state <= STATE_REG_READ;
                 instruction <= dat_i;
             end
         STATE_REG_READ: state <= STATE_EXECUTE;
-        // TODO maybe memory can't read in a single cycle ?
         STATE_EXECUTE: state <= STATE_MEMORY;
         STATE_MEMORY: state <= STATE_REG_WRITE;
         STATE_REG_WRITE: state <= STATE_FETCH;

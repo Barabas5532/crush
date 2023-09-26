@@ -18,8 +18,6 @@ module memory #(
     output reg rty_o
 );
 
-  // TODO use primitive for ICE40 SPRAM, or test that this is inferred
-  // correctly
   reg [31:0] memory[SIZE];
 
   wire[31:0] mask = {{8{sel_i[3]}}, {8{sel_i[2]}}, {8{sel_i[1]}}, {8{sel_i[0]}}};
