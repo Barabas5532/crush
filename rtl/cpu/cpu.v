@@ -99,12 +99,10 @@ reg alu_ge_rr;
 reg alu_geu_rr;
 
 wire [31:0] I_immediate;
-wire [31:0] S_immediate;
 
 inst_immediate_decode immediate_decode (
   .inst(instruction),
-  .I_immediate(I_immediate),
-  .S_immediate(S_immediate)
+  .I_immediate(I_immediate)
 );
 
 alu alu(
@@ -248,15 +246,15 @@ always @(*) begin
             adr_o <= alu_out_r & ~32'h0000_0003;
             case(funct3)
                 FUNCT3_SW: dat_o <= r_out2;
-                FUNCT3_SH: dat_o <= r_out2 << (16 * S_immediate[1]);
-                FUNCT3_SB: dat_o <= r_out2 << (8 * S_immediate[0 +: 2]);
+                FUNCT3_SH: dat_o <= r_out2 << (16 * alu_out_r[1]);
+                FUNCT3_SB: dat_o <= r_out2 << (8 * alu_out_r[0 +: 2]);
                 default: dat_o <= r_out2;
             endcase
             we_o <= 1;
             case(funct3)
                 FUNCT3_SW: sel_o <= 4'b1111;
-                FUNCT3_SH: sel_o <= 4'b0011 << (2 * S_immediate[1]);
-                FUNCT3_SB: sel_o <= 4'b0001 << S_immediate[0 +: 2];
+                FUNCT3_SH: sel_o <= 4'b0011 << (2 * alu_out_r[1]);
+                FUNCT3_SB: sel_o <= 4'b0001 << alu_out_r[0 +: 2];
                 default: sel_o <= 4'bxxxx;
             endcase
         end
