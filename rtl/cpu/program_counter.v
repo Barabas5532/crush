@@ -1,6 +1,6 @@
 `default_nettype none
 
-module program_counter #(parameter INITIAL_PC = 0) (
+module program_counter #(parameter integer INITIAL_PC) (
     input wire reset,
     input wire clk,
     input wire count,

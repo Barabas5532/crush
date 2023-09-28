@@ -1,0 +1,6 @@
+000 Fetch
+001 Read registers
+010 Execute
+011 Memory
+100 Write registers
+111 Reset

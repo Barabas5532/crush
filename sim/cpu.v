@@ -1,3 +1,8 @@
+/* This file implements a test that is able to execute programs stored on the
+ * host file system. It can be used along with RISCOF - The RISC-V
+ * Compatibility Framework.
+ */
+
 `default_nettype none
 
 module cpu_tb;
@@ -10,14 +15,14 @@ wire stb_o;
 wire cyc_o;
 wire[31:0] adr_o;
 wire[3:0] sel_o;
-reg[31:0] dat_i;
+wire[31:0] dat_i;
 wire[31:0] dat_o;
 wire we_o;
-reg ack_i = 0;
-reg err_i = 0;
-reg rty_i = 0;
+wor ack_i;
+wor err_i = 0;
+wor rty_i = 0;
 
-cpu dut (
+cpu #(.INITIAL_PC('h1000_0000)) dut (
     .clk_i(clk),
     .dat_i(dat_i),
     .dat_o(dat_o),
@@ -32,36 +37,71 @@ cpu dut (
     .we_o(we_o)
 );
 
+flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h20_0000)) flash_emulator (
+    .clk_i(clk),
+    .rst_i(reset),
+    .stb_i(stb_o),
+    .cyc_i(cyc_o),
+    .adr_i(adr_o),
+    .sel_i(sel_o),
+    .dat_i(dat_o),
+    .dat_o(dat_i),
+    .we_i(we_o),
+    .ack_o(ack_i),
+    .err_o(err_i),
+    .rty_o(rty_i)
+);
+
+memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
+    .clk_i(clk),
+    .rst_i(reset),
+    .stb_i(stb_o),
+    .cyc_i(cyc_o),
+    .adr_i(adr_o),
+    .sel_i(sel_o),
+    .dat_i(dat_o),
+    .dat_o(dat_i),
+    .we_i(we_o),
+    .ack_o(ack_i),
+    .err_o(err_i),
+    .rty_o(rty_i)
+);
+
+control #(
+    .BASE_ADDRESS('h3000_0000),
+    .MEMORY_BASE_ADDRESS('h2000_0000),
+    .MEMORY_SIZE('h4000)
+) control (
+    .clk_i(clk),
+    .rst_i(reset),
+    .stb_i(stb_o),
+    .cyc_i(cyc_o),
+    .adr_i(adr_o),
+    .sel_i(sel_o),
+    .dat_i(dat_o),
+    .dat_o(dat_i),
+    .we_i(we_o),
+    .ack_o(ack_i),
+    .err_o(err_i),
+    .rty_o(rty_i),
+    .memory(memory.memory)
+);
+
 always begin
     #0.5 clk = !clk;
 end
 
 initial begin
     $dumpfile("cpu.vcd");
-    $dumpvars;
+    $dumpvars(0);
 
-    #0.1
-    #1 reset = 0;
-    #1
+    #2.5 reset = 0;
+    #0.5
 
-    #1
-    assert(cyc_o == 1'b1);
-    assert(stb_o == 1'b1);
-    assert(sel_o == 4'b1111);
-    // ADDI r1, r0, 1
-    //            imm     rs1         funct3      rd          opcode
-    dat_i = {{12'h001}, {5'h0}, {FUNCT3_ADDI}, {5'h1}, OPCODE_OP_IMM};
-    ack_i = 1;
+    #200_000
 
-    #1
-    ack_i = 0;
-    dat_i = 32'hxxxx_xxxx;
-    assert(cyc_o == 0);
-    assert(stb_o == 0);
-
-    #4 assert(dut.registers.memory[1] == 1);
-
-    #10 $stop;
+    $error("Stop was not called within 200k clock cycles, stopping now");
+    $stop;
 end
 
 endmodule

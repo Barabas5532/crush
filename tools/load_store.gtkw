@@ -1,0 +1,94 @@
+[*]
+[*] GTKWave Analyzer v3.3.117 (w)1999-2023 BSI
+[*] Mon Sep 18 20:49:19 2023
+[*]
+[dumpfile] "/home/barabas/projects/hardware/risc-v/build/crush_0.0.1/sim_load_store-icarus/load_store.vcd"
+[dumpfile_mtime] "Mon Sep 18 20:44:28 2023"
+[dumpfile_size] 5159
+[savefile] "/home/barabas/projects/hardware/risc-v/tools/load_store.gtkw"
+[timestart] 0
+[size] 1910 1001
+[pos] -1 -1
+*-14.599666 18430 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] load_store.
+[treeopen] load_store.cpu.
+[treeopen] load_store.memory.
+[sst_width] 312
+[signals_width] 265
+[sst_expanded] 1
+[sst_vpaned_height] 296
+@28
+load_store.cpu.clk_i
+load_store.cpu.rst_i
+@200
+-
+@22
+load_store.cpu.pc[31:0]
+@2028
+^1 /home/barabas/projects/hardware/risc-v/tools/cpu_state_filter.txt
+load_store.cpu.state[2:0]
+@22
+load_store.cpu.instruction[31:0]
+load_store.cpu.immediate_decode.I_immediate[31:0]
+load_store.cpu.immediate_decode.S_immediate[31:0]
+@200
+-
+@22
+load_store.cpu.adr_o[31:0]
+load_store.cpu.dat_i[31:0]
+load_store.cpu.dat_o[31:0]
+load_store.cpu.sel_o[3:0]
+@28
+load_store.cpu.cyc_o
+load_store.cpu.stb_o
+load_store.cpu.we_o
+load_store.cpu.ack_i
+load_store.cpu.rty_i
+load_store.cpu.err_i
+@200
+-Memory
+@420
+load_store.memory.g_scope[0].i
+@22
+load_store.memory.g_scope[0].m[31:0]
+@420
+load_store.memory.g_scope[1].i
+@22
+load_store.memory.g_scope[1].m[31:0]
+@420
+load_store.memory.g_scope[2].i
+@22
+load_store.memory.g_scope[2].m[31:0]
+@420
+load_store.memory.g_scope[3].i
+@22
+load_store.memory.g_scope[3].m[31:0]
+@420
+load_store.memory.g_scope[4].i
+@22
+load_store.memory.g_scope[4].m[31:0]
+@420
+load_store.memory.g_scope[5].i
+@22
+load_store.memory.g_scope[5].m[31:0]
+@420
+load_store.memory.g_scope[6].i
+@22
+load_store.memory.g_scope[6].m[31:0]
+@420
+load_store.memory.g_scope[7].i
+@22
+load_store.memory.g_scope[7].m[31:0]
+@200
+-Registers
+@22
+load_store.cpu.registers.r_address1[4:0]
+load_store.cpu.registers.r_out1[31:0]
+load_store.cpu.registers.r_address2[4:0]
+load_store.cpu.registers.r_out2[31:0]
+load_store.cpu.registers.w_address[4:0]
+load_store.cpu.registers.w_data[31:0]
+@28
+load_store.cpu.registers.w_enable
+[pattern_trace] 1
+[pattern_trace] 0

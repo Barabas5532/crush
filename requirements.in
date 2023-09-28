@@ -1,0 +1,4 @@
+# No semantic versioning, use hardcoded version
+fusesoc==2.2.1
+# riscof supports semantic versioning as mentioned in their change log
+riscof~=1.25

@@ -6,7 +6,6 @@ reg clk = 1;
 reg reset = 1;
 reg stb_o = 0;
 reg cyc_o = 0;
-wire stall_i;
 reg[31:0] adr_o;
 reg[3:0] sel_o;
 wire[31:0] dat_i;
@@ -16,12 +15,11 @@ wire ack_i;
 wire err_i;
 wire rty_i;
 
-memory dut (
+memory #(.BASE_ADDRESS(0)) dut (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),
     .cyc_i(cyc_o),
-    .stall_o(stall_i),
     .adr_i(adr_o),
     .sel_i(sel_o),
     .dat_i(dat_o),
@@ -99,15 +97,6 @@ initial begin
     cyc_o = 0;
     #0
     assert(!ack_i);
-
-    #1
-    // 8-bit read from 0
-
-    // TODO
-    // 8-bit read from 0
-    // 8-bit read from 1
-    // 8-bit read from 2
-    // 8-bit read from 3
 
     #1
     $stop;
