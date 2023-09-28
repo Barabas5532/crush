@@ -15,7 +15,7 @@ wire ack_i;
 wire err_i;
 wire rty_i;
 
-memory dut (
+memory #(.BASE_ADDRESS(0)) dut (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),

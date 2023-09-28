@@ -28,6 +28,7 @@ STATE_RESET = 3'd7;
 
 reg[2:0] state;
 reg[31:0] instruction;
+reg[31:0] read_data;
 wire [6:0] opcode = instruction[6:0];
 wire [2:0] funct3 = instruction[14:12];
 
@@ -156,7 +157,11 @@ always @(posedge(clk_i)) begin
             end
         STATE_REG_READ: state <= STATE_EXECUTE;
         STATE_EXECUTE: state <= STATE_MEMORY;
-        STATE_MEMORY: state <= STATE_REG_WRITE;
+        STATE_MEMORY:
+            if(ack_i | (!mem_r_en & !mem_w_en)) begin
+                state <= STATE_REG_WRITE;
+                read_data <= dat_i;
+            end
         STATE_REG_WRITE: state <= STATE_FETCH;
         default: state <= STATE_FETCH;
         endcase
@@ -262,11 +267,11 @@ always @(*) begin
         case(opcode)
             OPCODE_LOAD: begin
                 case(funct3)
-                    FUNCT3_LW: w_data <= dat_i;
-                    FUNCT3_LB: w_data <= $signed(dat_i[8 * I_immediate[1:0] +: 8]);
-                    FUNCT3_LBU: w_data <= dat_i[8 * I_immediate[1:0] +: 8];
-                    FUNCT3_LH: w_data <= $signed(dat_i[16 * I_immediate[1] +: 16]);
-                    FUNCT3_LHU: w_data <= dat_i[16 * I_immediate[1] +: 16];
+                    FUNCT3_LW: w_data <= read_data;
+                    FUNCT3_LB: w_data <= $signed(read_data[8 * I_immediate[1:0] +: 8]);
+                    FUNCT3_LBU: w_data <= read_data[8 * I_immediate[1:0] +: 8];
+                    FUNCT3_LH: w_data <= $signed(read_data[16 * I_immediate[1] +: 16]);
+                    FUNCT3_LHU: w_data <= read_data[16 * I_immediate[1] +: 16];
                     default: w_data <= 32'hxxxx_xxxx;
                 endcase
             end
