@@ -55,7 +55,7 @@ targets:
       icarus:
         timescale: "1s/100ms"
         iverilog_options:
-          - "-g2005-sv"
+          - "-g2012"
           - "-gassertions"
 
   lint:
