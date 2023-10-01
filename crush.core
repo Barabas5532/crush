@@ -21,7 +21,7 @@ filesets:
 
   pcf:
     files:
-      - data/icebreaker.pcf: {file_type: pcf}
+      - data/icebreaker.pcf: {file_type: PCF}
 
   sim_inst_immediate_decode:
     files:
@@ -60,6 +60,8 @@ targets:
     toplevel: crush
     default_tool: icestorm
     tools:
+      icestorm:
+        nextpnr_options : [ "--up5k", "--package", "sg48" ]
       icarus:
         timescale: "1s/100ms"
         iverilog_options:

@@ -3,7 +3,7 @@
 module crush (
     input wire CLK,
     input wire BTN_N,
-    output wire LED0
+    output wire LED1
 );
 
 wire rst_i = !BTN_N;
@@ -11,7 +11,7 @@ wire clk = CLK;
 
 // TODO temporary so that the design is not optimised away. Create GPIO
 // module.
-assign LED0 = dat_i[0];
+assign LED1 = adr_o[0];
 
 wire stb_o;
 wire cyc_o;
