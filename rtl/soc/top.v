@@ -3,11 +3,16 @@
 module crush #(
 ) (
     input wire CLK,
-    input wire BTN_N
+    input wire BTN_N,
+    output wire LED0
 );
 
 wire rst_i = !BTN_N;
 wire clk = CLK;
+
+// TODO temporary so that the design is not optimised away. Create GPIO
+// module.
+assign LED0 = dat_i[0];
 
 wire stb_o;
 wire cyc_o;
@@ -17,8 +22,8 @@ wire[31:0] dat_i;
 wire[31:0] dat_o;
 wire we_o;
 wire ack_i;
-wire err_i = 0;
-wire rty_i = 0;
+wor err_i = 0;
+wor rty_i = 0;
 
 cpu #(.INITIAL_PC('h1000_0000)) dut (
     .clk_i(clk),

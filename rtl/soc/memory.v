@@ -20,13 +20,12 @@ module memory #(
 
   reg [31:0] memory[SIZE];
 
-  wire[31:0] mask = {{8{sel_i[3]}}, {8{sel_i[2]}}, {8{sel_i[1]}}, {8{sel_i[0]}}};
-  wire[31:0] value = memory[memory_address];
+  wire [31:0] mask = {{8{sel_i[3]}}, {8{sel_i[2]}}, {8{sel_i[1]}}, {8{sel_i[0]}}};
+  wire [31:0] value = memory[memory_address];
 
   wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + SIZE);
 
   // Individal signals so the memory can be observed in VCD output
-  /*
   generate
       genvar i;
       for(i = 0; i < SIZE && i < 8; i++) begin : g_scope
@@ -34,37 +33,25 @@ module memory #(
           assign m = memory[i];
       end
   endgenerate
-  */
 
-  task reset_memory();
-        reg[31:0] i;
-        for(i = 0; i < SIZE; i++) begin
-            memory[i] = 32'hxxxx_xxxx;
-        end
-  endtask
-
+  wire [31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
   always @(posedge clk_i) begin
-      if(rst_i) reset_memory();
-  end
+      ack_o <= 0;
+      err_o <= 0;
+      rty_o <= 0;
+      dat_o <= 32'hzzzz_zzzz;
 
-  wire[31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
-  always @(posedge clk_i) begin
-    ack_o <= 0;
-    err_o <= 0;
-    rty_o <= 0;
-    dat_o <= 32'hzzzz_zzzz;
+      if (stb_i & cyc_i & !ack_o & addressed) begin
+        ack_o <= 1;
+      end
 
-    if (stb_i & cyc_i & !ack_o & addressed) begin
-      ack_o <= 1;
-    end
+      if (stb_i & cyc_i & addressed & we_i) begin
+        memory[memory_address] <= (value & ~mask) | (dat_i & mask);
+      end
 
-    if (stb_i & cyc_i & addressed & we_i) begin
-     memory[memory_address] <= (value & ~mask) | (dat_i & mask);
-    end
-
-    if (stb_i & cyc_i & addressed & !we_i) begin
-      dat_o <= memory[memory_address];
-    end
+      if (stb_i & cyc_i & addressed & !we_i) begin
+        dat_o <= memory[memory_address];
+      end
   end
 
 endmodule
