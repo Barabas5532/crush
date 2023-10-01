@@ -1,7 +1,6 @@
 `default_nettype none
 
-module crush #(
-) (
+module crush (
     input wire CLK,
     input wire BTN_N,
     output wire LED0
