@@ -1,7 +1,7 @@
 `default_nettype none
 
 module memory #(
-    parameter integer BASE_ADDRESS,
+    parameter integer BASE_ADDRESS = 0,
     parameter integer SIZE = 16384
 ) (
     input wire clk_i,
@@ -26,21 +26,25 @@ module memory #(
   wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + SIZE);
 
   // Individal signals so the memory can be observed in VCD output
-  genvar i;
+  /*
   generate
+      genvar i;
       for(i = 0; i < SIZE && i < 8; i++) begin : g_scope
           wire[31:0] m;
           assign m = memory[i];
       end
   endgenerate
+  */
 
-  always @(posedge clk_i) begin
-      integer i;
-      if(rst_i) begin
+  task reset_memory();
+        reg[31:0] i;
         for(i = 0; i < SIZE; i++) begin
             memory[i] = 32'hxxxx_xxxx;
         end
-      end
+  endtask
+
+  always @(posedge clk_i) begin
+      if(rst_i) reset_memory();
   end
 
   wire[31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;

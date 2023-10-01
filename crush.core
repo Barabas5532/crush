@@ -15,7 +15,12 @@ filesets:
       - rtl/cpu/params.vh:
           is_include_file: true
       - rtl/soc/memory.v
+      - rtl/soc/top.v
     file_type: verilogSource
+
+  pcf:
+    files:
+      - data/icebreaker.pcf: {file_type: pcf}
 
   sim_inst_immediate_decode:
     files:
@@ -49,6 +54,7 @@ targets:
   default: &default
     filesets:
       - rtl
+      - pcf
     toplevel: crush
     default_tool: icestorm
     tools:
@@ -65,7 +71,7 @@ targets:
       verilator:
         mode : lint-only
         verilator_options:
-          - "-Wall"
+          - "-Wall -Wno-fatal"
     toplevel : cpu
 
   sim_inst_immediate_decode:

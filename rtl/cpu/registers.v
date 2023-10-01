@@ -48,12 +48,16 @@ wire[31:0] x29 = memory[29];
 wire[31:0] x30 = memory[30];
 wire[31:0] x31 = memory[31];
 
-initial begin
+  task reset_memory();
+    integer i;
+    for (i = 0; i < 32; i++) begin
+      memory[i] = 0;
+    end
+  endtask
 
-  for(int i=0; i<32; i++) begin
-    memory[i] = 0;
+  initial begin
+      reset_memory();
   end
-end
 
 always @(posedge clk) begin
     r_out1 = memory[r_address1];

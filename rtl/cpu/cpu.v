@@ -1,7 +1,7 @@
 `default_nettype none
 
 module cpu #(
-    parameter integer INITIAL_PC
+    parameter integer INITIAL_PC = 0
 ) (
     input wire clk_i,
     input wire[31:0] dat_i,

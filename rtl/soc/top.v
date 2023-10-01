@@ -2,9 +2,12 @@
 
 module crush #(
 ) (
-    input wire clk_i,
-    input wire rst_i
+    input wire CLK,
+    input wire BTN_N
 );
+
+wire rst_i = !BTN_N;
+wire clk = CLK;
 
 wire stb_o;
 wire cyc_o;
@@ -13,15 +16,15 @@ wire[3:0] sel_o;
 wire[31:0] dat_i;
 wire[31:0] dat_o;
 wire we_o;
-wor ack_i;
-wor err_i = 0;
-wor rty_i = 0;
+wire ack_i;
+wire err_i = 0;
+wire rty_i = 0;
 
 cpu #(.INITIAL_PC('h1000_0000)) dut (
     .clk_i(clk),
     .dat_i(dat_i),
     .dat_o(dat_o),
-    .rst_i(reset),
+    .rst_i(rst_i),
     .ack_i(ack_i),
     .err_i(err_i),
     .rty_i(rty_i),
@@ -32,9 +35,9 @@ cpu #(.INITIAL_PC('h1000_0000)) dut (
     .we_o(we_o)
 );
 
-memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
+memory #(.BASE_ADDRESS('h1000_0000), .SIZE('h4000)) memory (
     .clk_i(clk),
-    .rst_i(reset),
+    .rst_i(rst_i),
     .stb_i(stb_o),
     .cyc_i(cyc_o),
     .adr_i(adr_o),
