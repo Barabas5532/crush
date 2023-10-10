@@ -76,6 +76,7 @@ reg[31:0] alu_op_b;
 wire[31:0] alu_out;
 reg[31:0] alu_out_r;
 reg[31:0] alu_out_rr;
+reg[31:0] alu_out_rrr;
 
 wire alu_eq;
 wire alu_neq;
@@ -115,6 +116,7 @@ alu alu(
 always @(posedge(clk_i)) begin
     alu_out_r <= alu_out;
     alu_out_rr <= alu_out_r;
+    alu_out_rrr <= alu_out_rr;
 
     alu_eq_r <= alu_eq;
     alu_eq_rr <= alu_eq_r;
@@ -259,10 +261,10 @@ always @(*) begin
             OPCODE_LOAD: begin
                 case(funct3)
                     FUNCT3_LW: w_data <= read_data;
-                    FUNCT3_LB: w_data <= $signed(read_data[8 * alu_out_rr[1:0] +: 8]);
-                    FUNCT3_LBU: w_data <= read_data[8 * alu_out_rr[1:0] +: 8];
-                    FUNCT3_LH: w_data <= $signed(read_data[16 * alu_out_rr[1] +: 16]);
-                    FUNCT3_LHU: w_data <= read_data[16 * alu_out_rr[1] +: 16];
+                    FUNCT3_LB: w_data <= $signed(read_data[8 * alu_out_rrr[1:0] +: 8]);
+                    FUNCT3_LBU: w_data <= read_data[8 * alu_out_rrr[1:0] +: 8];
+                    FUNCT3_LH: w_data <= $signed(read_data[16 * alu_out_rrr[1] +: 16]);
+                    FUNCT3_LHU: w_data <= read_data[16 * alu_out_rrr[1] +: 16];
                     default: w_data <= 32'hxxxx_xxxx;
                 endcase
             end
