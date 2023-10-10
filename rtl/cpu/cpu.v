@@ -26,6 +26,7 @@ STATE_MEMORY = 3'd3,
 STATE_REG_WRITE = 3'd4,
 STATE_RESET = 3'd7;
 
+reg state_change;
 reg[2:0] state;
 reg[31:0] instruction;
 reg[31:0] read_data;
@@ -76,7 +77,6 @@ reg[31:0] alu_op_b;
 wire[31:0] alu_out;
 reg[31:0] alu_out_r;
 reg[31:0] alu_out_rr;
-reg[31:0] alu_out_rrr;
 
 wire alu_eq;
 wire alu_neq;
@@ -114,30 +114,33 @@ alu alu(
 );
 
 always @(posedge(clk_i)) begin
-    alu_out_r <= alu_out;
-    alu_out_rr <= alu_out_r;
-    alu_out_rrr <= alu_out_rr;
+    if(state_change) begin
+        alu_out_r <= alu_out;
+        alu_out_rr <= alu_out_r;
 
-    alu_eq_r <= alu_eq;
-    alu_eq_rr <= alu_eq_r;
+        alu_eq_r <= alu_eq;
+        alu_eq_rr <= alu_eq_r;
 
-    alu_neq_r <= alu_neq;
-    alu_neq_rr <= alu_neq_r;
+        alu_neq_r <= alu_neq;
+        alu_neq_rr <= alu_neq_r;
 
-    alu_lt_r <= alu_lt;
-    alu_lt_rr <= alu_lt_r;
+        alu_lt_r <= alu_lt;
+        alu_lt_rr <= alu_lt_r;
 
-    alu_ltu_r <= alu_ltu;
-    alu_ltu_rr <= alu_ltu_r;
+        alu_ltu_r <= alu_ltu;
+        alu_ltu_rr <= alu_ltu_r;
 
-    alu_ge_r <= alu_ge;
-    alu_ge_rr <= alu_ge_r;
+        alu_ge_r <= alu_ge;
+        alu_ge_rr <= alu_ge_r;
 
-    alu_geu_r <= alu_geu;
-    alu_geu_rr <= alu_geu_r;
+        alu_geu_r <= alu_geu;
+        alu_geu_rr <= alu_geu_r;
+    end
 end
 
 always @(posedge(clk_i)) begin
+    state_change <= 1;
+
     if(rst_i) begin
         state <= STATE_RESET;
         instruction <= 32'hxxxx_xxxx;
@@ -154,7 +157,7 @@ always @(posedge(clk_i)) begin
             if(ack_i | (!mem_r_en & !mem_w_en)) begin
                 state <= STATE_REG_WRITE;
                 read_data <= dat_i;
-            end
+            end else state_change <= 0;
         STATE_REG_WRITE: state <= STATE_FETCH;
         default: state <= STATE_FETCH;
         endcase
@@ -261,10 +264,10 @@ always @(*) begin
             OPCODE_LOAD: begin
                 case(funct3)
                     FUNCT3_LW: w_data <= read_data;
-                    FUNCT3_LB: w_data <= $signed(read_data[8 * alu_out_rrr[1:0] +: 8]);
-                    FUNCT3_LBU: w_data <= read_data[8 * alu_out_rrr[1:0] +: 8];
-                    FUNCT3_LH: w_data <= $signed(read_data[16 * alu_out_rrr[1] +: 16]);
-                    FUNCT3_LHU: w_data <= read_data[16 * alu_out_rrr[1] +: 16];
+                    FUNCT3_LB: w_data <= $signed(read_data[8 * alu_out_rr[1:0] +: 8]);
+                    FUNCT3_LBU: w_data <= read_data[8 * alu_out_rr[1:0] +: 8];
+                    FUNCT3_LH: w_data <= $signed(read_data[16 * alu_out_rr[1] +: 16]);
+                    FUNCT3_LHU: w_data <= read_data[16 * alu_out_rr[1] +: 16];
                     default: w_data <= 32'hxxxx_xxxx;
                 endcase
             end
