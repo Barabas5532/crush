@@ -9,6 +9,7 @@ import string
 from string import Template
 import sys
 import yaml
+from multiprocessing import Pool
 
 import riscof.utils as utils
 import riscof.constants as constants
@@ -50,48 +51,43 @@ class crush(pluginTemplate):
         utils.shellCommand(build_cmd).run(cwd=os.path.join(os.getcwd(), '../..'))
 
     def runTests(self, test_list):
-        # we will iterate over each entry in the testList. Each entry node will
-        # be referred to by the variable testname.
-        for test_name in test_list:
-            logger.info(f'Running Test: {test_name} on DUT')
+        logger.info(f'Running {len(test_list)} tests in parallel')
 
-            test_entry = test_list[test_name]
-            test_source_path = test_entry['test_path']
-            working_directory = test_entry['work_dir']
+        with Pool(len(test_list)) as p:
+            p.map(self.doRunTest, [test_list[x] for x in test_list])
 
-            logger.info(f'Working in: {working_directory}')
-            # name of the signature file as per requirement of RISCOF. RISCOF
-            # expects the signature to be named as DUT-<dut-name>.signature. The
-            # below variable creates an absolute path of signature file.
-            sig_file = os.path.join(working_directory, self.name[:-1] + ".signature")
+    def doRunTest(self, test_entry):
+        test_source_path = test_entry['test_path']
+        working_directory = test_entry['work_dir']
 
-            compile_macros = ' -D' + " -D".join(test_entry['macros'])
+        # name of the signature file as per requirement of RISCOF. RISCOF
+        # expects the signature to be named as DUT-<dut-name>.signature. The
+        # below variable creates an absolute path of signature file.
+        sig_file = os.path.join(working_directory, self.name[:-1] + ".signature")
 
-            logger.info(f'Compiling test: {test_source_path}')
-            cmd = ('riscv32-unknown-elf-gcc '
-                    '-march=rv32i '
-                    '-mabi=ilp32 '
-                    '-static '
-                    '-mcmodel=medany '
-                    '-fvisibility=hidden '
-                    '-nostdlib '
-                    '-nostartfiles '
-                    '-g '
-                    f'-T {os.path.join(os.getcwd(), "crush/env/link.ld")} '
-                    f'-I {os.path.join(os.getcwd(), "crush/env/")} '
-                    f'-I {self.archtest_env} '
-                    f'{compile_macros} '
-                    '-o test.elf ' +
-                    test_source_path
-                  )
-            logger.info(f'Compile test: {cmd}')
-            utils.shellCommand(cmd).run(cwd=working_directory)
+        compile_macros = ' -D' + " -D".join(test_entry['macros'])
 
-            binary_path = os.path.join(working_directory, 'test.bin')
-            binary_cmd = f'riscv32-unknown-elf-objcopy -O binary test.elf {binary_path}'
-            logger.info('Convert to binary: ' + binary_cmd)
-            utils.shellCommand(binary_cmd).run(cwd=working_directory)
+        cmd = ('riscv32-unknown-elf-gcc '
+                '-march=rv32i '
+                '-mabi=ilp32 '
+                '-static '
+                '-mcmodel=medany '
+                '-fvisibility=hidden '
+                '-nostdlib '
+                '-nostartfiles '
+                '-g '
+                f'-T {os.path.join(os.getcwd(), "crush/env/link.ld")} '
+                f'-I {os.path.join(os.getcwd(), "crush/env/")} '
+                f'-I {self.archtest_env} '
+                f'{compile_macros} '
+                '-o test.elf ' +
+                test_source_path
+              )
+        utils.shellCommand(cmd).run(cwd=working_directory)
 
-            sim_cmd = f'vvp -n {self.dut_exe} +SIGNATURE_PATH={sig_file} +BINARY_PATH={binary_path}'
-            logger.info(f'Executing simulator: {sim_cmd}')
-            utils.shellCommand(sim_cmd).run(cwd=working_directory)
+        binary_path = os.path.join(working_directory, 'test.bin')
+        binary_cmd = f'riscv32-unknown-elf-objcopy -O binary test.elf {binary_path}'
+        utils.shellCommand(binary_cmd).run(cwd=working_directory)
+
+        sim_cmd = f'vvp -n {self.dut_exe} +SIGNATURE_PATH={sig_file} +BINARY_PATH={binary_path}'
+        utils.shellCommand(sim_cmd).run(cwd=working_directory)
