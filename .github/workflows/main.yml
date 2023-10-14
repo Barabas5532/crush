@@ -1,1 +1,30 @@
+# Main CI script
+#
+# - Run compliance tests
+# - Run unit tests
+# - Run synthesis with 1 minute timeout
+# - Lint: Some kind of lint through fusesoc
 
+
+on: [push]
+
+jobs:
+  main:
+    # TODO docker
+    runs-on: ubuntu-22.04
+    container:
+      image: barabas5532/crush-ci:1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Set up python environment
+        run: |
+          apt-get install -y python3-venv
+          python -m venv venv
+          . .venv/bin/activate
+          python -m pip install -r requirements.txt
+      - name: Run RISCOF
+        run: |
+          script/init.sh
+          script/compliance.sh
