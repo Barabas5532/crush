@@ -24,6 +24,10 @@ jobs:
           python -m venv .venv
           . .venv/bin/activate
           python -m pip install -r requirements.txt
+          # Every step runs in its own shell. Activating the venv really just
+          # modifies the path. Persist the modified path, so that other steps
+          # also use the venv.
+          echo PATH=$PATH >> $GITHUB_ENV
       - name: Run RISCOF
         run: |
           script/init.sh
