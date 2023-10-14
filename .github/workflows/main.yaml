@@ -4,35 +4,23 @@
 # - Run unit tests
 # - Run synthesis with 1 minute timeout
 # - Lint: Some kind of lint through fusesoc
-#
-# Single docker image to use for all these. It needs to have the reference
-# simulator installed. Assume we can't run priviliged docker in CI for the
-# existing config.
-#
-# OR
-#
-# A machine runner installing dependencies at runtime with some caching to make
-# it fast.
-#
-# What needs to be installed?
-# - yosys
-# - nextpnr
-# - iverilog
-# - FuseSoC and RISCOF through pip, altough RISCOF has binary dependencies not
-#   included with the pip package
-# - risc-v toolchain
-#
-#
-# Yosys:
-# - In debian 12, the available version is 0.26
-#   (https://github.com/YosysHQ/yosys/releases/tag/yosys-0.26). This is from Feb
-#   2023.
-# - Ubuntu even more out of date than debian
-# - README recommends:
-#   https://github.com/YosysHQ/oss-cad-suite-build#installation. This should
-#   come with all the dependencies, and nextpnr too. Also includes a lot of stuff
-#   that is not needed, and total archive is 500MB.
-#
-# RISC-V GCC:
-# - debian 12 includes: gcc-riscv64-unknown-elf (12.2.0-14+11+b1) GCC cross
-#   compiler for Risc-V processors
+
+
+on: [push]
+
+jobs:
+  main:
+    # TODO docker
+    runs-on: ubuntu-22.04
+    container:
+      image: barabas5532/crush-ci:1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Set up python environment
+        run: |
+          apt-get install python3-venv
+          python -m venv venv
+          . .venv/bin/activate
+          python -m pip install -r requirements.txt
