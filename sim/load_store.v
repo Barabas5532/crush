@@ -16,13 +16,13 @@ wire[3:0] sel_o;
 wire[31:0] dat_i;
 wire[31:0] dat_o;
 wire we_o;
-wor ack_i;
-wor err_i = 0;
-wor rty_i = 0;
+wire ack_i;
+wire err_i = 0;
+wire rty_i = 0;
 
 string test_case_name = "";
 
-reg flash_ack_o;
+reg flash_ack_o = 0;
 reg[31:0] flash_dat_o = 32'hzzzz_zzzz;
 
 cpu #(.INITIAL_PC('h1000_0000)) cpu (
@@ -40,6 +40,7 @@ cpu #(.INITIAL_PC('h1000_0000)) cpu (
     .we_o(we_o)
 );
 
+wire memory_ack_o;
 memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
     .clk_i(clk),
     .rst_i(reset),
@@ -50,12 +51,12 @@ memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
     .dat_i(dat_o),
     .dat_o(dat_i),
     .we_i(we_o),
-    .ack_o(ack_i),
+    .ack_o(memory_ack_o),
     .err_o(err_i),
     .rty_o(rty_i)
 );
 
-assign ack_i = flash_ack_o;
+assign ack_i = flash_ack_o | memory_ack_o;
 assign dat_i = flash_dat_o;
 
 always begin
@@ -78,7 +79,7 @@ task static LW(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
     flash_ack_o = 1;
     flash_dat_o = {{offset}, {rs1}, {FUNCT3_LW}, {rd}, {OPCODE_LOAD}};
     @(posedge clk);
-    flash_ack_o = 1'bz;
+    flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
 endtask
 
@@ -89,7 +90,7 @@ task static LB(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
     flash_ack_o = 1;
     flash_dat_o = {{offset}, {rs1}, {FUNCT3_LB}, {rd}, {OPCODE_LOAD}};
     @(posedge clk);
-    flash_ack_o = 1'bz;
+    flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
 endtask
 
@@ -100,7 +101,7 @@ task static LBU(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
     flash_ack_o = 1;
     flash_dat_o = {{offset}, {rs1}, {FUNCT3_LBU}, {rd}, {OPCODE_LOAD}};
     @(posedge clk);
-    flash_ack_o = 1'bz;
+    flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
 endtask
 
@@ -111,7 +112,7 @@ task static LH(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
     flash_ack_o = 1;
     flash_dat_o = {{offset}, {rs1}, {FUNCT3_LH}, {rd}, {OPCODE_LOAD}};
     @(posedge clk);
-    flash_ack_o = 1'bz;
+    flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
 endtask
 
@@ -122,7 +123,7 @@ task static LHU(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
     flash_ack_o = 1;
     flash_dat_o = {{offset}, {rs1}, {FUNCT3_LHU}, {rd}, {OPCODE_LOAD}};
     @(posedge clk);
-    flash_ack_o = 1'bz;
+    flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
 endtask
 
@@ -133,7 +134,7 @@ task static SW(input reg[4:0] rs2, input reg[4:0] rs1, input reg[11:0] offset);
     flash_ack_o = 1;
     flash_dat_o = {{offset[11:5]}, {rs2}, {rs1}, {FUNCT3_SW}, {offset[4:0]}, {OPCODE_STORE}};
     @(posedge clk);
-    flash_ack_o = 1'bz;
+    flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
 endtask
 
@@ -144,7 +145,7 @@ task static SH(input reg[4:0] rs2, input reg[4:0] rs1, input reg[11:0] offset);
     flash_ack_o = 1;
     flash_dat_o = {{offset[11:5]}, {rs2}, {rs1}, {FUNCT3_SH}, {offset[4:0]}, {OPCODE_STORE}};
     @(posedge clk);
-    flash_ack_o = 1'bz;
+    flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
 endtask
 
@@ -155,7 +156,7 @@ task static SB(input reg[4:0] rs2, input reg[4:0] rs1, input reg[11:0] offset);
     flash_ack_o = 1;
     flash_dat_o = {{offset[11:5]}, {rs2}, {rs1}, {FUNCT3_SB}, {offset[4:0]}, {OPCODE_STORE}};
     @(posedge clk);
-    flash_ack_o = 1'bz;
+    flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
 endtask
 
