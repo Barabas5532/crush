@@ -16,9 +16,9 @@ wire[3:0] sel_o;
 wire[31:0] dat_i;
 wire[31:0] dat_o;
 wire we_o;
-wor ack_i;
-wor err_i = 0;
-wor rty_i = 0;
+wire ack_i;
+wire err_i = 0;
+wire rty_i = 0;
 
 string test_case_name = "";
 

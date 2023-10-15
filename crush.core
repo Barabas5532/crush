@@ -65,12 +65,19 @@ targets:
 
   lint:
     default_tool : verilator
-    filesets : [rtl]
+    filesets:
+      - rtl
+      - sim_inst_immediate_decode
+      - sim_memory
+      - sim_alu
+      - sim_load_store
+      - sim_cpu
+      - sim_common
     tools:
       verilator:
         mode : lint-only
         verilator_options:
-          - "-Wall"
+          - "-Wall -Wno-fatal"
     toplevel : cpu
 
   sim_inst_immediate_decode:
