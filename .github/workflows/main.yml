@@ -37,6 +37,7 @@ jobs:
           # also use the venv.
           echo PATH=$PATH >> $GITHUB_ENV
       - name: Run test
+        timeout-minutes: 1
         run: |
           script/init.sh
           fusesoc run --target ${{ matrix.target }} crush
@@ -81,6 +82,7 @@ jobs:
           # also use the venv.
           echo PATH=$PATH >> $GITHUB_ENV
       - name: Run RISCOF
+        timeout-minutes: 5
         run: |
           script/init.sh
           script/compliance.sh
