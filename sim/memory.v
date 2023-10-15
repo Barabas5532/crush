@@ -1,5 +1,7 @@
 `default_nettype none
 
+`include "fatal_assert.vh"
+
 module memory_tb;
 
 reg clk = 1;
@@ -50,7 +52,7 @@ initial begin
     // 32-bit write to 0
     // Based on Wishbone B4 3.2.3 Classic standard SINGLE WRITE Cycle
     // Clock edge 0
-    assert(!ack_i);
+    `fatal_assert(!ack_i);
 
     adr_o = 32'b0;
     dat_o = 32'h01234567;
@@ -62,14 +64,14 @@ initial begin
 
     #1
     // Clock edge 1
-    assert(ack_i);
+    `fatal_assert(ack_i);
 
     #1
     // Clock edge 2
     stb_o = 0;
     cyc_o = 0;
     #0
-    assert(!ack_i);
+    `fatal_assert(!ack_i);
 
     adr_o = 32'hxxxxxxxx;
     dat_o = 32'hxxxxxxxx;
@@ -79,7 +81,7 @@ initial begin
     #1
     // 32-bit read from 0
     // Based on Wishbone B4 3.2.1 Classic standard SINGLE READ Cycle
-    assert(!ack_i);
+    `fatal_assert(!ack_i);
     adr_o = 0;
     we_o = 0;
     sel_o = 4'b1111;
@@ -88,15 +90,15 @@ initial begin
 
     // Clock edge 0
     #1
-    assert(ack_i);
-    assert(dat_i == 32'h01234567);
+    `fatal_assert(ack_i);
+    `fatal_assert(dat_i == 32'h01234567);
 
     #1
     // Clock edge 2
     stb_o = 0;
     cyc_o = 0;
     #0
-    assert(!ack_i);
+    `fatal_assert(!ack_i);
 
     #1
     $stop;

@@ -46,8 +46,9 @@ filesets:
 
   sim_common:
     files:
-     - sim/test_util.sv
-    file_type: systemVerilogSource
+      - sim/fatal_assert.vh:
+          is_include_file: true
+    file_type: verilogSource
 
 targets:
   default: &default
@@ -75,6 +76,7 @@ targets:
   sim_inst_immediate_decode:
     <<: *default
     filesets_append:
+      - sim_common
       - sim_inst_immediate_decode
     toplevel: inst_immediate_decode_tb
     default_tool: icarus
@@ -82,6 +84,7 @@ targets:
   sim_memory:
     <<: *default
     filesets_append:
+      - sim_common
       - sim_memory
     toplevel: memory_tb
     default_tool: icarus
@@ -97,6 +100,7 @@ targets:
   sim_load_store:
     <<: *default
     filesets_append:
+      - sim_common
       - sim_load_store
     toplevel: load_store
     default_tool: icarus
