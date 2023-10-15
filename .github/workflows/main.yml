@@ -1,7 +1,6 @@
 # Main CI script
 #
 # TODO
-# - Run unit tests
 # - Run synthesis with 1 minute timeout
 # - Lint: Some kind of lint through fusesoc
 
@@ -41,7 +40,7 @@ jobs:
       - name: Run test
         run: |
           script/init.sh
-          fusesoc run --target ${{ matrix.target }}
+          fusesoc run --target ${{ matrix.target }} crush
   riscof-test:
     runs-on: ubuntu-22.04
     container:
