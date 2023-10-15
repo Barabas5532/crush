@@ -5,8 +5,10 @@
 # - Run synthesis with 1 minute timeout
 # - Lint: Some kind of lint through fusesoc
 
-
-on: [push]
+on:
+  pull_request:
+  push:
+    branches: [ master ]
 
 jobs:
   verilog-test:
@@ -39,7 +41,7 @@ jobs:
       - name: Run test
         run: |
           script/init.sh
-          riscof run --target ${{ matrix.target }}
+          fusesoc run --target ${{ matrix.target }}
   riscof-test:
     runs-on: ubuntu-22.04
     container:
