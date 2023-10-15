@@ -2,7 +2,6 @@
 #
 # TODO
 # - Run synthesis with 1 minute timeout
-# - Lint: Some kind of lint through fusesoc
 
 on:
   pull_request:
