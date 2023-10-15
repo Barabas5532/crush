@@ -48,7 +48,7 @@ module memory #(
     ack_o <= 0;
     err_o <= 0;
     rty_o <= 0;
-    dat_o <= 32'hzzzz_zzzz;
+    dat_o <= 32'h0000_0000;
 
     if (stb_i & cyc_i & !ack_o & addressed) begin
       ack_o <= 1;

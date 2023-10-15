@@ -63,6 +63,9 @@ targets:
           - "-g2012"
           - "-gassertions"
 
+  # TODO need a separate lint for each top level, i.e. for each testbench plus
+  #      the synthesisable part? This setup is probably not checking any of the
+  #      simluation code.
   lint:
     default_tool : verilator
     filesets:
@@ -77,8 +80,8 @@ targets:
       verilator:
         mode : lint-only
         verilator_options:
-          - "-Wall -Wno-fatal"
-    toplevel : cpu
+          - "-Wall -Wno-fatal -timing"
+    toplevel: cpu_tb
 
   sim_inst_immediate_decode:
     <<: *default
