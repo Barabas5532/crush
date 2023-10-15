@@ -81,6 +81,7 @@ task static LW(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
+    #0;
 endtask
 
 task static LB(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
@@ -92,6 +93,7 @@ task static LB(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
+    #0;
 endtask
 
 task static LBU(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
@@ -103,6 +105,7 @@ task static LBU(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
+    #0;
 endtask
 
 task static LH(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
@@ -114,6 +117,7 @@ task static LH(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
+    #0;
 endtask
 
 task static LHU(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
@@ -125,6 +129,7 @@ task static LHU(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
+    #0;
 endtask
 
 task static SW(input reg[4:0] rs2, input reg[4:0] rs1, input reg[11:0] offset);
@@ -136,6 +141,7 @@ task static SW(input reg[4:0] rs2, input reg[4:0] rs1, input reg[11:0] offset);
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
+    #0;
 endtask
 
 task static SH(input reg[4:0] rs2, input reg[4:0] rs1, input reg[11:0] offset);
@@ -147,6 +153,7 @@ task static SH(input reg[4:0] rs2, input reg[4:0] rs1, input reg[11:0] offset);
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
+    #0;
 endtask
 
 task static SB(input reg[4:0] rs2, input reg[4:0] rs1, input reg[11:0] offset);
@@ -158,6 +165,7 @@ task static SB(input reg[4:0] rs2, input reg[4:0] rs1, input reg[11:0] offset);
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
+    #0;
 endtask
 
 initial begin
