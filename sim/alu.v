@@ -1,5 +1,7 @@
 `default_nettype none
 
+import test_util::fatal_assert;
+
 module alu_tb ();
 
   `include "params.vh"
@@ -464,6 +466,7 @@ module alu_tb ();
     assert (out == 32'h0000_0000);
     assert (!geu);
 
+    fatal_assert (0);
     $stop;
   end
 

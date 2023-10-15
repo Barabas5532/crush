@@ -44,6 +44,10 @@ filesets:
      - sim/flash_emulator.v
     file_type: systemVerilogSource
 
+  sim_common:
+    files:
+     - sim/test_util.sv
+    file_type: systemVerilogSource
 
 targets:
   default: &default
@@ -85,6 +89,7 @@ targets:
   sim_alu:
     <<: *default
     filesets_append:
+      - sim_common
       - sim_alu
     toplevel: alu_tb
     default_tool: icarus
