@@ -8,6 +8,8 @@ FROM debian:12
 # the way ADD handles tar archives locally and remotely, this can not be set
 # to the GitHub download URL of the release. It must be a local path.
 ARG oss_cad_suite_src
+RUN test -n "$oss_cad_suite_src"
+
 ADD $oss_cad_suite_src /opt
 ENV PATH /opt/oss-cad-suite/bin:$PATH
 
@@ -34,3 +36,10 @@ RUN opam init -y --disable-sandboxing && \
     mv c_emulator/riscv_sim_RV32 /usr/local/bin && \
     cd / && \
     rm -rf /opt/sail-riscv
+
+# Work around incorrect assumption that only risv32 gcc can build for 32-bit
+# systems in riscof-plugins/sail_cSim. This 64-bit compiler will also build
+# 32-bit binaries.
+RUN ln -s /usr/bin/riscv64-unknown-elf-gcc /usr/local/bin/riscv32-unknown-elf-gcc && \
+    ln -s /usr/bin/riscv64-unknown-elf-objdump /usr/local/bin/riscv32-unknown-elf-objdump && \
+    ln -s /usr/bin/riscv64-unknown-elf-objcopy /usr/local/bin/riscv32-unknown-elf-objcopy

@@ -1,6 +1,6 @@
 # Main CI script
 #
-# - Run compliance tests
+# TODO
 # - Run unit tests
 # - Run synthesis with 1 minute timeout
 # - Lint: Some kind of lint through fusesoc
@@ -10,10 +10,9 @@ on: [push]
 
 jobs:
   main:
-    # TODO docker
     runs-on: ubuntu-22.04
     container:
-      image: barabas5532/crush-ci:1
+      image: barabas5532/crush-ci:2
     steps:
       - uses: actions/checkout@v4
         with:
