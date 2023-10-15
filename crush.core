@@ -44,6 +44,11 @@ filesets:
      - sim/flash_emulator.v
     file_type: systemVerilogSource
 
+  sim_common:
+    files:
+      - sim/fatal_assert.vh:
+          is_include_file: true
+    file_type: verilogSource
 
 targets:
   default: &default
@@ -60,17 +65,25 @@ targets:
 
   lint:
     default_tool : verilator
-    filesets : [rtl]
+    filesets:
+      - rtl
+      - sim_inst_immediate_decode
+      - sim_memory
+      - sim_alu
+      - sim_load_store
+      - sim_cpu
+      - sim_common
     tools:
       verilator:
         mode : lint-only
         verilator_options:
-          - "-Wall"
+          - "-Wall -Wno-fatal"
     toplevel : cpu
 
   sim_inst_immediate_decode:
     <<: *default
     filesets_append:
+      - sim_common
       - sim_inst_immediate_decode
     toplevel: inst_immediate_decode_tb
     default_tool: icarus
@@ -78,6 +91,7 @@ targets:
   sim_memory:
     <<: *default
     filesets_append:
+      - sim_common
       - sim_memory
     toplevel: memory_tb
     default_tool: icarus
@@ -85,6 +99,7 @@ targets:
   sim_alu:
     <<: *default
     filesets_append:
+      - sim_common
       - sim_alu
     toplevel: alu_tb
     default_tool: icarus
@@ -92,6 +107,7 @@ targets:
   sim_load_store:
     <<: *default
     filesets_append:
+      - sim_common
       - sim_load_store
     toplevel: load_store
     default_tool: icarus

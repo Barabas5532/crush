@@ -25,6 +25,7 @@ class crush(pluginTemplate):
         super().__init__(*args, **kwargs)
 
         config = kwargs['config']
+        self.compiler_name_prefix = config['compiler_name_prefix']
 
         with open('../../crush.core') as f:
             core = yaml.load(f, Loader=yaml.Loader)
@@ -66,8 +67,7 @@ class crush(pluginTemplate):
         sig_file = os.path.join(working_directory, self.name[:-1] + ".signature")
 
         compile_macros = ' -D' + " -D".join(test_entry['macros'])
-
-        cmd = ('riscv32-unknown-elf-gcc '
+        cmd = (f'{self.compiler_name_prefix}-gcc '
                 '-march=rv32i '
                 '-mabi=ilp32 '
                 '-static '
@@ -86,7 +86,7 @@ class crush(pluginTemplate):
         utils.shellCommand(cmd).run(cwd=working_directory)
 
         binary_path = os.path.join(working_directory, 'test.bin')
-        binary_cmd = f'riscv32-unknown-elf-objcopy -O binary test.elf {binary_path}'
+        binary_cmd = f'{self.compiler_name_prefix}-objcopy -O binary test.elf {binary_path}'
         utils.shellCommand(binary_cmd).run(cwd=working_directory)
 
         sim_cmd = f'vvp -n {self.dut_exe} +SIGNATURE_PATH={sig_file} +BINARY_PATH={binary_path}'
