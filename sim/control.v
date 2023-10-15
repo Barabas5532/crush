@@ -56,10 +56,10 @@ module control #(
       ack_o <= 1;
       case (adr_i)
         BASE_ADDRESS: begin
-          start_address = dat_i;
+          start_address <= dat_i;
         end
         BASE_ADDRESS + 4: begin
-          end_address = dat_i;
+          end_address <= dat_i;
         end
         BASE_ADDRESS + 8: begin
           string signature_path;
