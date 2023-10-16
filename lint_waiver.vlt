@@ -9,7 +9,6 @@ lint_off -rule VARHIDDEN -file "*/rtl/soc/memory.v" -match "Declaration of signa
 lint_off -rule VARHIDDEN -file "*/rtl/soc/memory.v" -match "Declaration of signal hides declaration in upper scope: 'i'*"
 lint_off -rule UNUSEDSIGNAL -file "*/rtl/soc/memory.v" -match "Signal is not used: 'm'"
 lint_off -rule UNUSEDSIGNAL -file "*/rtl/soc/memory.v" -match "Bits of signal are not used: 'memory_address'[31:14]"
-lint_off -rule BLKSEQ -file "*/rtl/soc/memory.v" -match "Blocking assignment '=' in sequential logic process*"
 
 lint_off -rule DECLFILENAME -file "*/sim/memory.v" -match "Filename 'memory' does not match MODULE name: 'memory_tb'"
 
@@ -26,7 +25,6 @@ lint_off -rule UNUSEDSIGNAL -file "*/rtl/cpu/cpu.v" -match "Signal is not used: 
 lint_off -rule UNUSEDSIGNAL -file "*/rtl/cpu/cpu.v" -match "Signal is not used: 'rty_i'"
 
 lint_off -rule DECLFILENAME -file "*/sim/cpu.v" -match "Filename 'cpu' does not match MODULE name: 'cpu_tb'"
-lint_off -rule BLKSEQ -file "*/sim/cpu.v" -match "Blocking assignment '=' in sequential logic process*"
 
 lint_off -rule UNUSEDSIGNAL -file "*/sim/flash_emulator.v" -match "Signal is not used: 'rst_i'"
 lint_off -rule UNUSEDSIGNAL -file "*/sim/flash_emulator.v" -match "Signal is not used: 'sel_i'"

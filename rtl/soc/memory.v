@@ -41,7 +41,11 @@ module memory #(
       integer i;
       if(rst_i) begin
         for(i = 0; i < SIZE; i++) begin
+            // verilator lint_off BLKSEQ
+            // delayed assignment in for loop is unsupported, this is the
+            // recommended alternative
             memory[i] = 32'hxxxx_xxxx;
+            // verilator lint_on BLKSEQ
         end
       end
   end

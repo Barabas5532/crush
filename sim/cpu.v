@@ -93,7 +93,7 @@ control #(
 assign ack_i = flash_ack_o | memory_ack_o | control_ack_o;
 
 always begin
-    #0.5 clk = !clk;
+    #0.5 clk <= !clk;
 end
 
 initial begin
