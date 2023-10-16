@@ -14,12 +14,15 @@ module flash_emulator #(
     input wire[31:0] adr_i,
     input wire[3:0] sel_i,
     input wire[31:0] dat_i,
-    output reg[31:0] dat_o,
+    output wire[31:0] dat_o,
     input wire we_i,
     output reg ack_o,
     output reg err_o,
     output reg rty_o
 );
+
+reg [31:0] data;
+assign dat_o = ack_o ? data : 32'hzzzz_zzzz;
 
 reg[31:0] flash[SIZE];
 wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < (BASE_ADDRESS + SIZE));
@@ -48,13 +51,13 @@ always @(posedge clk_i) begin
     ack_o <= 0;
     err_o <= 0;
     rty_o <= 0;
-    dat_o <= 32'hzzzz_zzzz;
+    data <= 32'h0000_0000;
 
     if (stb_i & cyc_i & !we_i & !ack_o & addressed) begin
         ack_o <= 1;
 
         read_data = flash[(adr_i - BASE_ADDRESS) >> 2];
-        dat_o <= {{read_data[ 7: 0]},
+        data <= {{read_data[ 7: 0]},
                   {read_data[15: 8]},
                   {read_data[23:16]},
                   {read_data[31:24]}};
