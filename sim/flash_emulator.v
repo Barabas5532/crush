@@ -48,7 +48,7 @@ always @(posedge clk_i) begin
     ack_o <= 0;
     err_o <= 0;
     rty_o <= 0;
-    dat_o <= 32'h0000_0000;
+    dat_o <= 32'hzzzz_zzzz;
 
     if (stb_i & cyc_i & !we_i & !ack_o & addressed) begin
         ack_o <= 1;

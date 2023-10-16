@@ -58,9 +58,14 @@ memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
 
 assign ack_i = flash_ack_o | memory_ack_o;
 assign dat_i = flash_dat_o;
+integer count = 0;
 
 always begin
-    #0.5 clk = !clk;
+    #0.5
+    clk <= !clk;
+    #0.5
+    clk <= !clk;
+    count <= count + 1;
 end
 
 task static test_case(input string a_test_case_name);
@@ -181,6 +186,11 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    $display("x1 = %x", cpu.registers.x1);
+    $display("count = %0d", count);
+    #1
+    $display("x1 = %x", cpu.registers.x1);
+    $display("count = %0d", count);
     `fatal_assert (cpu.registers.x1 == 32'h0000_0001);
 
     test_case("load word, with positive offset");

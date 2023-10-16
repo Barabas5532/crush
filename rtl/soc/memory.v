@@ -25,6 +25,9 @@ module memory #(
 
   wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + SIZE);
 
+  // reg [31:0] data;
+  // assign dat_o = ack_o ? data : 32'hzzzz_zzzz;
+
   // Individal signals so the memory can be observed in VCD output
   genvar i;
   generate
@@ -48,7 +51,7 @@ module memory #(
     ack_o <= 0;
     err_o <= 0;
     rty_o <= 0;
-    dat_o <= 32'h0000_0000;
+    dat_o <= 32'hzzzz_zzzz;
 
     if (stb_i & cyc_i & !ack_o & addressed) begin
       ack_o <= 1;
@@ -59,6 +62,7 @@ module memory #(
     end
 
     if (stb_i & cyc_i & addressed & !we_i) begin
+      // data <= memory[memory_address];
       dat_o <= memory[memory_address];
     end
   end

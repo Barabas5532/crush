@@ -50,7 +50,7 @@ module control #(
     ack_o <= 0;
     err_o <= 0;
     rty_o <= 0;
-    dat_o <= 32'h0000_0000;
+    dat_o <= 32'hzzzz_zzzz;
 
     if (stb_i & cyc_i & !ack_o) begin
       ack_o <= 1;
