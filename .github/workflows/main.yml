@@ -40,7 +40,7 @@ jobs:
         timeout-minutes: 1
         run: |
           script/init.sh
-          fusesoc run --target ${{ matrix.target }} crush
+          fusesoc run --target ${{ matrix.target }} --expand-env-vars-early crush
   verilog-lint:
     runs-on: ubuntu-22.04
     container:
@@ -62,7 +62,7 @@ jobs:
       - name: Run lint
         run: |
           script/init.sh
-          fusesoc run --target lint crush
+          fusesoc run --target lint --expand-env-vars-early crush
   riscof-test:
     runs-on: ubuntu-22.04
     container:

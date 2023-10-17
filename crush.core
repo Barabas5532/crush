@@ -31,7 +31,6 @@ filesets:
   sim_memory:
     files:
      - sim/memory.v
-     - /usr/share/yosys/ice40/cells_sim.v
     file_type: systemVerilogSource
 
   sim_alu:
@@ -55,6 +54,9 @@ filesets:
     files:
       - sim/fatal_assert.vh:
           is_include_file: true
+      # YOSYS_DATDIR must be defined in the calling environemnt. e.g.:
+      # export YOSYS_DATDIR=$(yosys-config --datdir)
+      - $YOSYS_DATDIR/ice40/cells_sim.v
     file_type: verilogSource
 
   verilator_waiver:
@@ -133,6 +135,7 @@ targets:
   sim_cpu:
     <<: *default
     filesets_append:
+      - sim_common
       - sim_cpu
     toplevel: cpu_tb
     default_tool: icarus
