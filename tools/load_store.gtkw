@@ -1,22 +1,99 @@
 [*]
 [*] GTKWave Analyzer v3.3.117 (w)1999-2023 BSI
-[*] Mon Sep 18 20:49:19 2023
+[*] Mon Oct 16 22:35:22 2023
 [*]
 [dumpfile] "/home/barabas/projects/hardware/risc-v/build/crush_0.0.1/sim_load_store-icarus/load_store.vcd"
-[dumpfile_mtime] "Mon Sep 18 20:44:28 2023"
-[dumpfile_size] 5159
+[dumpfile_mtime] "Mon Oct 16 22:27:21 2023"
+[dumpfile_size] 3686
 [savefile] "/home/barabas/projects/hardware/risc-v/tools/load_store.gtkw"
 [timestart] 0
 [size] 1910 1001
 [pos] -1 -1
-*-14.599666 18430 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-11.584020 10000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] load_store.
 [treeopen] load_store.cpu.
+[treeopen] load_store.cpu.registers.
 [treeopen] load_store.memory.
 [sst_width] 312
 [signals_width] 265
 [sst_expanded] 1
 [sst_vpaned_height] 296
+@28
+load_store.clk
+@420
+load_store.count
+@28
+load_store.reset
+@22
+load_store.adr_o[31:0]
+@28
+load_store.flash_ack_o
+@22
+load_store.flash_dat_o[31:0]
+@28
+load_store.memory_ack_o
+@22
+load_store.sel_o[3:0]
+@200
+-
+@28
+load_store.stb_o
+load_store.cyc_o
+load_store.we_o
+@22
+load_store.dat_o[31:0]
+load_store.dat_i[31:0]
+@28
+load_store.ack_i
+load_store.rty_i
+load_store.err_i
+@200
+-memory
+@28
+load_store.memory.ack_o
+load_store.memory.addressed
+@22
+load_store.memory.adr_i[31:0]
+@28
+load_store.memory.clk_i
+load_store.memory.cyc_i
+@22
+load_store.memory.dat_i[31:0]
+load_store.memory.dat_o[31:0]
+@28
+load_store.memory.err_o
+@22
+load_store.memory.mask[31:0]
+load_store.memory.memory_address[31:0]
+@28
+load_store.memory.rst_i
+load_store.memory.rty_o
+@22
+load_store.memory.sel_i[3:0]
+@28
+load_store.memory.stb_i
+@22
+load_store.memory.value[31:0]
+@28
+load_store.memory.we_i
+@200
+-CPU
+@22
+load_store.cpu.instruction[31:0]
+@28
+load_store.cpu.mem_r_en
+load_store.cpu.mem_w_en
+load_store.cpu.reg_w_en
+@22
+load_store.cpu.r_address1[4:0]
+load_store.cpu.r_address2[4:0]
+load_store.cpu.read_data[31:0]
+load_store.cpu.w_address[4:0]
+load_store.cpu.w_data[31:0]
+@28
+load_store.cpu.w_enable
+@22
+load_store.cpu.registers.x1[31:0]
 @28
 load_store.cpu.clk_i
 load_store.cpu.rst_i
@@ -29,8 +106,6 @@ load_store.cpu.pc[31:0]
 load_store.cpu.state[2:0]
 @22
 load_store.cpu.instruction[31:0]
-load_store.cpu.immediate_decode.I_immediate[31:0]
-load_store.cpu.immediate_decode.S_immediate[31:0]
 @200
 -
 @22
@@ -90,5 +165,7 @@ load_store.cpu.registers.w_address[4:0]
 load_store.cpu.registers.w_data[31:0]
 @28
 load_store.cpu.registers.w_enable
+@23
+load_store.cpu.registers.x1[31:0]
 [pattern_trace] 1
 [pattern_trace] 0

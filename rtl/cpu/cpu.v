@@ -26,6 +26,7 @@ STATE_MEMORY = 3'd3,
 STATE_REG_WRITE = 3'd4,
 STATE_RESET = 3'd7;
 
+reg state_change;
 reg[2:0] state;
 reg[31:0] instruction;
 reg[31:0] read_data;
@@ -98,15 +99,6 @@ reg alu_ltu_rr;
 reg alu_ge_rr;
 reg alu_geu_rr;
 
-wire [31:0] I_immediate;
-wire [31:0] S_immediate;
-
-inst_immediate_decode immediate_decode (
-  .inst(instruction),
-  .I_immediate(I_immediate),
-  .S_immediate(S_immediate)
-);
-
 alu alu(
    .instruction(instruction),
    .op_a(alu_op_a),
@@ -122,29 +114,33 @@ alu alu(
 );
 
 always @(posedge(clk_i)) begin
-    alu_out_r <= alu_out;
-    alu_out_rr <= alu_out_r;
+    if(state_change) begin
+        alu_out_r <= alu_out;
+        alu_out_rr <= alu_out_r;
 
-    alu_eq_r <= alu_eq;
-    alu_eq_rr <= alu_eq_r;
+        alu_eq_r <= alu_eq;
+        alu_eq_rr <= alu_eq_r;
 
-    alu_neq_r <= alu_neq;
-    alu_neq_rr <= alu_neq_r;
+        alu_neq_r <= alu_neq;
+        alu_neq_rr <= alu_neq_r;
 
-    alu_lt_r <= alu_lt;
-    alu_lt_rr <= alu_lt_r;
+        alu_lt_r <= alu_lt;
+        alu_lt_rr <= alu_lt_r;
 
-    alu_ltu_r <= alu_ltu;
-    alu_ltu_rr <= alu_ltu_r;
+        alu_ltu_r <= alu_ltu;
+        alu_ltu_rr <= alu_ltu_r;
 
-    alu_ge_r <= alu_ge;
-    alu_ge_rr <= alu_ge_r;
+        alu_ge_r <= alu_ge;
+        alu_ge_rr <= alu_ge_r;
 
-    alu_geu_r <= alu_geu;
-    alu_geu_rr <= alu_geu_r;
+        alu_geu_r <= alu_geu;
+        alu_geu_rr <= alu_geu_r;
+    end
 end
 
 always @(posedge(clk_i)) begin
+    state_change <= 1;
+
     if(rst_i) begin
         state <= STATE_RESET;
         instruction <= 32'hxxxx_xxxx;
@@ -161,7 +157,7 @@ always @(posedge(clk_i)) begin
             if(ack_i | (!mem_r_en & !mem_w_en)) begin
                 state <= STATE_REG_WRITE;
                 read_data <= dat_i;
-            end
+            end else state_change <= 0;
         STATE_REG_WRITE: state <= STATE_FETCH;
         default: state <= STATE_FETCH;
         endcase
@@ -202,92 +198,92 @@ always @(*) begin
 end
 
 always @(*) begin
-    pc_count <= 0;
-    pc_load <= 0;
-    pc_value <= 32'hxxxx_xxxx;
+    pc_count = 0;
+    pc_load = 0;
+    pc_value = 32'hxxxx_xxxx;
 
-    stb_o <= 0;
-    cyc_o <= 0;
-    sel_o <= 4'hx;
-    dat_o <= 32'hxxxx_xxxx;
-    adr_o <= 32'hxxxx_xxxx;
-    we_o <= 1'hx;
+    stb_o = 0;
+    cyc_o = 0;
+    sel_o = 4'hx;
+    dat_o = 32'hxxxx_xxxx;
+    adr_o = 32'hxxxx_xxxx;
+    we_o = 1'hx;
 
-    alu_op_a <= 32'hxxxx_xxxx;
-    alu_op_b <= 32'hxxxx_xxxx;
+    alu_op_a = 32'hxxxx_xxxx;
+    alu_op_b = 32'hxxxx_xxxx;
 
-    w_data <= 32'hxxxx_xxxx;
-    w_enable <= 1'b0;
+    w_data = 32'hxxxx_xxxx;
+    w_enable = 1'b0;
 
     case(state)
     STATE_FETCH: begin
-        stb_o <= 1;
-        cyc_o <= 1;
-        adr_o <= pc;
-        we_o <= 0;
-        sel_o <= 4'b1111;
+        stb_o = 1;
+        cyc_o = 1;
+        adr_o = pc;
+        we_o = 0;
+        sel_o = 4'b1111;
     end
     STATE_REG_READ: begin
     end
     STATE_EXECUTE: begin
-        alu_op_a <= r_out1;
-        alu_op_b <= r_out2;
+        alu_op_a = r_out1;
+        alu_op_b = r_out2;
     end
     STATE_MEMORY: begin
         if(mem_r_en) begin
-            stb_o <= 1;
-            cyc_o <= 1;
-            adr_o <= alu_out_r & ~32'h0000_0003;
-            we_o <= 0;
-            sel_o <= 4'b1111;
+            stb_o = 1;
+            cyc_o = 1;
+            adr_o = alu_out_r & ~32'h0000_0003;
+            we_o = 0;
+            sel_o = 4'b1111;
         end
 
         if(mem_w_en) begin
-            stb_o <= 1;
-            cyc_o <= 1;
-            adr_o <= alu_out_r & ~32'h0000_0003;
+            stb_o = 1;
+            cyc_o = 1;
+            adr_o = alu_out_r & ~32'h0000_0003;
             case(funct3)
-                FUNCT3_SW: dat_o <= r_out2;
-                FUNCT3_SH: dat_o <= r_out2 << (16 * S_immediate[1]);
-                FUNCT3_SB: dat_o <= r_out2 << (8 * S_immediate[0 +: 2]);
-                default: dat_o <= r_out2;
+                FUNCT3_SW: dat_o = r_out2;
+                FUNCT3_SH: dat_o = r_out2 << (16 * alu_out_r[1]);
+                FUNCT3_SB: dat_o = r_out2 << (8 * alu_out_r[0 +: 2]);
+                default: dat_o = r_out2;
             endcase
-            we_o <= 1;
+            we_o = 1;
             case(funct3)
-                FUNCT3_SW: sel_o <= 4'b1111;
-                FUNCT3_SH: sel_o <= 4'b0011 << (2 * S_immediate[1]);
-                FUNCT3_SB: sel_o <= 4'b0001 << S_immediate[0 +: 2];
-                default: sel_o <= 4'bxxxx;
+                FUNCT3_SW: sel_o = 4'b1111;
+                FUNCT3_SH: sel_o = 4'b0011 << (2 * alu_out_r[1]);
+                FUNCT3_SB: sel_o = 4'b0001 << alu_out_r[0 +: 2];
+                default: sel_o = 4'bxxxx;
             endcase
         end
     end
     STATE_REG_WRITE: begin
-        w_enable <= reg_w_en;
+        w_enable = reg_w_en;
 
         case(opcode)
             OPCODE_LOAD: begin
                 case(funct3)
-                    FUNCT3_LW: w_data <= read_data;
-                    FUNCT3_LB: w_data <= $signed(read_data[8 * I_immediate[1:0] +: 8]);
-                    FUNCT3_LBU: w_data <= read_data[8 * I_immediate[1:0] +: 8];
-                    FUNCT3_LH: w_data <= $signed(read_data[16 * I_immediate[1] +: 16]);
-                    FUNCT3_LHU: w_data <= read_data[16 * I_immediate[1] +: 16];
-                    default: w_data <= 32'hxxxx_xxxx;
+                    FUNCT3_LW: w_data = read_data;
+                    FUNCT3_LB: w_data = $signed(read_data[8 * alu_out_rr[1:0] +: 8]);
+                    FUNCT3_LBU: w_data = read_data[8 * alu_out_rr[1:0] +: 8];
+                    FUNCT3_LH: w_data = $signed(read_data[16 * alu_out_rr[1] +: 16]);
+                    FUNCT3_LHU: w_data = read_data[16 * alu_out_rr[1] +: 16];
+                    default: w_data = 32'hxxxx_xxxx;
                 endcase
             end
             OPCODE_JAL,
             OPCODE_JALR: begin
-                w_data <= pc_inc;
+                w_data = pc_inc;
             end
-            default: w_data <= alu_out_rr;
+            default: w_data = alu_out_rr;
         endcase
 
         case(opcode)
             OPCODE_JAL,
             OPCODE_JALR: begin
-                pc_count <= 1'bx;
-                pc_load <= 1;
-                pc_value <= alu_out_rr;
+                pc_count = 1'bx;
+                pc_load = 1;
+                pc_value = alu_out_rr;
             end
             OPCODE_BRANCH: begin
                 if((funct3 == FUNCT3_BEQ && alu_eq_rr) ||
@@ -296,22 +292,23 @@ always @(*) begin
                    (funct3 == FUNCT3_BLTU && alu_ltu_rr) ||
                    (funct3 == FUNCT3_BGE && alu_ge_rr) ||
                    (funct3 == FUNCT3_BGEU && alu_geu_rr)) begin
-                    pc_count <= 1'bx;
-                    pc_load <= 1;
-                    pc_value <= alu_out_rr;
+                    pc_count = 1'bx;
+                    pc_load = 1;
+                    pc_value = alu_out_rr;
                 end else begin
-                    pc_count <= 1;
-                    pc_load <= 0;
-                    pc_value <= 32'hxxxx_xxxx;
+                    pc_count = 1;
+                    pc_load = 0;
+                    pc_value = 32'hxxxx_xxxx;
                 end
             end
             default: begin
-                pc_count <= 1;
-                pc_load <= 0;
-                pc_value <= 32'hxxxx_xxxx;
+                pc_count = 1;
+                pc_load = 0;
+                pc_value = 32'hxxxx_xxxx;
             end
         endcase
     end
+    default: ;
     endcase
 end
 

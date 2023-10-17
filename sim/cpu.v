@@ -18,9 +18,9 @@ wire[3:0] sel_o;
 wire[31:0] dat_i;
 wire[31:0] dat_o;
 wire we_o;
-wor ack_i;
-wor err_i = 0;
-wor rty_i = 0;
+wire ack_i;
+wire err_i = 0;
+wire rty_i = 0;
 
 cpu #(.INITIAL_PC('h1000_0000)) dut (
     .clk_i(clk),
@@ -37,6 +37,7 @@ cpu #(.INITIAL_PC('h1000_0000)) dut (
     .we_o(we_o)
 );
 
+wire flash_ack_o;
 flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h20_0000)) flash_emulator (
     .clk_i(clk),
     .rst_i(reset),
@@ -47,11 +48,12 @@ flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h20_0000)) flash_emulator (
     .dat_i(dat_o),
     .dat_o(dat_i),
     .we_i(we_o),
-    .ack_o(ack_i),
+    .ack_o(flash_ack_o),
     .err_o(err_i),
     .rty_o(rty_i)
 );
 
+wire memory_ack_o;
 memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
     .clk_i(clk),
     .rst_i(reset),
@@ -62,11 +64,12 @@ memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
     .dat_i(dat_o),
     .dat_o(dat_i),
     .we_i(we_o),
-    .ack_o(ack_i),
+    .ack_o(memory_ack_o),
     .err_o(err_i),
     .rty_o(rty_i)
 );
 
+wire control_ack_o;
 control #(
     .BASE_ADDRESS('h3000_0000),
     .MEMORY_BASE_ADDRESS('h2000_0000),
@@ -81,14 +84,16 @@ control #(
     .dat_i(dat_o),
     .dat_o(dat_i),
     .we_i(we_o),
-    .ack_o(ack_i),
+    .ack_o(control_ack_o),
     .err_o(err_i),
     .rty_o(rty_i),
     .memory(memory.memory)
 );
 
+assign ack_i = flash_ack_o | memory_ack_o | control_ack_o;
+
 always begin
-    #0.5 clk = !clk;
+    #0.5 clk <= !clk;
 end
 
 initial begin
@@ -101,7 +106,7 @@ initial begin
     #200_000
 
     $error("Stop was not called within 200k clock cycles, stopping now");
-    $stop;
+    $fatal;
 end
 
 endmodule

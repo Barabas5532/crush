@@ -15,6 +15,7 @@ reg[31:0] memory[32];
 
 // These wires are here only so that icarus will include them in the VCD.
 // Arrays are not included by default.
+// verilator lint_off UNUSEDSIGNAL
 wire[31:0] x0 = memory[0];
 wire[31:0] x1 = memory[1];
 wire[31:0] x2 = memory[2];
@@ -47,6 +48,7 @@ wire[31:0] x28 = memory[28];
 wire[31:0] x29 = memory[29];
 wire[31:0] x30 = memory[30];
 wire[31:0] x31 = memory[31];
+// verilator lint_on UNUSEDSIGNAL
 
   task reset_memory();
     integer i;
@@ -60,10 +62,10 @@ wire[31:0] x31 = memory[31];
   end
 
 always @(posedge clk) begin
-    r_out1 = memory[r_address1];
-    r_out2 = memory[r_address2];
+    r_out1 <= memory[r_address1];
+    r_out2 <= memory[r_address2];
 
-    if(w_enable & w_address > 0) memory[w_address] = w_data;
+    if(w_enable & w_address > 0) memory[w_address] <= w_data;
 end
 
 endmodule

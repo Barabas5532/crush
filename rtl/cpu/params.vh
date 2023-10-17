@@ -6,6 +6,7 @@
 // Document Version 20191213
 // Chapter 24
 
+// verilator lint_off UNUSEDPARAM
 localparam OPCODE_OP_IMM   = 7'b0010011;
 localparam OPCODE_LUI      = 7'b0110111;
 localparam OPCODE_AUIPC    = 7'b0010111;
@@ -48,3 +49,4 @@ localparam FUNCT3_XOR   = 3'b100;
 localparam FUNCT3_SRL_SRA = 3'b101;
 localparam FUNCT3_OR    = 3'b110;
 localparam FUNCT3_AND   = 3'b111;
+// verilator lint_on UNUSEDPARAM
