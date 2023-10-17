@@ -35,7 +35,7 @@ module control #(
     input wire [31:0] adr_i,
     input wire [3:0] sel_i,
     input wire [31:0] dat_i,
-    output reg [31:0] dat_o,
+    output wire [31:0] dat_o,
     input wire we_i,
     output reg ack_o,
     output reg err_o,
@@ -46,20 +46,21 @@ module control #(
   reg [31:0] start_address;
   reg [31:0] end_address;
 
+  assign dat_o = 32'hzzzz_zzzz;
+
   always @(posedge clk_i) begin
     ack_o <= 0;
     err_o <= 0;
     rty_o <= 0;
-    dat_o <= 32'hzzzz_zzzz;
 
     if (stb_i & cyc_i & !ack_o) begin
       ack_o <= 1;
       case (adr_i)
         BASE_ADDRESS: begin
-          start_address = dat_i;
+          start_address <= dat_i;
         end
         BASE_ADDRESS + 4: begin
-          end_address = dat_i;
+          end_address <= dat_i;
         end
         BASE_ADDRESS + 8: begin
           string signature_path;

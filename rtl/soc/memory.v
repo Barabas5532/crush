@@ -11,7 +11,7 @@ module memory #(
     input wire [31:0] adr_i,
     input wire [3:0] sel_i,
     input wire [31:0] dat_i,
-    output reg [31:0] dat_o,
+    output wire [31:0] dat_o,
     input wire we_i,
     output reg ack_o,
     output reg err_o,
@@ -24,6 +24,9 @@ module memory #(
   wire[31:0] value = memory[memory_address];
 
   wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + SIZE);
+
+  reg [31:0] data;
+  assign dat_o = ack_o ? data : 32'hzzzz_zzzz;
 
   // Individal signals so the memory can be observed in VCD output
   genvar i;
@@ -38,7 +41,11 @@ module memory #(
       integer i;
       if(rst_i) begin
         for(i = 0; i < SIZE; i++) begin
+            // verilator lint_off BLKSEQ
+            // delayed assignment in for loop is unsupported, this is the
+            // recommended alternative
             memory[i] = 32'hxxxx_xxxx;
+            // verilator lint_on BLKSEQ
         end
       end
   end
@@ -48,18 +55,18 @@ module memory #(
     ack_o <= 0;
     err_o <= 0;
     rty_o <= 0;
-    dat_o <= 32'hzzzz_zzzz;
+    data <= 32'h0000_0000;
 
     if (stb_i & cyc_i & !ack_o & addressed) begin
       ack_o <= 1;
     end
 
     if (stb_i & cyc_i & addressed & we_i) begin
-     memory[memory_address] <= (value & ~mask) | (dat_i & mask);
+      memory[memory_address] <= (value & ~mask) | (dat_i & mask);
     end
 
     if (stb_i & cyc_i & addressed & !we_i) begin
-      dat_o <= memory[memory_address];
+      data <= memory[memory_address];
     end
   end
 
