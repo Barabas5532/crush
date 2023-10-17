@@ -186,11 +186,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
-    $display("x1 = %x", cpu.registers.x1);
-    $display("count = %0d", count);
     #1
-    $display("x1 = %x", cpu.registers.x1);
-    $display("count = %0d", count);
     `fatal_assert (cpu.registers.x1 == 32'h0000_0001);
 
     test_case("load word, with positive offset");
@@ -202,6 +198,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (cpu.registers.x1 == 32'h0000_0002);
 
     test_case("load word, with negative offset");
@@ -213,6 +210,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (cpu.registers.x1 == 32'h0000_0003);
 
     test_case("load byte, negative value");
@@ -224,6 +222,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (cpu.registers.x1 == 32'hFFFF_FF80);
 
     test_case("load byte, positive value");
@@ -235,6 +234,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (cpu.registers.x1 == 32'h0000_007F);
 
     test_case("load unsigned byte, negative value");
@@ -246,6 +246,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (cpu.registers.x1 == 32'h0000_0080);
 
     test_case("load unsigned byte, positive value");
@@ -257,6 +258,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (cpu.registers.x1 == 32'h0000_007F);
 
     test_case("load byte, offset 1");
@@ -268,6 +270,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (cpu.registers.x1 == 32'h0000_0001);
 
     test_case("load byte, offset 2");
@@ -279,6 +282,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (cpu.registers.x1 == 32'h0000_0002);
 
     test_case("load byte, offset 3");
@@ -290,6 +294,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (cpu.registers.x1 == 32'h0000_0003);
 
     test_case("load byte, offset -1");
@@ -302,6 +307,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (cpu.registers.x1 == 32'h0000_0003);
 
     test_case("load half word");
@@ -313,6 +319,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (cpu.registers.x1 == 32'hFFFF_8180);
 
     test_case("load unsigned half word");
@@ -324,6 +331,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (cpu.registers.x1 == 32'h0000_8180);
 
     test_case("load half word, offset 2");
@@ -335,6 +343,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (cpu.registers.x1 == 32'hFFFF_8382);
 
     test_case("store word");
@@ -346,6 +355,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (memory.memory[0] == 32'hF3F2_F1F0);
 
     test_case("store word with offset");
@@ -357,6 +367,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (memory.memory[1] == 32'hF3F2_F1F0);
 
     test_case("store half word");
@@ -369,6 +380,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (memory.memory[0] == 32'hDEAD_F1F0);
 
     test_case("store half word with offset");
@@ -381,6 +393,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (memory.memory[0] == 32'hF1F0_BEEF);
 
     test_case("store byte");
@@ -393,6 +406,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (memory.memory[0] == 32'hDEAD_BEF0);
 
     test_case("store byte, offset 1");
@@ -405,6 +419,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (memory.memory[0] == 32'hDEAD_F0EF);
 
     test_case("store byte, offset 2");
@@ -417,6 +432,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (memory.memory[0] == 32'hDEF0_BEEF);
 
     test_case("store byte, offset 3");
@@ -429,6 +445,7 @@ initial begin
     @(ack_i);
     @(posedge clk);
     @(posedge clk);
+    #1
     `fatal_assert (memory.memory[0] == 32'hF0AD_BEEF);
 
     $stop;
