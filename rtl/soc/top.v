@@ -1,6 +1,6 @@
 `default_nettype none
 
-module crush (
+module top (
     input wire CLK,
     input wire BTN_N,
     output wire LED1
@@ -21,8 +21,8 @@ wire[31:0] dat_i;
 wire[31:0] dat_o;
 wire we_o;
 wire ack_i;
-wor err_i = 0;
-wor rty_i = 0;
+wire err_i = 0;
+wire rty_i = 0;
 
 cpu #(.INITIAL_PC('h1000_0000)) dut (
     .clk_i(clk),
@@ -39,6 +39,7 @@ cpu #(.INITIAL_PC('h1000_0000)) dut (
     .we_o(we_o)
 );
 
+wire memory_ack_o;
 memory #(.BASE_ADDRESS('h1000_0000), .SIZE('h4000)) memory (
     .clk_i(clk),
     .rst_i(rst_i),
@@ -49,9 +50,11 @@ memory #(.BASE_ADDRESS('h1000_0000), .SIZE('h4000)) memory (
     .dat_i(dat_o),
     .dat_o(dat_i),
     .we_i(we_o),
-    .ack_o(ack_i),
+    .ack_o(memory_ack_o),
     .err_o(err_i),
     .rty_o(rty_i)
 );
+
+assign ack_i = memory_ack_o;
 
 endmodule

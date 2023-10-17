@@ -5,11 +5,6 @@ lint_off -rule DECLFILENAME -file "*/rtl/cpu/inst_decode_registers.v" -match "Fi
 lint_off -rule DECLFILENAME -file "*/sim/inst_immediate_decode.v" -match "Filename 'inst_immediate_decode' does not match MODULE name: 'inst_immediate_decode_tb'"
 lint_off -rule UNUSEDSIGNAL -file "*/rtl/cpu/inst_immediate_decode.v" -match "Bits of signal are not used: 'inst'[6:0]"
 
-lint_off -rule VARHIDDEN -file "*/rtl/soc/memory.v" -match "Declaration of signal hides declaration in upper scope: 'memory'*"
-lint_off -rule VARHIDDEN -file "*/rtl/soc/memory.v" -match "Declaration of signal hides declaration in upper scope: 'i'*"
-lint_off -rule UNUSEDSIGNAL -file "*/rtl/soc/memory.v" -match "Signal is not used: 'm'"
-lint_off -rule UNUSEDSIGNAL -file "*/rtl/soc/memory.v" -match "Bits of signal are not used: 'memory_address'[31:14]"
-
 lint_off -rule DECLFILENAME -file "*/sim/memory.v" -match "Filename 'memory' does not match MODULE name: 'memory_tb'"
 
 lint_off -rule WIDTHEXPAND -file "*/rtl/cpu/alu.v" -match "Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's LTS generates 1 bits."
@@ -34,4 +29,6 @@ lint_off -rule UNUSEDSIGNAL -file "*/sim/control.v" -match "Signal is not used: 
 lint_off -rule UNUSEDSIGNAL -file "*/sim/control.v" -match "Signal is not used: 'sel_i'"
 lint_off -rule UNUSEDSIGNAL -file "*/sim/control.v" -match "Signal is not used: 'we_i'"
 
+lint_off -file "/usr/share/yosys/ice40/cells_sim.v"
 
+lint_off -rule TIMESCALEMOD

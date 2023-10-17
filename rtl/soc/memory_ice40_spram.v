@@ -2,6 +2,7 @@
 
 module memory_ice40_spram (
     input wire clk,
+    input wire rst,
     input wire wen,
     input wire[3:0] wmask,
     input wire[13:0] addr,
@@ -18,7 +19,7 @@ module memory_ice40_spram (
     .CLOCK(clk),
     .STANDBY(1'b0),
     .SLEEP(1'b0),
-    .POWEROFF(1'b1),
+    .POWEROFF(!rst),
     .DATAOUT(rdata[31:16])
   );
 
@@ -31,7 +32,7 @@ module memory_ice40_spram (
     .CLOCK(clk),
     .STANDBY(1'b0),
     .SLEEP(1'b0),
-    .POWEROFF(1'b1),
+    .POWEROFF(!rst),
     .DATAOUT(rdata[15:0])
   );
 
