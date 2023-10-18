@@ -5,6 +5,8 @@
 
 `default_nettype none
 
+`timescale 1s/1s
+
 module cpu_tb;
 
 `include "params.vh"
@@ -54,7 +56,7 @@ flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h20_0000)) flash_emulator (
 );
 
 wire memory_ack_o;
-memory #(.BASE_ADDRESS('h2000_0000)) memory (
+sim_memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),
@@ -68,13 +70,6 @@ memory #(.BASE_ADDRESS('h2000_0000)) memory (
     .err_o(err_i),
     .rty_o(rty_i)
 );
-
-  reg [31:0] ram_data['h4000];
-  always @* begin
-      for(integer i = 0; i < 'h4000; i++) begin
-          ram_data[i] = {memory.ram.ram_top.mem[i], memory.ram.ram_bottom.mem[i]};
-      end
-  end
 
 wire control_ack_o;
 control #(
@@ -94,7 +89,7 @@ control #(
     .ack_o(control_ack_o),
     .err_o(err_i),
     .rty_o(rty_i),
-    .memory(ram_data)
+    .memory(memory.mem)
 );
 
 assign ack_i = flash_ack_o | memory_ack_o | control_ack_o;

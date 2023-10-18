@@ -10,4 +10,4 @@ else
    config=config-ci.ini
 fi
 
-riscof run --config=$config --suite=riscv-arch-test/riscv-test-suite/ --env=riscv-arch-test/riscv-test-suite/env
+riscof run --no-browser --config=$config --suite=riscv-arch-test/riscv-test-suite/ --env=riscv-arch-test/riscv-test-suite/env
