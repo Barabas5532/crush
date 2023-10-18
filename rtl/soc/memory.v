@@ -1,8 +1,7 @@
 `default_nettype none
 
 module memory #(
-    parameter integer BASE_ADDRESS,
-    parameter integer SIZE = 16384
+    parameter integer BASE_ADDRESS = 0
 ) (
     input wire clk_i,
     input wire rst_i,
@@ -11,63 +10,40 @@ module memory #(
     input wire [31:0] adr_i,
     input wire [3:0] sel_i,
     input wire [31:0] dat_i,
-    output wire [31:0] dat_o,
+    output reg [31:0] dat_o,
     input wire we_i,
     output reg ack_o,
     output reg err_o,
     output reg rty_o
 );
+  localparam integer SIZE = 16384;
+  wire [31:0] memory_address = (adr_i - BASE_ADDRESS);
+  wire addressed = (adr_i >= BASE_ADDRESS) && (memory_address < SIZE);
+  wire [31:0] memory_data;
 
-  reg [31:0] memory[SIZE];
+  memory_ice40_spram ram(
+    .clk(clk_i),
+    .rst(rst_i),
+    .wen(stb_i & cyc_i & we_i & addressed),
+    .wmask(sel_i),
+    .addr(memory_address[15:2]),
+    .wdata(dat_i),
+    .rdata(memory_data)
+  );
 
-  wire[31:0] mask = {{8{sel_i[3]}}, {8{sel_i[2]}}, {8{sel_i[1]}}, {8{sel_i[0]}}};
-  wire[31:0] value = memory[memory_address];
-
-  wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + SIZE);
-
-  reg [31:0] data;
-  assign dat_o = ack_o ? data : 32'hzzzz_zzzz;
-
-  // Individal signals so the memory can be observed in VCD output
-  genvar i;
-  generate
-      for(i = 0; i < SIZE && i < 8; i++) begin : g_scope
-          wire[31:0] m;
-          assign m = memory[i];
-      end
-  endgenerate
-
-  always @(posedge clk_i) begin
-      integer i;
-      if(rst_i) begin
-        for(i = 0; i < SIZE; i++) begin
-            // verilator lint_off BLKSEQ
-            // delayed assignment in for loop is unsupported, this is the
-            // recommended alternative
-            memory[i] = 32'hxxxx_xxxx;
-            // verilator lint_on BLKSEQ
-        end
-      end
+  always @(*) begin
+      if (ack_o) dat_o = memory_data;
+      else dat_o = 32'hzzzz_zzzz;
   end
 
-  wire[31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
   always @(posedge clk_i) begin
-    ack_o <= 0;
-    err_o <= 0;
-    rty_o <= 0;
-    data <= 32'h0000_0000;
+      ack_o <= 0;
+      err_o <= 0;
+      rty_o <= 0;
 
-    if (stb_i & cyc_i & !ack_o & addressed) begin
-      ack_o <= 1;
-    end
-
-    if (stb_i & cyc_i & addressed & we_i) begin
-      memory[memory_address] <= (value & ~mask) | (dat_i & mask);
-    end
-
-    if (stb_i & cyc_i & addressed & !we_i) begin
-      data <= memory[memory_address];
-    end
+      if (stb_i & cyc_i & !ack_o & addressed) begin
+        ack_o <= 1;
+      end
   end
 
 endmodule

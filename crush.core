@@ -15,7 +15,13 @@ filesets:
       - rtl/cpu/params.vh:
           is_include_file: true
       - rtl/soc/memory.v
+      - rtl/soc/memory_ice40_spram.v
+      - rtl/soc/top.v
     file_type: verilogSource
+
+  pcf:
+    files:
+      - data/icebreaker.pcf: {file_type: PCF}
 
   sim_inst_immediate_decode:
     files:
@@ -48,33 +54,37 @@ filesets:
     files:
       - sim/fatal_assert.vh:
           is_include_file: true
+      # YOSYS_DATDIR must be defined in the calling environemnt. e.g.:
+      # export YOSYS_DATDIR=$(yosys-config --datdir)
+      - $YOSYS_DATDIR/ice40/cells_sim.v
+      - sim/sim_memory.v
     file_type: verilogSource
 
-  lint_waiver:
+  verilator_waiver:
     files:
-      - lint_waiver.vlt
+      - data/verilator_waiver.vlt
     file_type: vlt
 
 targets:
   default: &default
     filesets:
       - rtl
-    toplevel: crush
+      - pcf
+    toplevel: top
     default_tool: icestorm
     tools:
+      icestorm:
+        nextpnr_options : [ "--up5k", "--package", "sg48" ]
       icarus:
         timescale: "1s/100ms"
         iverilog_options:
           - "-g2012"
           - "-gassertions"
 
-  # TODO need a separate lint for each top level, i.e. for each testbench plus
-  #      the synthesisable part? This setup is probably not checking any of the
-  #      simluation code.
   lint:
     default_tool : verilator
     filesets:
-      - lint_waiver
+      - verilator_waiver
       - rtl
       - sim_inst_immediate_decode
       - sim_memory
@@ -87,7 +97,9 @@ targets:
         mode : lint-only
         verilator_options:
           - "-Wall -timing"
-    toplevel: cpu_tb
+          # Disable default values in yosys's simulation modules.
+          - "-DNO_ICE40_DEFAULT_ASSIGNMENTS"
+    toplevel: top
 
   sim_inst_immediate_decode:
     <<: *default
@@ -124,6 +136,7 @@ targets:
   sim_cpu:
     <<: *default
     filesets_append:
+      - sim_common
       - sim_cpu
     toplevel: cpu_tb
     default_tool: icarus

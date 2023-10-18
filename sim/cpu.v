@@ -5,6 +5,8 @@
 
 `default_nettype none
 
+`timescale 1s/1s
+
 module cpu_tb;
 
 `include "params.vh"
@@ -54,7 +56,7 @@ flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h20_0000)) flash_emulator (
 );
 
 wire memory_ack_o;
-memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
+sim_memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),
@@ -87,7 +89,7 @@ control #(
     .ack_o(control_ack_o),
     .err_o(err_i),
     .rty_o(rty_i),
-    .memory(memory.memory)
+    .memory(memory.mem)
 );
 
 assign ack_i = flash_ack_o | memory_ack_o | control_ack_o;
@@ -103,9 +105,9 @@ initial begin
     #2.5 reset = 0;
     #0.5
 
-    #200_000
+    #300_000
 
-    $error("Stop was not called within 200k clock cycles, stopping now");
+    $error("Stop was not called within 300k clock cycles, stopping now");
     $fatal;
 end
 

@@ -1,5 +1,7 @@
 `default_nettype none
 
+`timescale 1s/1ms
+
 `include "fatal_assert.vh"
 
 module memory_tb;

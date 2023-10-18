@@ -47,7 +47,7 @@ class crush(pluginTemplate):
         self.archtest_env = archtest_env
 
     def build(self, isa_yaml, platform_yaml):
-        build_cmd = 'fusesoc run --target sim_cpu --build crush'
+        build_cmd = 'fusesoc run --target sim_cpu --build --resolve-env-vars-early crush'
         logger.info(f'Build simulator: {build_cmd}')
         utils.shellCommand(build_cmd).run(cwd=os.path.join(os.getcwd(), '../..'))
 

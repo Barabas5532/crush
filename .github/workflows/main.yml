@@ -39,8 +39,8 @@ jobs:
       - name: Run test
         timeout-minutes: 1
         run: |
-          script/init.sh
-          fusesoc run --target ${{ matrix.target }} crush
+          . script/init.sh
+          fusesoc run --target ${{ matrix.target }} --resolve-env-vars-early crush
   verilog-lint:
     runs-on: ubuntu-22.04
     container:
@@ -61,8 +61,8 @@ jobs:
           echo PATH=$PATH >> $GITHUB_ENV
       - name: Run lint
         run: |
-          script/init.sh
-          fusesoc run --target lint crush
+          . script/init.sh
+          fusesoc run --target lint --resolve-env-vars-early crush
   riscof-test:
     runs-on: ubuntu-22.04
     container:
@@ -84,5 +84,28 @@ jobs:
       - name: Run RISCOF
         timeout-minutes: 5
         run: |
-          script/init.sh
+          . script/init.sh
           script/compliance.sh
+  synthesis:
+    runs-on: ubuntu-22.04
+    container:
+      image: barabas5532/crush-ci:2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Set up python environment
+        run: |
+          apt-get install -y python3-venv
+          python -m venv .venv
+          . .venv/bin/activate
+          python -m pip install -r requirements.txt
+          # Every step runs in its own shell. Activating the venv really just
+          # modifies the path. Persist the modified path, so that other steps
+          # also use the venv.
+          echo PATH=$PATH >> $GITHUB_ENV
+      - name: Run synthesis
+        timeout-minutes: 1
+        run: |
+          . script/init.sh
+          fusesoc --verbose run crush
