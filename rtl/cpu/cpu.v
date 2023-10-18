@@ -152,7 +152,10 @@ always @(posedge(clk_i)) begin
                 instruction <= dat_i;
             end
         STATE_REG_READ: state <= STATE_EXECUTE;
-        STATE_EXECUTE: state <= STATE_MEMORY;
+        STATE_EXECUTE: begin
+            state <= STATE_MEMORY;
+            state_change <= 0;
+        end
         STATE_MEMORY:
             if(ack_i | (!mem_r_en & !mem_w_en)) begin
                 state <= STATE_REG_WRITE;
