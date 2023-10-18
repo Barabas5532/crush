@@ -41,7 +41,7 @@ cpu #(.INITIAL_PC('h1000_0000)) cpu (
 );
 
 wire memory_ack_o;
-memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
+sim_memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),
@@ -180,7 +180,7 @@ initial begin
     test_case("load word, no offset");
 
     cpu.registers.memory[1] = 32'h2000_0000;
-    memory.memory[0] = 32'h0000_0001;
+    memory.mem[0] = 32'h0000_0001;
 
     LW(1, 1, 12'h000);
     @(ack_i);
@@ -192,7 +192,7 @@ initial begin
     test_case("load word, with positive offset");
 
     cpu.registers.memory[1] = 32'h2000_0000;
-    memory.memory[1] = 32'h0000_0002;
+    memory.mem[1] = 32'h0000_0002;
 
     LW(1, 1, 12'h004);
     @(ack_i);
@@ -204,7 +204,7 @@ initial begin
     test_case("load word, with negative offset");
 
     cpu.registers.memory[1] = 32'h2000_0004;
-    memory.memory[0] = 32'h0000_0003;
+    memory.mem[0] = 32'h0000_0003;
 
     LW(1, 1, -12'h004);
     @(ack_i);
@@ -216,7 +216,7 @@ initial begin
     test_case("load byte, negative value");
 
     cpu.registers.memory[1] = 32'h2000_0000;
-    memory.memory[0] = 32'h8382_8180;
+    memory.mem[0] = 32'h8382_8180;
 
     LB(1, 1, 12'h000);
     @(ack_i);
@@ -228,7 +228,7 @@ initial begin
     test_case("load byte, positive value");
 
     cpu.registers.memory[1] = 32'h2000_0000;
-    memory.memory[0] = 32'h0302_017F;
+    memory.mem[0] = 32'h0302_017F;
 
     LB(1, 1, 12'h000);
     @(ack_i);
@@ -240,7 +240,7 @@ initial begin
     test_case("load unsigned byte, negative value");
 
     cpu.registers.memory[1] = 32'h2000_0000;
-    memory.memory[0] = 32'h8382_8180;
+    memory.mem[0] = 32'h8382_8180;
 
     LBU(1, 1, 12'h000);
     @(ack_i);
@@ -252,7 +252,7 @@ initial begin
     test_case("load unsigned byte, positive value");
 
     cpu.registers.memory[1] = 32'h2000_0000;
-    memory.memory[0] = 32'h0302_017F;
+    memory.mem[0] = 32'h0302_017F;
 
     LBU(1, 1, 12'h000);
     @(ack_i);
@@ -264,7 +264,7 @@ initial begin
     test_case("load byte, offset 1");
 
     cpu.registers.memory[1] = 32'h2000_0000;
-    memory.memory[0] = 32'h0302_0100;
+    memory.mem[0] = 32'h0302_0100;
 
     LB(1, 1, 12'h001);
     @(ack_i);
@@ -276,7 +276,7 @@ initial begin
     test_case("load byte, offset 2");
 
     cpu.registers.memory[1] = 32'h2000_0000;
-    memory.memory[0] = 32'h0302_0100;
+    memory.mem[0] = 32'h0302_0100;
 
     LB(1, 1, 12'h002);
     @(ack_i);
@@ -288,7 +288,7 @@ initial begin
     test_case("load byte, offset 3");
 
     cpu.registers.memory[1] = 32'h2000_0000;
-    memory.memory[0] = 32'h0302_0100;
+    memory.mem[0] = 32'h0302_0100;
 
     LB(1, 1, 12'h003);
     @(ack_i);
@@ -300,8 +300,8 @@ initial begin
     test_case("load byte, offset -1");
 
     cpu.registers.memory[1] = 32'h2000_0004;
-    memory.memory[0] = 32'h0302_0100;
-    memory.memory[1] = 32'hFFFF_FFFF;
+    memory.mem[0] = 32'h0302_0100;
+    memory.mem[1] = 32'hFFFF_FFFF;
 
     LB(1, 1, -12'h001);
     @(ack_i);
@@ -313,7 +313,7 @@ initial begin
     test_case("load half word");
 
     cpu.registers.memory[1] = 32'h2000_0000;
-    memory.memory[0] = 32'h8382_8180;
+    memory.mem[0] = 32'h8382_8180;
 
     LH(1, 1, 12'h000);
     @(ack_i);
@@ -325,7 +325,7 @@ initial begin
     test_case("load unsigned half word");
 
     cpu.registers.memory[1] = 32'h2000_0000;
-    memory.memory[0] = 32'h8382_8180;
+    memory.mem[0] = 32'h8382_8180;
 
     LHU(1, 1, 12'h000);
     @(ack_i);
@@ -337,7 +337,7 @@ initial begin
     test_case("load half word, offset 2");
 
     cpu.registers.memory[1] = 32'h2000_0000;
-    memory.memory[0] = 32'h8382_8180;
+    memory.mem[0] = 32'h8382_8180;
 
     LH(1, 1, 12'h002);
     @(ack_i);
@@ -356,7 +356,7 @@ initial begin
     @(posedge clk);
     @(posedge clk);
     #1
-    `fatal_assert (memory.memory[0] == 32'hF3F2_F1F0);
+    `fatal_assert (memory.mem[0] == 32'hF3F2_F1F0);
 
     test_case("store word with offset");
 
@@ -368,11 +368,11 @@ initial begin
     @(posedge clk);
     @(posedge clk);
     #1
-    `fatal_assert (memory.memory[1] == 32'hF3F2_F1F0);
+    `fatal_assert (memory.mem[1] == 32'hF3F2_F1F0);
 
     test_case("store half word");
 
-    memory.memory[0] = 32'hDEAD_BEEF;
+    memory.mem[0] = 32'hDEAD_BEEF;
     cpu.registers.memory[1] = 32'hF3F2_F1F0;
     cpu.registers.memory[2] = 32'h2000_0000;
 
@@ -381,11 +381,11 @@ initial begin
     @(posedge clk);
     @(posedge clk);
     #1
-    `fatal_assert (memory.memory[0] == 32'hDEAD_F1F0);
+    `fatal_assert (memory.mem[0] == 32'hDEAD_F1F0);
 
     test_case("store half word with offset");
 
-    memory.memory[0] = 32'hDEAD_BEEF;
+    memory.mem[0] = 32'hDEAD_BEEF;
     cpu.registers.memory[1] = 32'hF3F2_F1F0;
     cpu.registers.memory[2] = 32'h2000_0000;
 
@@ -394,11 +394,11 @@ initial begin
     @(posedge clk);
     @(posedge clk);
     #1
-    `fatal_assert (memory.memory[0] == 32'hF1F0_BEEF);
+    `fatal_assert (memory.mem[0] == 32'hF1F0_BEEF);
 
     test_case("store byte");
 
-    memory.memory[0] = 32'hDEAD_BEEF;
+    memory.mem[0] = 32'hDEAD_BEEF;
     cpu.registers.memory[1] = 32'hF3F2_F1F0;
     cpu.registers.memory[2] = 32'h2000_0000;
 
@@ -407,11 +407,11 @@ initial begin
     @(posedge clk);
     @(posedge clk);
     #1
-    `fatal_assert (memory.memory[0] == 32'hDEAD_BEF0);
+    `fatal_assert (memory.mem[0] == 32'hDEAD_BEF0);
 
     test_case("store byte, offset 1");
 
-    memory.memory[0] = 32'hDEAD_BEEF;
+    memory.mem[0] = 32'hDEAD_BEEF;
     cpu.registers.memory[1] = 32'hF3F2_F1F0;
     cpu.registers.memory[2] = 32'h2000_0000;
 
@@ -420,11 +420,11 @@ initial begin
     @(posedge clk);
     @(posedge clk);
     #1
-    `fatal_assert (memory.memory[0] == 32'hDEAD_F0EF);
+    `fatal_assert (memory.mem[0] == 32'hDEAD_F0EF);
 
     test_case("store byte, offset 2");
 
-    memory.memory[0] = 32'hDEAD_BEEF;
+    memory.mem[0] = 32'hDEAD_BEEF;
     cpu.registers.memory[1] = 32'hF3F2_F1F0;
     cpu.registers.memory[2] = 32'h2000_0000;
 
@@ -433,11 +433,11 @@ initial begin
     @(posedge clk);
     @(posedge clk);
     #1
-    `fatal_assert (memory.memory[0] == 32'hDEF0_BEEF);
+    `fatal_assert (memory.mem[0] == 32'hDEF0_BEEF);
 
     test_case("store byte, offset 3");
 
-    memory.memory[0] = 32'hDEAD_BEEF;
+    memory.mem[0] = 32'hDEAD_BEEF;
     cpu.registers.memory[1] = 32'hF3F2_F1F0;
     cpu.registers.memory[2] = 32'h2000_0000;
 
@@ -446,7 +446,7 @@ initial begin
     @(posedge clk);
     @(posedge clk);
     #1
-    `fatal_assert (memory.memory[0] == 32'hF0AD_BEEF);
+    `fatal_assert (memory.mem[0] == 32'hF0AD_BEEF);
 
     $stop;
 end
