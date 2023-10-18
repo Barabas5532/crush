@@ -25,7 +25,7 @@ int bss_end[0];
  * @}
  */
 
-int main();
+int main(void);
 
 /**
  * The entry point into the application.
