@@ -40,7 +40,7 @@ cpu #(.INITIAL_PC('h1000_0000)) dut (
 );
 
 wire memory_ack_o;
-memory #(.BASE_ADDRESS('h1000_0000), .SIZE('h4000)) memory (
+memory #(.BASE_ADDRESS('h1000_0000)) memory (
     .clk_i(clk),
     .rst_i(rst_i),
     .stb_i(stb_o),

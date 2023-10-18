@@ -70,7 +70,7 @@ targets:
     filesets:
       - rtl
       - pcf
-    toplevel: crush
+    toplevel: top
     default_tool: icestorm
     tools:
       icestorm:
