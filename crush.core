@@ -99,7 +99,7 @@ targets:
           - "-Wall -timing"
           # Disable default values in yosys's simulation modules.
           - "-DNO_ICE40_DEFAULT_ASSIGNMENTS"
-    toplevel: cpu_tb
+    toplevel: top
 
   sim_inst_immediate_decode:
     <<: *default

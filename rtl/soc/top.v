@@ -21,8 +21,8 @@ wire[31:0] dat_i;
 wire[31:0] dat_o;
 wire we_o;
 wire ack_i;
-wire err_i = 0;
-wire rty_i = 0;
+wire err_i;
+wire rty_i;
 
 cpu #(.INITIAL_PC('h1000_0000)) dut (
     .clk_i(clk),

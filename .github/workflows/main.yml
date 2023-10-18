@@ -108,4 +108,4 @@ jobs:
         timeout-minutes: 1
         run: |
           . script/init.sh
-          fusesoc run --resolve-env-vars-early crush
+          fusesoc --verbose run crush
