@@ -39,7 +39,7 @@ jobs:
       - name: Run test
         timeout-minutes: 1
         run: |
-          script/init.sh
+          source script/init.sh
           fusesoc run --target ${{ matrix.target }} --expand-env-vars-early crush
   verilog-lint:
     runs-on: ubuntu-22.04
@@ -61,7 +61,7 @@ jobs:
           echo PATH=$PATH >> $GITHUB_ENV
       - name: Run lint
         run: |
-          script/init.sh
+          source script/init.sh
           fusesoc run --target lint --expand-env-vars-early crush
   riscof-test:
     runs-on: ubuntu-22.04
@@ -84,5 +84,5 @@ jobs:
       - name: Run RISCOF
         timeout-minutes: 5
         run: |
-          script/init.sh
+          source script/init.sh
           script/compliance.sh
