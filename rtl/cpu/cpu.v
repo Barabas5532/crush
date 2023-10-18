@@ -76,7 +76,6 @@ reg[31:0] alu_op_a;
 reg[31:0] alu_op_b;
 wire[31:0] alu_out;
 reg[31:0] alu_out_r;
-reg[31:0] alu_out_rr;
 
 wire alu_eq;
 wire alu_neq;
@@ -91,13 +90,6 @@ reg alu_lt_r;
 reg alu_ltu_r;
 reg alu_ge_r;
 reg alu_geu_r;
-
-reg alu_eq_rr;
-reg alu_neq_rr;
-reg alu_lt_rr;
-reg alu_ltu_rr;
-reg alu_ge_rr;
-reg alu_geu_rr;
 
 alu alu(
    .instruction(instruction),
@@ -116,25 +108,18 @@ alu alu(
 always @(posedge(clk_i)) begin
     if(state_change) begin
         alu_out_r <= alu_out;
-        alu_out_rr <= alu_out_r;
 
         alu_eq_r <= alu_eq;
-        alu_eq_rr <= alu_eq_r;
 
         alu_neq_r <= alu_neq;
-        alu_neq_rr <= alu_neq_r;
 
         alu_lt_r <= alu_lt;
-        alu_lt_rr <= alu_lt_r;
 
         alu_ltu_r <= alu_ltu;
-        alu_ltu_rr <= alu_ltu_r;
 
         alu_ge_r <= alu_ge;
-        alu_ge_rr <= alu_ge_r;
 
         alu_geu_r <= alu_geu;
-        alu_geu_rr <= alu_geu_r;
     end
 end
 
@@ -152,7 +137,10 @@ always @(posedge(clk_i)) begin
                 instruction <= dat_i;
             end
         STATE_REG_READ: state <= STATE_EXECUTE;
-        STATE_EXECUTE: state <= STATE_MEMORY;
+        STATE_EXECUTE: begin
+            state <= STATE_MEMORY;
+            state_change <= 0;
+        end
         STATE_MEMORY:
             if(ack_i | (!mem_r_en & !mem_w_en)) begin
                 state <= STATE_REG_WRITE;
@@ -264,10 +252,10 @@ always @(*) begin
             OPCODE_LOAD: begin
                 case(funct3)
                     FUNCT3_LW: w_data = read_data;
-                    FUNCT3_LB: w_data = $signed(read_data[8 * alu_out_rr[1:0] +: 8]);
-                    FUNCT3_LBU: w_data = read_data[8 * alu_out_rr[1:0] +: 8];
-                    FUNCT3_LH: w_data = $signed(read_data[16 * alu_out_rr[1] +: 16]);
-                    FUNCT3_LHU: w_data = read_data[16 * alu_out_rr[1] +: 16];
+                    FUNCT3_LB: w_data = $signed(read_data[8 * alu_out_r[1:0] +: 8]);
+                    FUNCT3_LBU: w_data = read_data[8 * alu_out_r[1:0] +: 8];
+                    FUNCT3_LH: w_data = $signed(read_data[16 * alu_out_r[1] +: 16]);
+                    FUNCT3_LHU: w_data = read_data[16 * alu_out_r[1] +: 16];
                     default: w_data = 32'hxxxx_xxxx;
                 endcase
             end
@@ -275,7 +263,7 @@ always @(*) begin
             OPCODE_JALR: begin
                 w_data = pc_inc;
             end
-            default: w_data = alu_out_rr;
+            default: w_data = alu_out_r;
         endcase
 
         case(opcode)
@@ -283,18 +271,18 @@ always @(*) begin
             OPCODE_JALR: begin
                 pc_count = 1'bx;
                 pc_load = 1;
-                pc_value = alu_out_rr;
+                pc_value = alu_out_r;
             end
             OPCODE_BRANCH: begin
-                if((funct3 == FUNCT3_BEQ && alu_eq_rr) ||
-                   (funct3 == FUNCT3_BNE && alu_neq_rr) ||
-                   (funct3 == FUNCT3_BLT && alu_lt_rr) ||
-                   (funct3 == FUNCT3_BLTU && alu_ltu_rr) ||
-                   (funct3 == FUNCT3_BGE && alu_ge_rr) ||
-                   (funct3 == FUNCT3_BGEU && alu_geu_rr)) begin
+                if((funct3 == FUNCT3_BEQ && alu_eq_r) ||
+                   (funct3 == FUNCT3_BNE && alu_neq_r) ||
+                   (funct3 == FUNCT3_BLT && alu_lt_r) ||
+                   (funct3 == FUNCT3_BLTU && alu_ltu_r) ||
+                   (funct3 == FUNCT3_BGE && alu_ge_r) ||
+                   (funct3 == FUNCT3_BGEU && alu_geu_r)) begin
                     pc_count = 1'bx;
                     pc_load = 1;
-                    pc_value = alu_out_rr;
+                    pc_value = alu_out_r;
                 end else begin
                     pc_count = 1;
                     pc_load = 0;
