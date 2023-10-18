@@ -128,7 +128,7 @@ always @(posedge(clk_i)) begin
 
     if(rst_i) begin
         state <= STATE_RESET;
-        instruction <= 32'hxxxx_xxxx;
+        instruction <= 32'h0000_0000;
     end else begin
         case(state)
         STATE_FETCH:
@@ -188,20 +188,20 @@ end
 always @(*) begin
     pc_count = 0;
     pc_load = 0;
-    pc_value = 32'hxxxx_xxxx;
+    pc_value = 0;
 
     stb_o = 0;
     cyc_o = 0;
-    sel_o = 4'hx;
-    dat_o = 32'hxxxx_xxxx;
-    adr_o = 32'hxxxx_xxxx;
-    we_o = 1'hx;
+    sel_o = 0;
+    dat_o = 0;
+    adr_o = 0;
+    we_o = 0;
 
-    alu_op_a = 32'hxxxx_xxxx;
-    alu_op_b = 32'hxxxx_xxxx;
+    alu_op_a = 0;
+    alu_op_b = 0;
 
-    w_data = 32'hxxxx_xxxx;
-    w_enable = 1'b0;
+    w_data = 0;
+    w_enable = 0;
 
     case(state)
     STATE_FETCH: begin
@@ -241,7 +241,7 @@ always @(*) begin
                 FUNCT3_SW: sel_o = 4'b1111;
                 FUNCT3_SH: sel_o = 4'b0011 << (2 * alu_out_r[1]);
                 FUNCT3_SB: sel_o = 4'b0001 << alu_out_r[0 +: 2];
-                default: sel_o = 4'bxxxx;
+                default: sel_o = 0;
             endcase
         end
     end
@@ -256,7 +256,7 @@ always @(*) begin
                     FUNCT3_LBU: w_data = read_data[8 * alu_out_r[1:0] +: 8];
                     FUNCT3_LH: w_data = $signed(read_data[16 * alu_out_r[1] +: 16]);
                     FUNCT3_LHU: w_data = read_data[16 * alu_out_r[1] +: 16];
-                    default: w_data = 32'hxxxx_xxxx;
+                    default: w_data = 0;
                 endcase
             end
             OPCODE_JAL,
@@ -269,7 +269,7 @@ always @(*) begin
         case(opcode)
             OPCODE_JAL,
             OPCODE_JALR: begin
-                pc_count = 1'bx;
+                pc_count = 0;
                 pc_load = 1;
                 pc_value = alu_out_r;
             end
@@ -280,19 +280,19 @@ always @(*) begin
                    (funct3 == FUNCT3_BLTU && alu_ltu_r) ||
                    (funct3 == FUNCT3_BGE && alu_ge_r) ||
                    (funct3 == FUNCT3_BGEU && alu_geu_r)) begin
-                    pc_count = 1'bx;
+                    pc_count = 0;
                     pc_load = 1;
                     pc_value = alu_out_r;
                 end else begin
                     pc_count = 1;
                     pc_load = 0;
-                    pc_value = 32'hxxxx_xxxx;
+                    pc_value = 0;
                 end
             end
             default: begin
                 pc_count = 1;
                 pc_load = 0;
-                pc_value = 32'hxxxx_xxxx;
+                pc_value = 0;
             end
         endcase
     end
