@@ -52,9 +52,9 @@ program_counter #(.INITIAL_PC(INITIAL_PC)) program_counter(
 reg[31:0] w_data;
 reg w_enable;
 wire[4:0] w_address;
-reg[4:0] r_address1;
+wire[4:0] r_address1;
 wire[31:0] r_out1;
-reg[4:0] r_address2;
+wire[4:0] r_address2;
 wire[31:0] r_out2;
 
 registers registers(

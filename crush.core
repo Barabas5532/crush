@@ -17,6 +17,7 @@ filesets:
       - rtl/soc/memory.v
       - rtl/soc/memory_ice40_spram.v
       - rtl/soc/top.v
+      - rtl/soc/gpio.v
     file_type: verilogSource
 
   pcf:
@@ -75,6 +76,8 @@ targets:
     tools:
       icestorm:
         nextpnr_options : [ "--up5k", "--package", "sg48" ]
+        yosys_synth_options:
+          - "-dsp"
       icarus:
         timescale: "1s/100ms"
         iverilog_options:

@@ -22,7 +22,7 @@ void delay()
 bool get_button(void)
 {
     volatile uint32_t *gpio = GPIO_BASE_ADDRESS;
-    return *gpio & BIT_MASK(0);
+    return *gpio & BIT_MASK(8);
 }
 
 void set_led_on(int index, bool led_on)
@@ -30,10 +30,10 @@ void set_led_on(int index, bool led_on)
     volatile uint32_t *gpio = GPIO_BASE_ADDRESS;
     if(led_on)
     {
-        *gpio |= BIT_MASK(1 + index);
+        *gpio |= BIT_MASK(index);
     }
     else
     {
-        *gpio &= ~BIT_MASK(1 + index);
+        *gpio &= ~BIT_MASK(index);
     }
 }

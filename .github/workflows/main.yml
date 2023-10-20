@@ -109,3 +109,20 @@ jobs:
         run: |
           . script/init.sh
           fusesoc --verbose run crush
+  firmware:
+    runs-on: ubuntu-22.04
+    container:
+      image: barabas5532/crush-ci:2
+    defaults:
+      run:
+        working-directory: fw
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=TC-crush.cmake
+      - name: Build
+        run: cmake --build build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: firmware
+          path: fw/build/crush-blinky
