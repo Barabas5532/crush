@@ -7,15 +7,6 @@
  * @{
  */
 
-/** The start of the data region in flash to be copied to RAM */
-int data_flash_start[0];
-/** The end of the data region in flash to be copied to RAM */
-int data_flash_end[0];
-/** The start of the data region in RAM */
-int data_ram_start[0];
-/** The end of the data region in RAM */
-int data_ram_end[0];
-
 /** The start of the region in RAM to be zero initialised */
 int bss_start[0];
 /** The end of the region in RAM to be zero initialised */
@@ -35,14 +26,9 @@ int main(void);
  */
 __attribute__((section(".start"))) void start(void)
 {
-    for(int i = 0; data_flash_start + i < data_flash_end; i++)
-    {
-        data_ram_start[i] = data_flash_start[i];
-    }
-
     for(int *i = bss_start; i < bss_end; i++)
     {
-        i[0] = 0;
+        *i = 0;
     }
 
     main();
