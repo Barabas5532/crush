@@ -19,16 +19,13 @@ int bss_end[0];
 int main(void);
 
 /**
- * The entry point into the application.
+ * The entry point into the C application.
  *
- * The linker script is configured to place this function at the initial PC.
- * This will be the very first thing executed after boot.
+ * It is called from assembly startup code in start.S, which is in turn placed
+ * at the initial PC using the linker script.
  */
-__attribute__((section(".start"))) void start(void)
+void c_start(void)
 {
-    // TODO set up stack section and stack pointer:
-    // https://vivonomicon.com/2020/02/11/bare-metal-risc-v-development-with-the-gd32vf103cb/
-
     for(int *i = bss_start; i < bss_end; i++)
     {
         *i = 0;
@@ -36,7 +33,8 @@ __attribute__((section(".start"))) void start(void)
 
     main();
 
-    // Main should never return
-    while(1)
+    // The assembly start code does not expect us to return, really main should
+    // not return either
+    for(;;)
         ;
 }

@@ -71,7 +71,7 @@ gpio #(.BASE_ADDRESS('h4000_0000)) gpio (
     .ack_o(gpio_ack_o),
     .err_o(err_i),
     .rty_o(rty_i),
-    .pin_input({{7{1'b0}}, BTN_N}),
+    .pin_input({{7{1'b0}}, BTN1}),
     .pin_output({unused, LED2, LED1})
 );
 

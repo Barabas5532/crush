@@ -25,5 +25,14 @@ SECTIONS
         . = ALIGN(4);
         bss_end = .;
     } > mem
+
+    .stack : {
+        . = 1K; /* stack size */
+        /* Calling conventions require 16 byte aligned stack pointer
+         * https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-cc.adoc
+         */
+        . = ALIGN(16);
+        stack_start = .;
+    } > mem
 }
 

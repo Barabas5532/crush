@@ -4,9 +4,11 @@
  * Register map:
  * BASE_ADDRESS + 0: control register
  *
- * bit 0 to 7 of the control register can be written to control the 8 outputs.
+ * bit 0 to 7 of the control register can be read and written to control the
+ * 8 outputs.
  *
  * bit 8 to 15 of the control register can be read to read from the 8 inputs.
+ * Writes are ignored.
  *
  * This module supports only 32-bit access.
  */
@@ -29,8 +31,9 @@ module gpio #(
     output reg [7:0] pin_output
 );
 
-  reg data;
+  reg [31:0] data;
 
+  // TODO should be (ack_o && !we_i), also check other modules
   assign dat_o = ack_o ? data : 32'hzzzz_zzzz;
 
   always @* begin
@@ -38,7 +41,7 @@ module gpio #(
 
     ack_o = (adr_i == BASE_ADDRESS) && stb_i && cyc_i;
 
-    if(ack_o && !we_i) data = {{16{1'b0}}, pin_input, {8{1'b0}}};
+    if(ack_o && !we_i) data = {{16{1'b0}}, pin_input, pin_output};
   end
 
   always @(posedge clk_i) begin

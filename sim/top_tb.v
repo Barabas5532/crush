@@ -4,7 +4,7 @@
 
 `default_nettype none
 
-`timescale 1s/1s
+`timescale 1ns/1ns
 
 module top_tb;
 
@@ -22,19 +22,22 @@ top top(
     .LED2(led2)
 );
 
-initial clk = 0;
 initial begin
     btn_n = 0;
-    #2.5 btn_n = 1;
+    #400 btn_n = 1;
 end
 
-always #0.5 clk <= !clk;
+initial clk = 0;
+always #80 clk <= !clk;
+
+initial btn1 = 0;
+always #10_000_000 btn1 <= !btn1;
 
 initial begin
     $dumpfile("top.vcd");
     $dumpvars(0);
 
-    #300_000
+    #(300_000 * 80)
 
     $display("finishing now");
     $finish;

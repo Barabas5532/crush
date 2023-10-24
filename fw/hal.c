@@ -8,8 +8,7 @@
 #pragma GCC optimize("O0")
 void delay()
 {
-
-    for(int i = 0; i < 1 * 1000 * 1000; i++)
+    for(int i = 0; i < 100; i++)
     {
         __asm__("nop");
     };
