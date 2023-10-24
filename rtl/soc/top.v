@@ -38,20 +38,23 @@ cpu #(.INITIAL_PC('h1000_0000)) dut (
 );
 
 wire memory_ack_o;
-memory #(.BASE_ADDRESS('h1000_0000)) memory (
-    .clk_i(clk),
-    .rst_i(rst_i),
-    .stb_i(stb_o),
-    .cyc_i(cyc_o),
-    .adr_i(adr_o),
-    .sel_i(sel_o),
-    .dat_i(dat_o),
-    .dat_o(dat_i),
-    .we_i(we_o),
-    .ack_o(memory_ack_o),
-    .err_o(err_i),
-    .rty_o(rty_i)
-);
+  memory_infer #(
+      .BASE_ADDRESS('h1000_0000),
+      .SIZE(16384)
+  ) memory (
+      .clk_i(clk),
+      .rst_i(rst_i),
+      .stb_i(stb_o),
+      .cyc_i(cyc_o),
+      .adr_i(adr_o),
+      .sel_i(sel_o),
+      .dat_i(dat_o),
+      .dat_o(dat_i),
+      .we_i (we_o),
+      .ack_o(memory_ack_o),
+      .err_o(err_i),
+      .rty_o(rty_i)
+  );
 
 wire gpio_ack_o;
 wire [5:0] unused;

@@ -15,6 +15,7 @@ filesets:
       - rtl/cpu/params.vh:
           is_include_file: true
       - rtl/soc/memory.v
+      - rtl/soc/memory_infer.v
       - rtl/soc/memory_ice40_spram.v
       - rtl/soc/top.v
       - rtl/soc/gpio.v
@@ -60,6 +61,14 @@ filesets:
       - $YOSYS_DATDIR/ice40/cells_sim.v
       - sim/sim_memory.v
     file_type: verilogSource
+
+  sim_top:
+    files:
+      - sim/top_tb.v
+      - fw/build/crush-blinky.bin:
+         file_type: user
+         copyto: fw.bin
+    file_type: systemVerilogSource
 
   verilator_waiver:
     files:
@@ -143,3 +152,24 @@ targets:
       - sim_cpu
     toplevel: cpu_tb
     default_tool: icarus
+
+  sim_top:
+    <<: *default
+    filesets_append:
+      - sim_top
+    toplevel: top_tb
+    default_tool: icarus
+    hooks:
+      post_run: [sim_top]
+    #tools:
+      #icarus:
+        #vvp_options:
+          #- "+BINARY_PATH=fw.bin"
+
+# TODO make fusesoc support vvp plusargs:
+# https://github.com/olofk/fusesoc/issues/653
+scripts:
+  sim_top:
+    cmd:
+      - echo
+      - "Run 'vvp -n -M. -l icarus.log   crush_0.0.1 -fst +BINARY_PATH=fw.bin' in the build folder to run the simulation"
