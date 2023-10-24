@@ -28,23 +28,33 @@ module memory_infer #(
 
   wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + SIZE);
 
-  integer i;
-
   wire [31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
 
   initial begin : init
     reg[8 * 100] binary_path;
     if ($value$plusargs("BINARY_PATH=%s", binary_path)) begin : has_arg
       integer file;
+      integer i;
       integer length;
+      reg [31:0] mem_read[SIZE];
 
       $display("Reading memory contents from %s", binary_path);
 
       file   = $fopen(binary_path, "rb");
-      length = $fread(mem, file);
+      length = $fread(mem_read, file);
       $fclose(file);
 
       $display("Read %0d bytes", length);
+
+      // Binaries output by gcc are always in little endian order. Our
+      // wishbone is in big endian order. Swap the endianness during
+      // initalisation so the program can be read correctly.
+      for(i = 0; i < SIZE; i++) begin
+        mem[i] <= {{mem_read[i][ 7: 0]},
+                   {mem_read[i][15: 8]},
+                   {mem_read[i][23:16]},
+                   {mem_read[i][31:24]}};
+      end
     end else begin
       $error("The BINARY_PATH plus arg must be set");
       $stop;
