@@ -26,6 +26,9 @@ int main(void);
  */
 __attribute__((section(".start"))) void start(void)
 {
+    // TODO set up stack section and stack pointer:
+    // https://vivonomicon.com/2020/02/11/bare-metal-risc-v-development-with-the-gd32vf103cb/
+
     for(int *i = bss_start; i < bss_end; i++)
     {
         *i = 0;
