@@ -21,7 +21,7 @@ module memory_infer #(
     output reg rty_o
 );
 
-  reg [31:0] mem[SIZE];
+  (* synthesis, ram_block *) reg [31:0] mem[SIZE];
 
   wire [31:0] mask = {{8{sel_i[3]}}, {8{sel_i[2]}}, {8{sel_i[1]}}, {8{sel_i[0]}}};
   wire [31:0] value = mem[memory_address];
