@@ -43,10 +43,10 @@ module memory_infer #(
     if (stb_i & cyc_i & !ack_o & addressed) begin
       ack_o <= 1;
       if (we_i) begin
-        if (sel_i[3]) mem[memory_address][31:24] <= dat_i[7:0];
-        if (sel_i[2]) mem[memory_address][23:16] <= dat_i[15:8];
-        if (sel_i[1]) mem[memory_address][15:8] <= dat_i[23:16];
-        if (sel_i[0]) mem[memory_address][7:0] <= dat_i[31:24];
+        if (sel_i[0]) mem[memory_address][31:24] <= dat_i[7:0];
+        if (sel_i[1]) mem[memory_address][23:16] <= dat_i[15:8];
+        if (sel_i[2]) mem[memory_address][15:8] <= dat_i[23:16];
+        if (sel_i[3]) mem[memory_address][7:0] <= dat_i[31:24];
       end else begin
         data <= {
           {mem[memory_address][7:0]},
