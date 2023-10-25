@@ -40,7 +40,7 @@ cpu #(.INITIAL_PC('h1000_0000)) dut (
 wire memory_ack_o;
   memory_infer #(
       .BASE_ADDRESS('h1000_0000),
-      .SIZE(16384)
+      .SIZE('h800)
   ) memory (
       .clk_i(clk),
       .rst_i(rst_i),
