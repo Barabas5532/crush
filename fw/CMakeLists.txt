@@ -16,3 +16,7 @@ add_custom_command(TARGET crush-blinky POST_BUILD
         COMMAND ${objcopy_program} -O binary crush-blinky crush-blinky.bin
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         )
+add_custom_command(TARGET crush-blinky POST_BUILD
+        COMMAND ${objcopy_program} --verilog-data-width 4 -O verilog crush-blinky crush-blinky.data
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        )

@@ -31,33 +31,18 @@ module memory_infer #(
   wire [31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
 
   initial begin : init
-    reg[8 * 100] binary_path;
-    if ($value$plusargs("BINARY_PATH=%s", binary_path)) begin : has_arg
-      integer file;
-      integer i;
-      integer length;
-      reg [31:0] mem_read[SIZE];
+    reg [31:0] mem_read[SIZE];
+    integer i;
 
-      $display("Reading memory contents from %s", binary_path);
+    $readmemh("fw.data", mem_read);
 
-      file   = $fopen(binary_path, "rb");
-      length = $fread(mem_read, file);
-      $fclose(file);
-
-      $display("Read %0d bytes", length);
-
-      // Binaries output by gcc are always in little endian order. Our
-      // wishbone is in big endian order. Swap the endianness during
-      // initalisation so the program can be read correctly.
-      for(i = 0; i < SIZE; i++) begin
-        mem[i] <= {{mem_read[i][ 7: 0]},
-                   {mem_read[i][15: 8]},
-                   {mem_read[i][23:16]},
-                   {mem_read[i][31:24]}};
-      end
-    end else begin
-      $error("The BINARY_PATH plus arg must be set");
-      $stop;
+    // Binaries output by gcc are always in little endian order. Our
+    // wishbone is in big endian order. Swap the endianness during
+    // initalisation so the program can be read correctly.
+    for (i = 0; i < SIZE; i++) begin
+      mem[i] <= {
+        {mem_read[i][7:0]}, {mem_read[i][15:8]}, {mem_read[i][23:16]}, {mem_read[i][31:24]}
+      };
     end
   end
 
@@ -72,7 +57,7 @@ module memory_infer #(
     end
 
     if (stb_i & cyc_i & addressed & we_i) begin
-     mem[memory_address] <= (value & ~mask) | (dat_i & mask);
+      mem[memory_address] <= (value & ~mask) | (dat_i & mask);
     end
 
     if (stb_i & cyc_i & addressed & !we_i) begin

@@ -15,7 +15,7 @@ filesets:
       - rtl/cpu/params.vh:
           is_include_file: true
       - rtl/soc/memory.v
-      - rtl/soc/memory_infer.v
+      - rtl/soc/memory_infer.v: {file_type: systemVerilogSource}
       - rtl/soc/memory_ice40_spram.v
       - rtl/soc/top.v
       - rtl/soc/gpio.v
@@ -65,9 +65,9 @@ filesets:
   sim_top:
     files:
       - sim/top_tb.v
-      - fw/build/crush-blinky.bin:
+      - fw/build/crush-blinky.data:
          file_type: user
-         copyto: fw.bin
+         copyto: fw.data
     file_type: systemVerilogSource
 
   verilator_waiver:
