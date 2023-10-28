@@ -1,7 +1,7 @@
 use core::arch::asm;
 
 pub(crate) fn delay() {
-    for _ in 0..10 {
+    for _ in 0..10_000 {
         unsafe {
             asm!("nop");
         }
