@@ -1,0 +1,53 @@
+[*]
+[*] GTKWave Analyzer v3.3.117 (w)1999-2023 BSI
+[*] Tue Oct 24 19:33:46 2023
+[*]
+[dumpfile] "/home/barabas/projects/hardware/risc-v/build/crush_0.0.1/sim_top-icarus/top.vcd"
+[dumpfile_mtime] "Tue Oct 24 19:20:13 2023"
+[dumpfile_size] 6157
+[savefile] "/home/barabas/projects/hardware/risc-v/tools/top.gtkw"
+[timestart] 0
+[size] 1910 1001
+[pos] -1 -1
+*-14.309388 18000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top_tb.
+[treeopen] top_tb.top.
+[sst_width] 273
+[signals_width] 309
+[sst_expanded] 1
+[sst_vpaned_height] 296
+@28
+top_tb.btn1
+top_tb.clk
+top_tb.btn_n
+top_tb.led1
+top_tb.led2
+@2028
+^1 /home/barabas/projects/hardware/risc-v/tools/cpu_state_filter.txt
+top_tb.top.dut.state[2:0]
+@28
+top_tb.top.dut.ack_i
+top_tb.top.dut.cyc_o
+top_tb.top.dut.stb_o
+@29
+top_tb.top.dut.we_o
+@22
+top_tb.top.dut.dat_o[31:0]
+top_tb.top.dut.adr_o[31:0]
+top_tb.top.dut.dat_i[31:0]
+@200
+-
+@22
+top_tb.top.dut.pc[31:0]
+top_tb.top.dut.instruction[31:0]
+@200
+-
+@22
+top_tb.top.dut.r_out1[31:0]
+top_tb.top.dut.r_out2[31:0]
+top_tb.top.dut.w_address[4:0]
+top_tb.top.dut.w_data[31:0]
+@28
+top_tb.top.dut.w_enable
+[pattern_trace] 1
+[pattern_trace] 0

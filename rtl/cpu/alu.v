@@ -6,12 +6,12 @@ module alu (
     input  wire [31:0] op_b,
     input  wire [31:0] pc,
     output reg  [31:0] out,
-    output reg eq,
-    output reg neq,
-    output reg lt,
-    output reg ltu,
-    output reg ge,
-    output reg geu
+    output wire eq,
+    output wire neq,
+    output wire lt,
+    output wire ltu,
+    output wire ge,
+    output wire geu
 );
 
   `include "params.vh"

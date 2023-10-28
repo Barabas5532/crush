@@ -15,8 +15,13 @@ filesets:
       - rtl/cpu/params.vh:
           is_include_file: true
       - rtl/soc/memory.v
+      - rtl/soc/memory_infer.v: {file_type: systemVerilogSource}
       - rtl/soc/memory_ice40_spram.v
       - rtl/soc/top.v
+      - rtl/soc/gpio.v
+      - fw/binary/crush-blinky.data:
+         file_type: user
+         copyto: fw.data
     file_type: verilogSource
 
   pcf:
@@ -60,6 +65,11 @@ filesets:
       - sim/sim_memory.v
     file_type: verilogSource
 
+  sim_top:
+    files:
+      - sim/top_tb.v
+    file_type: systemVerilogSource
+
   verilator_waiver:
     files:
       - data/verilator_waiver.vlt
@@ -75,11 +85,15 @@ targets:
     tools:
       icestorm:
         nextpnr_options : [ "--up5k", "--package", "sg48" ]
+        yosys_synth_options:
+          - "-dsp"
       icarus:
         timescale: "1s/100ms"
         iverilog_options:
           - "-g2012"
           - "-gassertions"
+    hooks:
+      post_run: [iceprog_hint]
 
   lint:
     default_tool : verilator
@@ -140,3 +154,16 @@ targets:
       - sim_cpu
     toplevel: cpu_tb
     default_tool: icarus
+
+  sim_top:
+    <<: *default
+    filesets_append:
+      - sim_top
+    toplevel: top_tb
+    default_tool: icarus
+
+scripts:
+  iceprog_hint:
+    cmd:
+      - echo
+      - "Run 'iceprog ...' in the build folder to program the board"

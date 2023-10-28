@@ -1,8 +1,3 @@
-# Main CI script
-#
-# TODO
-# - Run synthesis with 1 minute timeout
-
 on:
   pull_request:
   push:
@@ -12,7 +7,7 @@ jobs:
   verilog-test:
     runs-on: ubuntu-22.04
     container:
-      image: barabas5532/crush-ci:2
+      image: barabas5532/crush-ci:3
     strategy:
       matrix:
         target:
@@ -20,6 +15,7 @@ jobs:
           - sim_memory
           - sim_alu
           - sim_load_store
+          - sim_top
           # sim_cpu is not a testbench, but a target for RISCOF testing, so it
           # is not included here
     steps:
@@ -44,7 +40,7 @@ jobs:
   verilog-lint:
     runs-on: ubuntu-22.04
     container:
-      image: barabas5532/crush-ci:2
+      image: barabas5532/crush-ci:3
     steps:
       - uses: actions/checkout@v4
         with:
@@ -66,7 +62,7 @@ jobs:
   riscof-test:
     runs-on: ubuntu-22.04
     container:
-      image: barabas5532/crush-ci:2
+      image: barabas5532/crush-ci:3
     steps:
       - uses: actions/checkout@v4
         with:
@@ -89,7 +85,7 @@ jobs:
   synthesis:
     runs-on: ubuntu-22.04
     container:
-      image: barabas5532/crush-ci:2
+      image: barabas5532/crush-ci:3
     steps:
       - uses: actions/checkout@v4
         with:
@@ -109,3 +105,23 @@ jobs:
         run: |
           . script/init.sh
           fusesoc --verbose run crush
+  firmware:
+    runs-on: ubuntu-22.04
+    container:
+      image: barabas5532/crush-ci:3
+    defaults:
+      run:
+        working-directory: fw
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=TC-crush.cmake
+      - name: Build
+        run: cmake --build build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: firmware-elf
+          path: |
+            fw/build/crush-blinky
+            fw/build/crush-blinky.bin
+            fw/build/crush-blinky.data
