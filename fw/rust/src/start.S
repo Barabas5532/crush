@@ -1,4 +1,4 @@
-.section .start
+.section .init
 .global start
 start:
     // Load stack_start defined by the linker file to the stack pointer

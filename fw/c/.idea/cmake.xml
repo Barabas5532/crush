@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeSharedSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug (RV32)" ENABLED="true" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Use CMake toolchain file" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=TC-crush.cmake" />
+    </configurations>
+  </component>
+</project>
