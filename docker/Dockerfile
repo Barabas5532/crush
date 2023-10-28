@@ -43,3 +43,6 @@ RUN opam init -y --disable-sandboxing && \
 RUN ln -s /usr/bin/riscv64-unknown-elf-gcc /usr/local/bin/riscv32-unknown-elf-gcc && \
     ln -s /usr/bin/riscv64-unknown-elf-objdump /usr/local/bin/riscv32-unknown-elf-objdump && \
     ln -s /usr/bin/riscv64-unknown-elf-objcopy /usr/local/bin/riscv32-unknown-elf-objcopy
+
+# Duplicated so that cache from eariler versions can be reused
+RUN apt-get install -y cmake ninja-build

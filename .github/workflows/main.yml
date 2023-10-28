@@ -120,5 +120,8 @@ jobs:
         run: cmake --build build
       - uses: actions/upload-artifact@v3
         with:
-          name: firmware
-          path: fw/build/crush-blinky
+          name: firmware-elf
+          path: |
+            fw/build/crush-blinky
+            fw/build/crush-blinky.bin
+            fw/build/crush-blinky.data
