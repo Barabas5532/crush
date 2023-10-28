@@ -19,7 +19,7 @@ filesets:
       - rtl/soc/memory_ice40_spram.v
       - rtl/soc/top.v
       - rtl/soc/gpio.v
-      - fw/binary/crush-blinky.data:
+      - fw/rust/binary/crush-blinky.data:
          file_type: user
          copyto: fw.data
     file_type: verilogSource

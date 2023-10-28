@@ -29,7 +29,7 @@ module memory_infer #(
   reg [31:0] data;
   assign dat_o = ack_o ? data : 32'hzzzz_zzzz;
 
-  wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + SIZE);
+  wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + 4 * SIZE);
 
   // depending on the size, some address bits are not going to be used
   // verilator lint_off UNUSEDSIGNAL
