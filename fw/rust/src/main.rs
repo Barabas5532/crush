@@ -1,5 +1,16 @@
-#![]
+#![no_main]
+#![no_std]
 
-fn main() {
-    println!("Hello, world!");
+use core::panic::PanicInfo;
+
+mod hal;
+mod start;
+
+#[panic_handler]
+fn panic(_panic: &PanicInfo) -> ! {
+    loop {}
+}
+
+pub fn main() -> ! {
+    loop {}
 }
