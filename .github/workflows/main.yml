@@ -7,7 +7,7 @@ jobs:
   verilog-test:
     runs-on: ubuntu-22.04
     container:
-      image: barabas5532/crush-ci:2
+      image: barabas5532/crush-ci:3
     strategy:
       matrix:
         target:
@@ -40,7 +40,7 @@ jobs:
   verilog-lint:
     runs-on: ubuntu-22.04
     container:
-      image: barabas5532/crush-ci:2
+      image: barabas5532/crush-ci:3
     steps:
       - uses: actions/checkout@v4
         with:
@@ -62,7 +62,7 @@ jobs:
   riscof-test:
     runs-on: ubuntu-22.04
     container:
-      image: barabas5532/crush-ci:2
+      image: barabas5532/crush-ci:3
     steps:
       - uses: actions/checkout@v4
         with:
@@ -85,7 +85,7 @@ jobs:
   synthesis:
     runs-on: ubuntu-22.04
     container:
-      image: barabas5532/crush-ci:2
+      image: barabas5532/crush-ci:3
     steps:
       - uses: actions/checkout@v4
         with:
@@ -108,7 +108,7 @@ jobs:
   firmware:
     runs-on: ubuntu-22.04
     container:
-      image: barabas5532/crush-ci:2
+      image: barabas5532/crush-ci:3
     defaults:
       run:
         working-directory: fw
