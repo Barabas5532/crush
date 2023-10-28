@@ -9,7 +9,7 @@ MEMORY
 SECTIONS
 {
     .mem : {
-        KEEP(*(.blah));
+        KEEP(*(.init));
         *(.text .text.*);
         *(.rodata .rodata.*);
         *(.bss .bss.*);
