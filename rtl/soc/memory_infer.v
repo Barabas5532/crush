@@ -8,7 +8,10 @@ module memory_infer #(
     parameter integer SIZE = 16384
 ) (
     input wire clk_i,
+    // The memory we are trying to infer can not be reset
+    // verilator lint_off UNUSEDSIGNAL
     input wire rst_i,
+    // verilator lint_on UNUSEDSIGNAL
     input wire stb_i,
     input wire cyc_i,
     input wire [31:0] adr_i,
@@ -28,7 +31,10 @@ module memory_infer #(
 
   wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + SIZE);
 
+  // depending on the size, some address bits are not going to be used
+  // verilator lint_off UNUSEDSIGNAL
   wire [31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
+  // verilator lint_on UNUSEDSIGNAL
 
   initial $readmemh("fw.data", mem);
 
