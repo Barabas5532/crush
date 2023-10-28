@@ -32,6 +32,8 @@ module gpio #(
 );
 
   reg [31:0] data;
+  assign err_o = 0;
+  assign rty_o = 0;
 
   // TODO should be (ack_o && !we_i), also check other modules
   assign dat_o = ack_o ? data : 32'hzzzz_zzzz;

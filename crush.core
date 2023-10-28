@@ -92,6 +92,8 @@ targets:
         iverilog_options:
           - "-g2012"
           - "-gassertions"
+    hooks:
+      post_run: [iceprog_hint]
 
   lint:
     default_tool : verilator
@@ -159,17 +161,9 @@ targets:
       - sim_top
     toplevel: top_tb
     default_tool: icarus
-    hooks:
-      post_run: [sim_top]
-    #tools:
-      #icarus:
-        #vvp_options:
-          #- "+BINARY_PATH=fw.bin"
 
-# TODO make fusesoc support vvp plusargs:
-# https://github.com/olofk/fusesoc/issues/653
 scripts:
-  sim_top:
+  iceprog_hint:
     cmd:
       - echo
-      - "Run 'vvp -n -M. -l icarus.log   crush_0.0.1 -fst +BINARY_PATH=fw.bin' in the build folder to run the simulation"
+      - "Run 'iceprog ...' in the build folder to program the board"
