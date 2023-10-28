@@ -2,9 +2,7 @@
 #![no_std]
 
 use core::panic::PanicInfo;
-
-mod hal;
-mod start;
+use core::arch::global_asm;
 
 #[panic_handler]
 fn panic(_panic: &PanicInfo) -> ! {
@@ -13,4 +11,11 @@ fn panic(_panic: &PanicInfo) -> ! {
 
 pub fn main() -> ! {
     loop {}
+}
+
+global_asm!(include_str!("start.S"));
+
+#[no_mangle]
+pub extern "C" fn c_start() -> ! {
+    main();
 }

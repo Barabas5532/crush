@@ -3,13 +3,13 @@ ENTRY(start)
 
 MEMORY
 {
-    mem (rwx): ORIGIN = 0x10000000, LENGTH = 0x800 * 4
+    mem (rwx): ORIGIN = 0x00000000, LENGTH = 0x800 * 4
 }
 
 SECTIONS
 {
     .mem : {
-        KEEP(*(.start));
+        KEEP(*(.blah));
         *(.text .text.*);
         *(.rodata .rodata.*);
         *(.bss .bss.*);
