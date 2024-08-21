@@ -645,4 +645,7 @@
 #define INCLUDE_xTaskGetHandle                 0
 #define INCLUDE_xTaskResumeFromISR             1
 
+#define configMTIME_BASE_ADDRESS 0
+#define configMTIMECMP_BASE_ADDRESS 0
+
 #endif /* FREERTOS_CONFIG_H */
