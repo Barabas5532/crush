@@ -5,7 +5,6 @@
 #include <semphr.h>
 
 #include <stdbool.h>
-#include <stdio.h>
 
 #include "hal.h"
 
@@ -15,8 +14,6 @@ void main( void )
 {
     static StaticTask_t exampleTaskTCB;
     static StackType_t exampleTaskStack[ configMINIMAL_STACK_SIZE ];
-
-    ( void ) printf( "Example FreeRTOS Project\n" );
 
     ( void ) xTaskCreateStatic( task,
                                 "example",

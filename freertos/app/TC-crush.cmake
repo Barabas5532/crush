@@ -13,5 +13,5 @@ find_program(COMPILER_PATH
 get_filename_component(COMPILER_NAME ${COMPILER_PATH} NAME)
 set(CMAKE_C_COMPILER ${COMPILER_NAME})
 
-set(CMAKE_C_FLAGS "-nostartfiles -nostdlib -march=rv32i -mabi=ilp32")
-set(CMAKE_ASM_FLAGS "-march=rv32i -mabi=ilp32")
+set(CMAKE_C_FLAGS "-nostartfiles -nostdlib -march=rv32i_zicsr -mabi=ilp32")
+set(CMAKE_ASM_FLAGS "-march=rv32i_zicsr -mabi=ilp32")
