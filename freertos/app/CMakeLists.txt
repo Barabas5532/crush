@@ -40,6 +40,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SO
 
 target_link_libraries(${PROJECT_NAME} PRIVATE freertos_kernel)
 
+# Since we use -nostdlib, we must link to libgcc manually
+target_link_libraries(${PROJECT_NAME} PRIVATE gcc)
+
 string(REPLACE "-gcc" "-objcopy" objcopy_name ${CMAKE_C_COMPILER})
 find_program(objcopy_program ${objcopy_name} REQUIRED)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
