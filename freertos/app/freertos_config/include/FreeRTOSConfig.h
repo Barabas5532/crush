@@ -252,6 +252,7 @@
  * allocated objects from the build.  Defaults to 0 if left undefined.  See
  * https://www.freertos.org/Static_Vs_Dynamic_Memory_Allocation.html. */
 #define configSUPPORT_STATIC_ALLOCATION              1
+#define configKERNEL_PROVIDED_STATIC_MEMORY          1
 
 /* Set configSUPPORT_DYNAMIC_ALLOCATION to 1 to include FreeRTOS API functions
  * that create FreeRTOS objects (tasks, queues, etc.) using dynamically allocated
@@ -420,9 +421,11 @@
 #define INCLUDE_vTaskSuspend                   0
 #define INCLUDE_xResumeFromISR                 0
 #define INCLUDE_vTaskDelayUntil                0
-#define INCLUDE_vTaskDelay                     0
+#define INCLUDE_vTaskDelay                     1
 #define INCLUDE_xTaskGetSchedulerState         0
-#define INCLUDE_xTaskGetCurrentTaskHandle      0
+// Must be on for the FreeRTOS bunded CMake script to work, as it always adds
+// stream_buffers.c, and that file requires this to be on.
+#define INCLUDE_xTaskGetCurrentTaskHandle      1
 #define INCLUDE_uxTaskGetStackHighWaterMark    0
 #define INCLUDE_xTaskGetIdleTaskHandle         0
 #define INCLUDE_eTaskGetState                  0

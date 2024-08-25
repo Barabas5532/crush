@@ -1,5 +1,3 @@
-#pragma once
-
 #include <string.h>
 
 /* When using -nostdlib with GCC, it may still generate calls to memcmp,
