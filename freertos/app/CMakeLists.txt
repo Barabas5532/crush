@@ -21,7 +21,10 @@ set( FREERTOS_PORT "GCC_POSIX" CACHE STRING "" FORCE)
 
 # Select the cross-compile PORT
 if (CMAKE_CROSSCOMPILING)
-    set(FREERTOS_RISCV_EXTENSION "RISCV_no_extensions" CACHE STRING "" FORCE)
+    # We don't have a sifive CLINT, but that define seems to be unused anyway,
+    # and the MTIME define is required for FreeRTOS to automatically use the
+    # mtime for system tick.
+    set(FREERTOS_RISCV_EXTENSION "RISCV_MTIME_CLINT_no_extensions" CACHE STRING "" FORCE)
     set(FREERTOS_PORT "GCC_RISC_V_GENERIC" CACHE STRING "" FORCE)
 endif()
 
