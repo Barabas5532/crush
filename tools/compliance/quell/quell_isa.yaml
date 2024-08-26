@@ -1,6 +1,26 @@
 hart_ids: [0]
 hart0:
-  ISA: RV32I
+  ISA: RV32IZicsr
   physical_addr_sz: 32
   User_Spec_Version: '2.3'
+  Privilege_Spec_Version: '1.12'
   supported_xlen: [32]
+  misa:
+    reset-val: 0x0
+    rv32:
+      mxl:
+        implemented: false
+      extensions:
+        implemented: false
+      accessible: true
+    rv64:
+      accessible: false
+  # We do also support some other CSRs, but they are not supported by the
+  # reference, so there is no point configuring them here.
+  #
+  # mcause
+  # mepc
+  # mstatus
+  # mtime
+  # mtimecmp
+  # mie

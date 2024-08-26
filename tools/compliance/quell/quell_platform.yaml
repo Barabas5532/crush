@@ -2,3 +2,9 @@ nmi:
   address: 0x10000000
 reset:
   address: 0x10000000
+mtime:
+  implemented: True
+  address: 0x20000000
+mtimecmp:
+  implemented: True
+  address: 0x20000009
