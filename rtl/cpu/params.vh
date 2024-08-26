@@ -49,4 +49,10 @@ localparam FUNCT3_XOR   = 3'b100;
 localparam FUNCT3_SRL_SRA = 3'b101;
 localparam FUNCT3_OR    = 3'b110;
 localparam FUNCT3_AND   = 3'b111;
+localparam FUNCT3_CSRRW = 3'b001;
+localparam FUNCT3_CSRRS = 3'b010;
+localparam FUNCT3_CSRRC = 3'b011;
+localparam FUNCT3_CSRRWI = 3'b101;
+localparam FUNCT3_CSRRSI = 3'b110;
+localparam FUNCT3_CSRRCI = 3'b111;
 // verilator lint_on UNUSEDPARAM
