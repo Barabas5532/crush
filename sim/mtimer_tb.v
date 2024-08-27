@@ -21,7 +21,7 @@ wire err_i;
 wire rty_i;
 
 wire interrupt;
-reg interrupt_enable;
+reg interrupt_enable = 0;
 
 localparam BASE_ADDRESS = 32'h100;
 
@@ -117,15 +117,25 @@ initial begin
     #0
     `fatal_assert(!ack_i);
 
-   interrupt_enable = 1;
+   #5
 
-   // TODO interrupt enabled high
-   //      write to counter x
-   //      write to compare x + N, where N is large enough to overflow in a few cycles
-   //      wait a bit
-   //      assert interrupt fired
-   //      update compare to x
-   //      assert interrupt low
+   // Set mtimecmp to a very large value to ensure interrupt doesn't trigger
+   // immediately
+   write_register(BASE_ADDRESS + 12, 1);
+   #0 interrupt_enable = 1;
+   #0 `fatal_assert(!interrupt);
+   // mtime = 1000
+   write_register(BASE_ADDRESS + 0, 1000);
+   // mtimecmp = 1010. Should interrupt in a few cycles
+   write_register(BASE_ADDRESS + 8, 1010);
+   write_register(BASE_ADDRESS + 12, 0);
+
+   #10
+   `fatal_assert(interrupt);
+
+   // mtime = 1000. Should clear interrupt
+   write_register(BASE_ADDRESS + 0, 1000);
+   `fatal_assert(!interrupt);
 
     #1
     $stop;

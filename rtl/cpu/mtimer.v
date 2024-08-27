@@ -20,36 +20,31 @@ module mtimer #(
    input wire interrupt_enable,
    output reg interrupt
 );
-   localparam SIZE = 4 * 4;
+   // The number of 32-bit registers that can be addressed inside this
+   // peripheral
+   localparam SIZE = 4;
 
-   reg [63:0] mtime;
-   reg [63:0] mtimecmp;
+  wire [31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
+  wire addressed = (adr_i >= BASE_ADDRESS) && (memory_address < SIZE);
 
-  wire [31:0] address = (adr_i - BASE_ADDRESS);
-  wire addressed = (adr_i >= BASE_ADDRESS) && (address < SIZE);
+   /* Implemented as registers to simplify the wishbone interface implementation.
+    *
+    * It would cleaner to define some kind of bidirectional alias so that we can
+    * read and write either the 32-bit register representation or the 64-bit
+    * counter representation, but it doesn't seem to be possible. We can at
+    * least read from the 64-bit representation below, but we must write to the
+    * 32-bit representation.
+    */
+   reg [31:0] mem [4];
+
+   wire [63:0] mtime;
+   assign mtime = {mem[1], mem[0]};
+
+   wire [63:0] mtimecmp;
+   assign mtimecmp = {mem[3], mem[2]};
+
   reg [31:0] data;
-
-   always @(*) begin
-      data = 32'hxxxx_xxxx;
-
-      case(address)
-        0: begin
-           data = mtime[31:0];
-        end
-        4: begin
-           data = mtime[63:32];
-        end
-        8: begin
-           data = mtimecmp[31:0];
-        end
-        12: begin
-           data = mtimecmp[63:32];
-        end
-      endcase
-
-      if (ack_o & !we_i) dat_o = data;
-      else dat_o = 32'hzzzz_zzzz;
-   end
+  assign dat_o = ack_o ? data : 32'hzzzz_zzzz;
 
    always @(posedge clk_i) begin
       ack_o <= 0;
@@ -57,17 +52,24 @@ module mtimer #(
       rty_o <= 0;
 
       if(rst_i) begin
-         mtime <= 0;
-         mtimecmp <= 0;
+         for(int i = 0; i < 4; i++) mem[i] <= 0;
       end else begin
+         {mem[1], mem[0]} <= mtime + 1;
+
+         // wishbone access overwrites counting behaviour
          if (stb_i & cyc_i & !ack_o & addressed) begin
             ack_o <= 1;
+        if(we_i) begin
+        if (sel_i[0]) mem[memory_address][7:0] <= dat_i[7:0];
+        if (sel_i[1]) mem[memory_address][15:8] <= dat_i[15:8];
+        if (sel_i[2]) mem[memory_address][23:16] <= dat_i[23:16];
+        if (sel_i[3]) mem[memory_address][31:24] <= dat_i[31:24];
+            end else begin
+               data <= mem[memory_address];
+            end
          end
 
-         mtime <= mtime + 1;
-
          if(interrupt_enable && mtime == mtimecmp) interrupt <= 1;
-
          if(mtimecmp > mtime) interrupt <= 0;
       end
    end
