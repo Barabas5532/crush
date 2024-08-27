@@ -47,26 +47,14 @@ always begin
     #0.5 clk = !clk;
 end
 
-initial begin
-    $dumpfile("mtimer.vcd");
-    $dumpvars;
-
-    #0.1
-
-    #1
-    reset = 1;
-
-    #1
-    reset = 0;
-
-    #5
-    // 32-bit write to 0
-    // Based on Wishbone B4 3.2.3 Classic standard SINGLE WRITE Cycle
+// 32-bit write
+// Based on Wishbone B4 3.2.3 Classic standard SINGLE WRITE Cycle
+task automatic write_register(input reg[31:0] register_address, input reg[31:0] data);
     // Clock edge 0
     `fatal_assert(!ack_i);
 
-    adr_o = BASE_ADDRESS + 0;
-    dat_o = 32'h0000_0000;
+    adr_o = register_address;
+    dat_o = data;
     we_o = 1'b1;
     sel_o = 4'b1111;
 
@@ -83,6 +71,23 @@ initial begin
     cyc_o = 0;
     #0
     `fatal_assert(!ack_i);
+endtask
+
+
+initial begin
+    $dumpfile("mtimer.vcd");
+    $dumpvars;
+
+    #0.1
+
+    #1
+    reset = 1;
+
+    #1
+    reset = 0;
+
+    #5
+    write_register(BASE_ADDRESS + 0, 0);
 
     adr_o = 32'hxxxxxxxx;
     dat_o = 32'hxxxxxxxx;
@@ -111,6 +116,8 @@ initial begin
     cyc_o = 0;
     #0
     `fatal_assert(!ack_i);
+
+   interrupt_enable = 1;
 
    // TODO interrupt enabled high
    //      write to counter x
