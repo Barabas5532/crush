@@ -1,7 +1,8 @@
 `default_nettype none
 
 module cpu #(
-    parameter integer INITIAL_PC = 0
+    parameter integer INITIAL_PC = 0,
+    parameter integer TRAP_PC = 0
 ) (
     input wire clk_i,
     input wire[31:0] dat_i,
@@ -14,7 +15,11 @@ module cpu #(
     output reg cyc_o,
     output reg[31:0] adr_o,
     output reg[3:0] sel_o,
-    output reg we_o
+    output reg we_o,
+    input wire timer_interrupt,
+    input wire external_interrupt,
+    output reg timer_interrupt_enable,
+    output reg external_interrupt_enable
 );
 
 `include "params.vh"
@@ -38,6 +43,18 @@ reg pc_count;
 reg[31:0] pc_value;
 wire[31:0] pc;
 wire[31:0] pc_inc;
+
+reg [31:0] mstatus;
+reg [31:0] mepc;
+reg [31:0] mcause;
+
+wire mstatus_mie = mstatus[3];
+
+wire mie_mtie = mie[7];
+wire mie_meie = mie[11];
+
+assign timer_interrupt_enable = mstatus_mie && mie_mtie;
+assign external_interrupt_enable = mstatus_mie && mie_meie;
 
 program_counter #(.INITIAL_PC(INITIAL_PC)) program_counter(
     .reset(rst_i),
@@ -244,6 +261,30 @@ always @(*) begin
                 default: sel_o = 4'bxxxx;
             endcase
         end
+
+
+       if(timer_interrupt || external_interrupt) begin
+          // Prevent memory writes if interrupted. This is the only side effect
+          // of the instruction, so this effectively interrupts the instruction,
+          // and it can be restarted after handling the interrupt.
+            stb_o = 0;
+            cyc_o = 0;
+            sel_o = 4'hx;
+            dat_o = 32'hxxxx_xxxx;
+            adr_o = 32'hxxxx_xxxx;
+            we_o = 1'hx;
+
+          mepc = pc_value;
+          pc_value = TRAP_PC;
+
+          if(timer_interrupt) begin
+             mcause = 7;
+          end
+
+          if(external_interrupt) begin
+             mcause = 11;
+          end
+       end
     end
     STATE_REG_WRITE: begin
         w_enable = reg_w_en;
