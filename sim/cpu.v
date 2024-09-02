@@ -5,7 +5,7 @@
 
 `default_nettype none
 
-`timescale 1s/1s
+`timescale 1ns/1ps
 
 module cpu_tb;
 
@@ -24,7 +24,7 @@ wire ack_i;
 wire err_i = 0;
 wire rty_i = 0;
 
-cpu #(.INITIAL_PC('h1000_0000)) dut (
+cpu #(.INITIAL_PC('h2000_8000)) dut (
     .clk_i(clk),
     .dat_i(dat_i),
     .dat_o(dat_o),
@@ -40,7 +40,7 @@ cpu #(.INITIAL_PC('h1000_0000)) dut (
 );
 
 wire flash_ack_o;
-flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h20_0000)) flash_emulator (
+flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h1_0000)) flash_emulator (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),
@@ -56,7 +56,7 @@ flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h20_0000)) flash_emulator (
 );
 
 wire memory_ack_o;
-sim_memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
+memory_ice40_spram_wb #(.BASE_ADDRESS('h2000_0000)) memory (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),
@@ -71,12 +71,8 @@ sim_memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
     .rty_o(rty_i)
 );
 
-wire control_ack_o;
-control #(
-    .BASE_ADDRESS('h3000_0000),
-    .MEMORY_BASE_ADDRESS('h2000_0000),
-    .MEMORY_SIZE('h4000)
-) control (
+wire mtimer_ack_o;
+mtimer #(.BASE_ADDRESS('h3000_0000)) mtimer (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),
@@ -86,28 +82,55 @@ control #(
     .dat_i(dat_o),
     .dat_o(dat_i),
     .we_i(we_o),
-    .ack_o(control_ack_o),
+    .ack_o(mtimer_ack_o),
     .err_o(err_i),
-    .rty_o(rty_i),
-    .memory(memory.mem)
+    .rty_o(rty_i)
 );
 
-assign ack_i = flash_ack_o | memory_ack_o | control_ack_o;
+wire gpio_ack_o;
+wire gpio_rty_o;
+wire gpio_err_o;
+wire [5:0] unused;
+reg btn = 0;
+reg led1;
+reg led2;
+gpio #(.BASE_ADDRESS('h4000_0000)) gpio (
+    .clk_i(clk),
+    .rst_i(reset),
+    .stb_i(stb_o),
+    .cyc_i(cyc_o),
+    .adr_i(adr_o),
+    .sel_i(sel_o),
+    .dat_i(dat_o),
+    .dat_o(dat_i),
+    .we_i(we_o),
+    .ack_o(gpio_ack_o),
+    .err_o(gpio_err_o),
+    .rty_o(gpio_rty_o),
+    .pin_input({{7{1'b0}}, btn}),
+    .pin_output({unused, led2, led1})
+);
+
+assign ack_i = flash_ack_o | memory_ack_o | mtimer_ack_o | gpio_ack_o;
 
 always begin
-    #0.5 clk <= !clk;
+    #42 clk <= !clk;
+end
+
+always begin
+    #1000 btn <= !btn;
 end
 
 initial begin
     $dumpfile("cpu.vcd");
     $dumpvars(0);
 
-    #2.5 reset = 0;
-    #0.5
+    #250 reset = 0;
+    #50
 
     #300_000
 
-    $error("Stop was not called within 300k clock cycles, stopping now");
+    $error("Stop was not called within 300 us, stopping now");
     $fatal;
 end
 

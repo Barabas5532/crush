@@ -44,9 +44,10 @@ reg[31:0] pc_value;
 wire[31:0] pc;
 wire[31:0] pc_inc;
 
-reg [31:0] mstatus;
-reg [31:0] mepc;
 reg [31:0] mcause;
+reg [31:0] mepc;
+reg [31:0] mie;
+reg [31:0] mstatus;
 
 wire mstatus_mie = mstatus[3];
 

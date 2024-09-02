@@ -18,6 +18,7 @@ filesets:
       - rtl/soc/memory.v
       - rtl/soc/memory_infer.v: {file_type: systemVerilogSource}
       - rtl/soc/memory_ice40_spram.v
+      - rtl/soc/memory_ice40_spram_wb.v
       - rtl/soc/top.v
       - rtl/soc/gpio.v
       - fw/binary/crush-blinky.data:

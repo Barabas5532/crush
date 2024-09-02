@@ -18,7 +18,7 @@ module memory_ice40_spram_wb #(
     output reg rty_o
 );
 
-   localparam SIZE = 16384;
+   localparam SIZE = 65536;
 
   reg [31:0] data;
   assign dat_o = ack_o ? data : 32'hzzzz_zzzz;

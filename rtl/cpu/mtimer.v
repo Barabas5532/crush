@@ -11,7 +11,7 @@ module mtimer #(
     input wire [31:0] adr_i,
     input wire [3:0] sel_i,
     input wire [31:0] dat_i,
-    output reg [31:0] dat_o,
+    output wire [31:0] dat_o,
     input wire we_i,
     output reg ack_o,
     output reg err_o,
