@@ -3,31 +3,26 @@ ENTRY(start)
 
 MEMORY
 {
-    ram (rwx): ORIGIN = 0x10000000, LENGTH = 0x800 * 4
-    
-    /* TODO move firmware to the flash, set up load from flash to program memory */
-    /*
-     * TODO would be even better if we move the RAM to SPRAM too next to the
-     * firmware and stop using blockram.
-     */
-     /*
-    ram (rw): ORIGIN = 0x10000000, LENGTH = 0x800 * 4
-    program (rx): ORIGIN = 0x10000000, LENGTH = 0x800 * 4
-    flash (r): ORIGIN = 0x10000000, LENGTH = 0x800 * 4
-     */
+    flash (r): ORIGIN = 0x10000000, LENGTH = 0x8000
+    ram (rw): ORIGIN = 0x20000000, LENGTH = 0x8000
+    program (rx): ORIGIN = 0x20008000, LENGTH = 0x8000
 }
 
 SECTIONS
 {
-    /* TODO move firmware to the program memory, set up load from flash to program memory */
-    .ram : {
+    .program : {
         . = ALIGN(4);
+        __program_start = .;
         KEEP(*(.start))
         *(.text .text.*)
         *(.rodata .rodata*)
         . = ALIGN(4);
         *(.data .data.*);
-    } > ram
+        __program_end = .;
+    } > program AT> flash
+
+    __flash_start = LOADADDR(.program);
+    __flash_end = LOADADDR(.program) + LENGTH(.program);
 
     .bss (NOLOAD) : {
         . = ALIGN(4);

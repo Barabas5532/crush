@@ -8,9 +8,19 @@
  */
 
 /** The start of the region in RAM to be zero initialised */
-int bss_start[0];
+extern int bss_start[0];
 /** The end of the region in RAM to be zero initialised */
-int bss_end[0];
+extern int bss_end[0];
+
+/** The start of the region in flash containing the program */
+extern int __flash_start[0];
+/** The end of the region in flash containing the program */
+extern int __flash_end[0];
+
+/** The start of the region in RAM where program is copied and executed from */
+extern int __program_start[0];
+/** The end of the region in RAM where program is copied and executed from */
+extern int __program_end[0];
 
 /**
  * @}
@@ -26,6 +36,18 @@ int main(void);
  */
 void c_start(void)
 {
+    {
+        int *src = __flash_start;
+        int *dst = __program_start;
+
+        while(src < __flash_end) {
+            *dst = *src;
+
+            dst++;
+            src++;
+        }
+    }
+
     for(int *i = bss_start; i < bss_end; i++)
     {
         *i = 0;
