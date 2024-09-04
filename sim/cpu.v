@@ -118,7 +118,7 @@ always begin
 end
 
 always begin
-    #1000 btn <= !btn;
+    #50_000_000 btn <= !btn;
 end
 
 initial begin
@@ -128,9 +128,9 @@ initial begin
     #250 reset = 0;
     #50
 
-    #30_000_000
+    #300_000_000
 
-    $error("Stop was not called within 30 ms, stopping now");
+    $error("Stop was not called within 300 ms, stopping now");
     $fatal;
 end
 
