@@ -13,25 +13,24 @@ SECTIONS
         . = ALIGN(4);
         KEEP(*(.start))
         *(.text .text.*)
-        *(.rodata .rodata*)
+        *(.rodata .rodata* .srodata .srodata.*)
         . = ALIGN(4);
     } > flash
 
     .data : {
         . = ALIGN(4);
         __data_start = .;
-        *(.data .data.*);
+        *(.data .data.* .sdata .sdata.*);
         . = ALIGN(4);
         __data_end = .;
     } > ram AT> flash
 
     __flash_data_start = LOADADDR(.data);
-    __flash_data_end = LOADADDR(.data) + LENGTH(.data);
 
     .bss (NOLOAD) : {
         . = ALIGN(4);
         bss_start = .;
-        *(.bss .bss.*)
+        *(.bss .bss.* .sbss .sbss.*)
         *(COMMON)
         . = ALIGN(4);
         bss_end = .;

@@ -40,7 +40,7 @@ void c_start(void)
         int *src = __flash_data_start;
         int *dst = __data_start;
 
-        while(src < __flash_data_end) {
+        while(dst < __data_end) {
             *dst = *src;
 
             dst++;
