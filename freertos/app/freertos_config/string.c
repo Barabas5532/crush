@@ -12,17 +12,21 @@ void* memcpy( void *restrict a_dest, const void *restrict a_src, size_t count ) 
     char *dest = a_dest;
     const char *src = a_src;
 
-    for(int i = 0; i < count; i++) {
+    for(size_t i = 0; i < count; i++) {
         dest[i] = src[i];
     }
+
+    return dest;
 }
 
 void *memset( void *a_dest, int ch, size_t count ) {
     char *dest = a_dest;
 
-    for(int i = 0; i < count; i++) {
+    for(size_t i = 0; i < count; i++) {
         dest[i] = ch;
     }
+
+    return dest;
 }
 
 int memcmp( const void* a_lhs, const void* a_rhs, size_t count ) {
