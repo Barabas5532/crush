@@ -1,16 +1,17 @@
 [*]
 [*] GTKWave Analyzer v3.3.120 (w)1999-2024 BSI
-[*] Mon Sep  2 22:39:15 2024
+[*] Wed Sep  4 19:37:11 2024
 [*]
 [dumpfile] "/home/barabas/data3/projects/hardware/risc-v/cpu.vcd"
-[dumpfile_mtime] "Mon Sep  2 22:32:59 2024"
-[dumpfile_size] 38412
+[dumpfile_mtime] "Wed Sep  4 19:34:41 2024"
+[dumpfile_size] 10598309
 [savefile] "/home/barabas/data3/projects/hardware/risc-v/tools/cpu2.gtkw"
-[timestart] 0
+[timestart] 5748817000
 [size] 1910 1001
 [pos] -1 -1
-*-19.421982 235000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-19.421982 5751060000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] cpu_tb.
+[treeopen] cpu_tb.dut.
 [sst_width] 318
 [signals_width] 291
 [sst_expanded] 1
@@ -30,11 +31,47 @@ cpu_tb.adr_o[31:0]
 cpu_tb.we_o[0]
 @22
 cpu_tb.dat_o[31:0]
+@23
 cpu_tb.dat_i[31:0]
 @28
 cpu_tb.ack_i[0]
 cpu_tb.err_i[0]
 cpu_tb.rty_i[0]
+@200
+-CPU
+@22
+cpu_tb.dut.pc[31:0]
+cpu_tb.dut.registers.x0[31:0]
+cpu_tb.dut.registers.x1[31:0]
+cpu_tb.dut.registers.x2[31:0]
+cpu_tb.dut.registers.x3[31:0]
+cpu_tb.dut.registers.x4[31:0]
+cpu_tb.dut.registers.x5[31:0]
+cpu_tb.dut.registers.x6[31:0]
+cpu_tb.dut.registers.x7[31:0]
+cpu_tb.dut.registers.x8[31:0]
+cpu_tb.dut.registers.x9[31:0]
+cpu_tb.dut.registers.x11[31:0]
+cpu_tb.dut.registers.x12[31:0]
+cpu_tb.dut.registers.x13[31:0]
+cpu_tb.dut.registers.x14[31:0]
+cpu_tb.dut.registers.x15[31:0]
+cpu_tb.dut.registers.x16[31:0]
+cpu_tb.dut.registers.x17[31:0]
+cpu_tb.dut.registers.x18[31:0]
+cpu_tb.dut.registers.x19[31:0]
+cpu_tb.dut.registers.x20[31:0]
+cpu_tb.dut.registers.x21[31:0]
+cpu_tb.dut.registers.x22[31:0]
+cpu_tb.dut.registers.x23[31:0]
+cpu_tb.dut.registers.x24[31:0]
+cpu_tb.dut.registers.x25[31:0]
+cpu_tb.dut.registers.x26[31:0]
+cpu_tb.dut.registers.x27[31:0]
+cpu_tb.dut.registers.x28[31:0]
+cpu_tb.dut.registers.x29[31:0]
+cpu_tb.dut.registers.x30[31:0]
+cpu_tb.dut.registers.x31[31:0]
 @200
 -GPIO
 @28

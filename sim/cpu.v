@@ -24,7 +24,7 @@ wire ack_i;
 wire err_i = 0;
 wire rty_i = 0;
 
-cpu #(.INITIAL_PC('h2000_8000)) dut (
+cpu #(.INITIAL_PC('h1000_0000)) dut (
     .clk_i(clk),
     .dat_i(dat_i),
     .dat_o(dat_o),
@@ -128,9 +128,9 @@ initial begin
     #250 reset = 0;
     #50
 
-    #300_000
+    #30_000_000
 
-    $error("Stop was not called within 300 us, stopping now");
+    $error("Stop was not called within 30 ms, stopping now");
     $fatal;
 end
 
