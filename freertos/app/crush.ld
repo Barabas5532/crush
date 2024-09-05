@@ -12,6 +12,8 @@ SECTIONS
     .flash : {
         . = ALIGN(4);
         KEEP(*(.start))
+        . = 0x100;
+        KEEP(*(.text.freertos_risc_v_trap_handler))
         *(.text .text.*)
         *(.rodata .rodata* .srodata .srodata.*)
         . = ALIGN(4);
