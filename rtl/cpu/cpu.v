@@ -18,8 +18,8 @@ module cpu #(
     output reg we_o,
     input wire timer_interrupt,
     input wire external_interrupt,
-    output reg timer_interrupt_enable,
-    output reg external_interrupt_enable
+    output wire timer_interrupt_enable,
+    output wire external_interrupt_enable
 );
 
 `include "params.vh"
@@ -147,6 +147,10 @@ always @(posedge(clk_i)) begin
     if(rst_i) begin
         state <= STATE_RESET;
         instruction <= 32'hxxxx_xxxx;
+        mcause <= 0;
+        mepc <= 0;
+        mie <= 0;
+        mstatus <= 0;
     end else begin
         case(state)
         STATE_FETCH:

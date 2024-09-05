@@ -24,6 +24,9 @@ wire ack_i;
 wire err_i = 0;
 wire rty_i = 0;
 
+wire timer_interrupt;
+wire timer_interrupt_enable;
+
 cpu #(.INITIAL_PC('h1000_0000)) dut (
     .clk_i(clk),
     .dat_i(dat_i),
@@ -36,7 +39,10 @@ cpu #(.INITIAL_PC('h1000_0000)) dut (
     .cyc_o(cyc_o),
     .adr_o(adr_o),
     .sel_o(sel_o),
-    .we_o(we_o)
+    .we_o(we_o),
+    .timer_interrupt(timer_interrupt),
+    .timer_interrupt_enable(timer_interrupt_enable),
+    .external_interrupt(0)
 );
 
 wire flash_ack_o;
@@ -84,7 +90,9 @@ mtimer #(.BASE_ADDRESS('h3000_0000)) mtimer (
     .we_i(we_o),
     .ack_o(mtimer_ack_o),
     .err_o(err_i),
-    .rty_o(rty_i)
+    .rty_o(rty_i),
+    .interrupt_enable(timer_interrupt_enable),
+    .interrupt(timer_interrupt)
 );
 
 wire gpio_ack_o;
