@@ -53,6 +53,7 @@ module mtimer #(
 
       if(rst_i) begin
          for(int i = 0; i < 4; i++) mem[i] <= 0;
+         interrupt <= 0;
       end else begin
          {mem[1], mem[0]} <= mtime + 1;
 
