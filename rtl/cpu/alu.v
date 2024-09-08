@@ -1,11 +1,11 @@
 `default_nettype none
 
 module alu (
-    input  wire [31:0] instruction,
-    input  wire [31:0] op_a,
-    input  wire [31:0] op_b,
-    input  wire [31:0] pc,
-    output reg  [31:0] out,
+    input wire [31:0] instruction,
+    input wire [31:0] op_a,
+    input wire [31:0] op_b,
+    input wire [31:0] pc,
+    output reg [31:0] out,
     output wire eq,
     output wire neq,
     output wire lt,
@@ -57,7 +57,9 @@ module alu (
         FUNCT3_SLLI: out = op_a << shamt;
         // False branch must be signed too for the true branch to actually
         // perform an arithetic shift instead of logical shift...
-        FUNCT3_SRLI_SRAI: out = instruction[30] ? $signed(op_a) >>> shamt : $signed(op_a) >> shamt;
+        FUNCT3_SRLI_SRAI:
+        out = instruction[30] ? $signed(op_a) >>> shamt :
+            $signed(op_a) >> shamt;
       endcase
       OPCODE_OP:
       case (funct3)
@@ -69,15 +71,16 @@ module alu (
         FUNCT3_XOR: out = op_a ^ op_b;
         FUNCT3_SLL: out = op_a << op_b[4:0];
         FUNCT3_SRL_SRA:
-        out = instruction[30] ? $signed(op_a) >>> op_b[4:0] : $signed(op_a) >> op_b[4:0];
+        out = instruction[30] ? $signed(op_a) >>> op_b[4:0] :
+            $signed(op_a) >> op_b[4:0];
       endcase
       OPCODE_BRANCH: out = pc + B_immediate;
-      OPCODE_LUI:    out = U_immediate;
-      OPCODE_AUIPC:  out = pc + U_immediate;
-      OPCODE_LOAD:   out = op_a + I_immediate;
-      OPCODE_STORE:  out = op_a + S_immediate;
-      OPCODE_JAL:    out = pc + J_immediate;
-      OPCODE_JALR:   out = (op_a + I_immediate) & ~1;
+      OPCODE_LUI: out = U_immediate;
+      OPCODE_AUIPC: out = pc + U_immediate;
+      OPCODE_LOAD: out = op_a + I_immediate;
+      OPCODE_STORE: out = op_a + S_immediate;
+      OPCODE_JAL: out = pc + J_immediate;
+      OPCODE_JALR: out = (op_a + I_immediate) & ~1;
       default: ;
     endcase
   end

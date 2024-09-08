@@ -24,7 +24,7 @@ module memory_infer #(
     output reg rty_o
 );
 
-  (* synthesis, ram_block *)reg [31:0] mem  [SIZE];
+  (* synthesis, ram_block *) reg [31:0] mem[SIZE];
 
   reg [31:0] data;
   assign dat_o = ack_o ? data : 32'hzzzz_zzzz;
@@ -53,7 +53,8 @@ module memory_infer #(
         if (sel_i[1]) mem[memory_address][23:16] <= dat_i[15:8];
         if (sel_i[2]) mem[memory_address][15:8] <= dat_i[23:16];
         if (sel_i[3]) mem[memory_address][7:0] <= dat_i[31:24];
-      end else begin
+      end
+      else begin
         data <= {
           {mem[memory_address][7:0]},
           {mem[memory_address][15:8]},

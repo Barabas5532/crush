@@ -66,7 +66,8 @@ module control #(
           string signature_path;
 
           $display("Control register accessed, finishing simulation");
-          $display("Dumping memory from %08h to %08h", start_address, end_address);
+          $display("Dumping memory from %08h to %08h", start_address,
+                   end_address);
 
           if ($value$plusargs("SIGNATURE_PATH=%s", signature_path)) begin
             integer file;
@@ -76,10 +77,11 @@ module control #(
 
             file = $fopen(signature_path, "w");
             for (i = start_address; i < end_address; i += 4) begin
-              $fwrite(file, "%08h\n", memory[(i - MEMORY_BASE_ADDRESS) >> 2]);
+              $fwrite(file, "%08h\n", memory[(i-MEMORY_BASE_ADDRESS)>>2]);
             end
             $fclose(file);
-          end else begin
+          end
+          else begin
             $error("The SIGNATURE_PATH plus arg must be set");
             $stop;
           end

@@ -20,30 +20,32 @@ module sim_memory #(
 
   reg [31:0] mem[SIZE];
 
-  wire[31:0] mask = {{8{sel_i[3]}}, {8{sel_i[2]}}, {8{sel_i[1]}}, {8{sel_i[0]}}};
-  wire[31:0] value = mem[memory_address];
+  wire [31:0] mask = {
+    {8{sel_i[3]}}, {8{sel_i[2]}}, {8{sel_i[1]}}, {8{sel_i[0]}}
+  };
+  wire [31:0] value = mem[memory_address];
 
   wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + SIZE);
 
   // Individal signals so the memory can be observed in VCD output
   genvar i;
   generate
-      for(i = 0; i < SIZE && i < 8; i++) begin : g_scope
-          wire[31:0] m;
-          assign m = mem[i];
-      end
+    for (i = 0; i < SIZE && i < 8; i++) begin : g_scope
+      wire [31:0] m;
+      assign m = mem[i];
+    end
   endgenerate
 
   always @(posedge clk_i) begin
-      integer i;
-      if(rst_i) begin
-        for(i = 0; i < SIZE; i++) begin
-            mem[i] = 32'hxxxx_xxxx;
-        end
+    integer i;
+    if (rst_i) begin
+      for (i = 0; i < SIZE; i++) begin
+        mem[i] = 32'hxxxx_xxxx;
       end
+    end
   end
 
-  wire[31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
+  wire [31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
   always @(posedge clk_i) begin
     ack_o <= 0;
     err_o <= 0;
@@ -55,7 +57,7 @@ module sim_memory #(
     end
 
     if (stb_i & cyc_i & addressed & we_i) begin
-     mem[memory_address] <= (value & ~mask) | (dat_i & mask);
+      mem[memory_address] <= (value & ~mask) | (dat_i & mask);
     end
 
     if (stb_i & cyc_i & addressed & !we_i) begin

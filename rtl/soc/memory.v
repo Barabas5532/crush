@@ -21,29 +21,29 @@ module memory #(
   wire addressed = (adr_i >= BASE_ADDRESS) && (memory_address < SIZE);
   wire [31:0] memory_data;
 
-  memory_ice40_spram ram(
-    .clk(clk_i),
-    .rst(rst_i),
-    .wen(stb_i & cyc_i & we_i & addressed),
-    .wmask(sel_i),
-    .addr(memory_address[15:2]),
-    .wdata(dat_i),
-    .rdata(memory_data)
+  memory_ice40_spram ram (
+      .clk(clk_i),
+      .rst(rst_i),
+      .wen(stb_i & cyc_i & we_i & addressed),
+      .wmask(sel_i),
+      .addr(memory_address[15:2]),
+      .wdata(dat_i),
+      .rdata(memory_data)
   );
 
   always @(*) begin
-      if (ack_o) dat_o = memory_data;
-      else dat_o = 32'hzzzz_zzzz;
+    if (ack_o) dat_o = memory_data;
+    else dat_o = 32'hzzzz_zzzz;
   end
 
   always @(posedge clk_i) begin
-      ack_o <= 0;
-      err_o <= 0;
-      rty_o <= 0;
+    ack_o <= 0;
+    err_o <= 0;
+    rty_o <= 0;
 
-      if (stb_i & cyc_i & !ack_o & addressed) begin
-        ack_o <= 1;
-      end
+    if (stb_i & cyc_i & !ack_o & addressed) begin
+      ack_o <= 1;
+    end
   end
 
 endmodule

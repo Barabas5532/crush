@@ -47,13 +47,13 @@ module gpio #(
 
     ack_o = (adr_i == BASE_ADDRESS) && stb_i && cyc_i;
 
-    if(ack_o && !we_i) data = {{16{1'b0}}, pin_input, pin_output};
+    if (ack_o && !we_i) data = {{16{1'b0}}, pin_input, pin_output};
   end
 
   always @(posedge clk_i) begin
-    if(ack_o && we_i) pin_output = dat_i[7:0];
+    if (ack_o && we_i) pin_output = dat_i[7:0];
 
-    if(rst_i) pin_output = 0;
+    if (rst_i) pin_output = 0;
   end
 
 endmodule
