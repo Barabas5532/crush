@@ -203,6 +203,19 @@ initial begin
     `fatal_assert (cpu.mepc         == 32'h1110_0000);
     #1;
 
+    test_case("CSRRC");
+
+    cpu.mepc                = 32'h1010_0000;
+    cpu.registers.memory[2] = 32'h1100_0000;
+
+    CSRRC(1, CSR_MEPC, 2);
+
+    #1;
+    @(cpu.state == cpu.STATE_FETCH);
+    `fatal_assert (cpu.registers.x1 == 32'h1010_0000);
+    `fatal_assert (cpu.mepc         == 32'h0010_0000);
+    #1;
+
     $stop;
 end
 
