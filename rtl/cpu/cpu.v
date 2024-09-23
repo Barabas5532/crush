@@ -193,15 +193,26 @@ always @(posedge(clk_i)) begin
                 mepc <= pc;
                 state <= STATE_FETCH;
 
-                mstatus[7] <= 1;
+                // MIE
                 mstatus[3] <= 0;
+                // MPIE
+                mstatus[7] <= 1;
             end
         end
         STATE_REG_WRITE: begin
             state <= STATE_FETCH;
 
             if(opcode == OPCODE_SYSTEM) begin
-                case(csr_address)
+               if(w_address == 0 &&
+               funct3 == FUNCT3_PRIV &&
+               r_address1 == 0 &&
+               instruction[31:20] == FUNCT12_MRET) begin
+                // MIE
+                mstatus[3] <= 1;
+                // MPIE
+                mstatus[7] <= 1;
+            end
+            else case(csr_address)
                 CSR_MSTATUS: mstatus <= alu_out_r;
                 CSR_MIE: mie <= alu_out_r;
                 CSR_MEPC: mepc <= alu_out_r;
@@ -402,6 +413,15 @@ always @(*) begin
                 pc_value = 32'hxxxx_xxxx;
             end
         endcase
+
+        if(opcode == OPCODE_SYSTEM &&
+           w_address == 0 &&
+           funct3 == FUNCT3_PRIV &&
+           r_address1 == 0 &&
+           instruction[31:20] == FUNCT12_MRET) begin
+            pc_load = 1;
+            pc_value = mepc;
+        end
     end
     default: ;
     endcase

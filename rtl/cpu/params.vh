@@ -61,4 +61,6 @@ localparam CSR_MSTATUS  = 12'h300;
 localparam CSR_MIE      = 12'h304;
 localparam CSR_MEPC     = 12'h341;
 localparam CSR_MCAUSE   = 12'h342;
+
+localparam FUNCT12_MRET = 12'b001100000010;
 // verilator lint_on UNUSEDPARAM
