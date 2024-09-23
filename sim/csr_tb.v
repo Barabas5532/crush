@@ -130,36 +130,36 @@ task static CSRRC(input reg[4:0] rd, input reg[11:0] csr, input reg[4:0] rs1);
     #0;
 endtask
 
-task static CSRRWI(input reg[4:0] rd, input reg[11:0] csr, input reg[4:0] rs1);
+task static CSRRWI(input reg[4:0] rd, input reg[11:0] csr, input reg[4:0] imm);
     // wait for wishbone instruction read
     @(stb_o & cyc_o);
     @(posedge clk);
     flash_ack_o = 1;
-    flash_dat_o = {{csr}, {rs1}, {FUNCT3_CSRRWI}, {rd}, {OPCODE_SYSTEM}};
+    flash_dat_o = {{csr}, {imm}, {FUNCT3_CSRRWI}, {rd}, {OPCODE_SYSTEM}};
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
     #0;
 endtask
 
-task static CSRRSI(input reg[4:0] rd, input reg[11:0] csr, input reg[4:0] rs1);
+task static CSRRSI(input reg[4:0] rd, input reg[11:0] csr, input reg[4:0] imm);
     // wait for wishbone instruction read
     @(stb_o & cyc_o);
     @(posedge clk);
     flash_ack_o = 1;
-    flash_dat_o = {{csr}, {rs1}, {FUNCT3_CSRRSI}, {rd}, {OPCODE_SYSTEM}};
+    flash_dat_o = {{csr}, {imm}, {FUNCT3_CSRRSI}, {rd}, {OPCODE_SYSTEM}};
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
     #0;
 endtask
 
-task static CSRRCI(input reg[4:0] rd, input reg[11:0] csr, input reg[4:0] rs1);
+task static CSRRCI(input reg[4:0] rd, input reg[11:0] csr, input reg[4:0] imm);
     // wait for wishbone instruction read
     @(stb_o & cyc_o);
     @(posedge clk);
     flash_ack_o = 1;
-    flash_dat_o = {{csr}, {rs1}, {FUNCT3_CSRRCI}, {rd}, {OPCODE_SYSTEM}};
+    flash_dat_o = {{csr}, {imm}, {FUNCT3_CSRRCI}, {rd}, {OPCODE_SYSTEM}};
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
@@ -214,6 +214,42 @@ initial begin
     @(cpu.state == cpu.STATE_FETCH);
     `fatal_assert (cpu.registers.x1 == 32'h1010_0000);
     `fatal_assert (cpu.mepc         == 32'h0010_0000);
+    #1;
+
+    test_case("CSRRWI");
+
+    cpu.mepc = 32'h0000_0014;
+
+    CSRRWI(1, CSR_MEPC, 5'h18);
+
+    #1;
+    @(cpu.state == cpu.STATE_FETCH);
+    `fatal_assert (cpu.registers.x1 == 32'h0000_0014);
+    `fatal_assert (cpu.mepc         == 32'h0000_0018);
+    #1;
+
+    test_case("CSRRSI");
+
+    cpu.mepc = 32'h0000_0014;
+
+    CSRRSI(1, CSR_MEPC, 5'h18);
+
+    #1;
+    @(cpu.state == cpu.STATE_FETCH);
+    `fatal_assert (cpu.registers.x1 == 32'h0000_0014);
+    `fatal_assert (cpu.mepc         == 32'h0000_001C);
+    #1;
+
+    test_case("CSRRCI");
+
+    cpu.mepc = 32'h0000_0014;
+
+    CSRRCI(1, CSR_MEPC, 5'h18);
+
+    #1;
+    @(cpu.state == cpu.STATE_FETCH);
+    `fatal_assert (cpu.registers.x1 == 32'h0000_0014);
+    `fatal_assert (cpu.mepc         == 32'h0000_0004);
     #1;
 
     $stop;
