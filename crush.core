@@ -67,6 +67,11 @@ filesets:
       - sim/sim_memory.v
     file_type: verilogSource
 
+  sim_csr:
+    files:
+     - sim/csr_tb.v
+    file_type: systemVerilogSource
+
   sim_mtimer:
     files:
       - sim/mtimer_tb.v
@@ -145,6 +150,14 @@ targets:
       - sim_common
       - sim_alu
     toplevel: alu_tb
+    default_tool: icarus
+
+  sim_csr:
+    <<: *default
+    filesets_append:
+      - sim_common
+      - sim_csr
+    toplevel: csr_tb
     default_tool: icarus
 
   sim_load_store:

@@ -25,7 +25,6 @@ wire err_i = 0;
 wire rty_i = 0;
 
 wire timer_interrupt;
-wire timer_interrupt_enable;
 
 cpu #(.INITIAL_PC('h1000_0000), .TRAP_PC('h1000_0100)) dut (
     .clk_i(clk),
@@ -41,8 +40,7 @@ cpu #(.INITIAL_PC('h1000_0000), .TRAP_PC('h1000_0100)) dut (
     .sel_o(sel_o),
     .we_o(we_o),
     .timer_interrupt(timer_interrupt),
-    .timer_interrupt_enable(timer_interrupt_enable),
-    .external_interrupt(0)
+    .external_interrupt(1'b0)
 );
 
 wire flash_ack_o;
@@ -91,7 +89,6 @@ mtimer #(.BASE_ADDRESS('h3000_0000)) mtimer (
     .ack_o(mtimer_ack_o),
     .err_o(err_i),
     .rty_o(rty_i),
-    .interrupt_enable(timer_interrupt_enable),
     .interrupt(timer_interrupt)
 );
 
@@ -134,9 +131,9 @@ initial begin
     $dumpvars(0);
 
     #250 reset = 0;
-    #50
+    #50;
 
-    #300_000_000
+    #300_000_000;
 
     $error("Stop was not called within 300 ms, stopping now");
     $fatal;

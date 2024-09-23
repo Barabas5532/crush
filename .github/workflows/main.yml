@@ -14,6 +14,7 @@ jobs:
           - sim_inst_immediate_decode
           - sim_memory
           - sim_alu
+          - sim_csr
           - sim_load_store
           - sim_top
           - sim_mtimer

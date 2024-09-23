@@ -56,4 +56,9 @@ localparam FUNCT3_CSRRWI = 3'b101;
 localparam FUNCT3_CSRRSI = 3'b110;
 localparam FUNCT3_CSRRCI = 3'b111;
 localparam FUNCT3_PRIV = 3'b000;
+
+localparam CSR_MSTATUS  = 12'h300;
+localparam CSR_MIE      = 12'h304;
+localparam CSR_MEPC     = 12'h341;
+localparam CSR_MCAUSE   = 12'h342;
 // verilator lint_on UNUSEDPARAM

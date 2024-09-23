@@ -17,7 +17,6 @@ module mtimer #(
     output reg err_o,
     output reg rty_o,
    // interrupt
-   input wire interrupt_enable,
    output reg interrupt
 );
    // The number of 32-bit registers that can be addressed inside this
@@ -70,7 +69,7 @@ module mtimer #(
             end
          end
 
-         if(interrupt_enable && mtime == mtimecmp) interrupt <= 1;
+         interrupt <= 1;
          if(mtimecmp > mtime) interrupt <= 0;
       end
    end
