@@ -21,6 +21,7 @@ module alu (
   wire [31:0] B_immediate;
   wire [31:0] U_immediate;
   wire [31:0] J_immediate;
+  wire [31:0] CSR_immediate;
 
   inst_immediate_decode immediate_decode (
       .inst(instruction),
@@ -28,7 +29,8 @@ module alu (
       .S_immediate(S_immediate),
       .B_immediate(B_immediate),
       .U_immediate(U_immediate),
-      .J_immediate(J_immediate)
+      .J_immediate(J_immediate),
+      .CSR_immediate(CSR_immediate)
   );
 
   wire [6:0] opcode = instruction[6:0];
@@ -78,6 +80,14 @@ module alu (
       OPCODE_STORE:  out = op_a + S_immediate;
       OPCODE_JAL:    out = pc + J_immediate;
       OPCODE_JALR:   out = (op_a + I_immediate) & ~1;
+      OPCODE_SYSTEM: case(funct3)
+            FUNCT3_CSRRW: out = op_a;
+            FUNCT3_CSRRWI: out = CSR_immediate;
+            FUNCT3_CSRRC: out = op_a & ~op_b;
+            FUNCT3_CSRRCI: out = op_a & ~CSR_immediate;
+            FUNCT3_CSRRS: out = op_a | op_b;
+            FUNCT3_CSRRSI: out = op_a | CSR_immediate;
+      endcase
       default: ;
     endcase
   end

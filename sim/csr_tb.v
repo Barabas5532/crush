@@ -85,97 +85,72 @@ task static test_case(input string a_test_case_name);
   @(posedge clk) reset = 0;
 endtask
 
-
-task static LW(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
+task static CSRRW(input reg[4:0] rd, input reg[11:0] csr, input reg[4:0] rs1);
     // wait for wishbone instruction read
     @(stb_o & cyc_o);
     @(posedge clk);
     flash_ack_o = 1;
-    flash_dat_o = {{offset}, {rs1}, {FUNCT3_LW}, {rd}, {OPCODE_LOAD}};
+    flash_dat_o = {{csr}, {rs1}, {FUNCT3_CSRRW}, {rd}, {OPCODE_SYSTEM}};
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
     #0;
 endtask
 
-task static LB(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
+task static CSRRS(input reg[4:0] rd, input reg[11:0] csr, input reg[4:0] rs1);
     // wait for wishbone instruction read
     @(stb_o & cyc_o);
     @(posedge clk);
     flash_ack_o = 1;
-    flash_dat_o = {{offset}, {rs1}, {FUNCT3_LB}, {rd}, {OPCODE_LOAD}};
+    flash_dat_o = {{csr}, {rs1}, {FUNCT3_CSRRS}, {rd}, {OPCODE_SYSTEM}};
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
     #0;
 endtask
 
-task static LBU(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
+task static CSRRC(input reg[4:0] rd, input reg[11:0] csr, input reg[4:0] rs1);
     // wait for wishbone instruction read
     @(stb_o & cyc_o);
     @(posedge clk);
     flash_ack_o = 1;
-    flash_dat_o = {{offset}, {rs1}, {FUNCT3_LBU}, {rd}, {OPCODE_LOAD}};
+    flash_dat_o = {{csr}, {rs1}, {FUNCT3_CSRRC}, {rd}, {OPCODE_SYSTEM}};
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
     #0;
 endtask
 
-task static LH(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
+task static CSRRWI(input reg[4:0] rd, input reg[11:0] csr, input reg[4:0] rs1);
     // wait for wishbone instruction read
     @(stb_o & cyc_o);
     @(posedge clk);
     flash_ack_o = 1;
-    flash_dat_o = {{offset}, {rs1}, {FUNCT3_LH}, {rd}, {OPCODE_LOAD}};
+    flash_dat_o = {{csr}, {rs1}, {FUNCT3_CSRRWI}, {rd}, {OPCODE_SYSTEM}};
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
     #0;
 endtask
 
-task static LHU(input reg[4:0] rs1, input reg[4:0] rd, input reg[11:0] offset);
+task static CSRRSI(input reg[4:0] rd, input reg[11:0] csr, input reg[4:0] rs1);
     // wait for wishbone instruction read
     @(stb_o & cyc_o);
     @(posedge clk);
     flash_ack_o = 1;
-    flash_dat_o = {{offset}, {rs1}, {FUNCT3_LHU}, {rd}, {OPCODE_LOAD}};
+    flash_dat_o = {{csr}, {rs1}, {FUNCT3_CSRRSI}, {rd}, {OPCODE_SYSTEM}};
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
     #0;
 endtask
 
-task static SW(input reg[4:0] rs2, input reg[4:0] rs1, input reg[11:0] offset);
+task static CSRRCI(input reg[4:0] rd, input reg[11:0] csr, input reg[4:0] rs1);
     // wait for wishbone instruction read
     @(stb_o & cyc_o);
     @(posedge clk);
     flash_ack_o = 1;
-    flash_dat_o = {{offset[11:5]}, {rs2}, {rs1}, {FUNCT3_SW}, {offset[4:0]}, {OPCODE_STORE}};
-    @(posedge clk);
-    flash_ack_o = 0;
-    flash_dat_o = 32'hzzzz_zzzz;
-    #0;
-endtask
-
-task static SH(input reg[4:0] rs2, input reg[4:0] rs1, input reg[11:0] offset);
-    // wait for wishbone instruction read
-    @(stb_o & cyc_o);
-    @(posedge clk);
-    flash_ack_o = 1;
-    flash_dat_o = {{offset[11:5]}, {rs2}, {rs1}, {FUNCT3_SH}, {offset[4:0]}, {OPCODE_STORE}};
-    @(posedge clk);
-    flash_ack_o = 0;
-    flash_dat_o = 32'hzzzz_zzzz;
-    #0;
-endtask
-
-task static SB(input reg[4:0] rs2, input reg[4:0] rs1, input reg[11:0] offset);
-    // wait for wishbone instruction read
-    @(stb_o & cyc_o);
-    @(posedge clk);
-    flash_ack_o = 1;
-    flash_dat_o = {{offset[11:5]}, {rs2}, {rs1}, {FUNCT3_SB}, {offset[4:0]}, {OPCODE_STORE}};
+    flash_dat_o = {{csr}, {rs1}, {FUNCT3_CSRRCI}, {rd}, {OPCODE_SYSTEM}};
     @(posedge clk);
     flash_ack_o = 0;
     flash_dat_o = 32'hzzzz_zzzz;
@@ -186,21 +161,24 @@ initial begin
     $dumpfile("csr_tb.vcd");
     $dumpvars(0);
 
-    test_case("load word, no offset");
+    test_case("CSRRW");
 
-    cpu.registers.memory[1] = 32'h2000_0000;
-    memory.mem[0] = 32'h0000_0001;
+    cpu.registers.memory[1] = 32'h0000_00A0;
+    cpu.registers.memory[2] = 32'h0000_00B0;
 
-    LW(1, 1, 12'h000);
-    @(ack_i);
-    @(posedge clk);
-    @(posedge clk);
+    CSRRW(1, CSR_MEPC, 2);
+
     #1
-    `fatal_assert (cpu.registers.x1 == 32'h0000_0001);
+    @(cpu.state == cpu.STATE_FETCH);
+    `fatal_assert (cpu.registers.x1 == 32'h0000_0000);
+    `fatal_assert (cpu.mepc == 32'h0000_00B0);
 
-    test_case("CSSRW");
+    CSRRW(1, CSR_MEPC, 2);
 
-    `fatal_assert(1 == 2);
+    #1
+    @(cpu.state == cpu.STATE_FETCH);
+    `fatal_assert (cpu.registers.x1 == 32'h0000_00B0);
+    `fatal_assert (cpu.mepc == 32'h0000_00B0);
 
     $stop;
 end

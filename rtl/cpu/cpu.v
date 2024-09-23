@@ -51,6 +51,8 @@ reg [31:0] mie;
 reg [31:0] mstatus;
 wire [31:0] mtvec = TRAP_PC;
 
+reg [31:0]  csr_read_value;
+
 wire mstatus_mie = mstatus[3];
 
 wire mie_mtie = mie[7];
@@ -167,14 +169,15 @@ always @(posedge(clk_i)) begin
             if(opcode == OPCODE_SYSTEM) begin
                 if(funct3 == FUNCT3_CSRRW) begin
                     case(csr_address)
-                    CSR_MSTATUS: mstatus <= r_out1;
-                    CSR_MIE: mie <= r_out1;
-                    CSR_MEPC: mepc <= r_out1;
-                    CSR_MCAUSE: mcause <= r_out1;
+                    CSR_MSTATUS: csr_read_value <= mstatus;
+                    CSR_MIE: csr_read_value <= mie;
+                    CSR_MEPC: csr_read_value <= mepc;
+                    CSR_MCAUSE: csr_read_value <= mcause;
                     default: ;
                     endcase
                 end
             end
+
         end
         STATE_EXECUTE: begin
             state <= STATE_MEMORY;
@@ -187,6 +190,19 @@ always @(posedge(clk_i)) begin
             end else state_change <= 0;
         STATE_REG_WRITE: begin
             state <= STATE_FETCH;
+
+            if(opcode == OPCODE_SYSTEM) begin
+                if(funct3 == FUNCT3_CSRRW) begin
+                    case(csr_address)
+                    CSR_MSTATUS: mstatus <= r_out1;
+                    CSR_MIE: mie <= r_out1;
+                    CSR_MEPC: mepc <= r_out1;
+                    CSR_MCAUSE: mcause <= r_out1;
+                    default: ;
+                    endcase
+                end
+            end
+
             if(trap_taken) begin
                 mcause <= mcause_;
                 mepc <= pc;
@@ -274,6 +290,10 @@ always @(*) begin
     STATE_EXECUTE: begin
         alu_op_a = r_out1;
         alu_op_b = r_out2;
+
+        if(opcode == OPCODE_SYSTEM) begin
+            alu_op_a = csr_read_value;
+        end
     end
     STATE_MEMORY: begin
         if(mem_r_en) begin
@@ -346,6 +366,7 @@ always @(*) begin
             OPCODE_JALR: begin
                 w_data = pc_inc;
             end
+            OPCODE_SYSTEM: w_data = csr_read_value;
             default: w_data = alu_out_r;
         endcase
 
