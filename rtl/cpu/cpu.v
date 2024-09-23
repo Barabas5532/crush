@@ -167,15 +167,13 @@ always @(posedge(clk_i)) begin
             state <= STATE_EXECUTE;
 
             if(opcode == OPCODE_SYSTEM) begin
-                if(funct3 == FUNCT3_CSRRW) begin
-                    case(csr_address)
-                    CSR_MSTATUS: csr_read_value <= mstatus;
-                    CSR_MIE: csr_read_value <= mie;
-                    CSR_MEPC: csr_read_value <= mepc;
-                    CSR_MCAUSE: csr_read_value <= mcause;
-                    default: ;
-                    endcase
-                end
+                case(csr_address)
+                CSR_MSTATUS: csr_read_value <= mstatus;
+                CSR_MIE: csr_read_value <= mie;
+                CSR_MEPC: csr_read_value <= mepc;
+                CSR_MCAUSE: csr_read_value <= mcause;
+                default: ;
+                endcase
             end
 
         end
@@ -192,15 +190,13 @@ always @(posedge(clk_i)) begin
             state <= STATE_FETCH;
 
             if(opcode == OPCODE_SYSTEM) begin
-                if(funct3 == FUNCT3_CSRRW) begin
-                    case(csr_address)
-                    CSR_MSTATUS: mstatus <= r_out1;
-                    CSR_MIE: mie <= r_out1;
-                    CSR_MEPC: mepc <= r_out1;
-                    CSR_MCAUSE: mcause <= r_out1;
-                    default: ;
-                    endcase
-                end
+                case(csr_address)
+                CSR_MSTATUS: mstatus <= alu_out_r;
+                CSR_MIE: mie <= alu_out_r;
+                CSR_MEPC: mepc <= alu_out_r;
+                CSR_MCAUSE: mcause <= alu_out_r;
+                default: ;
+                endcase
             end
 
             if(trap_taken) begin
@@ -291,8 +287,9 @@ always @(*) begin
         alu_op_a = r_out1;
         alu_op_b = r_out2;
 
-        if(opcode == OPCODE_SYSTEM) begin
+        if((opcode == OPCODE_SYSTEM) && (funct3 != FUNCT3_CSRRW)) begin
             alu_op_a = csr_read_value;
+            alu_op_b = r_out1;
         end
     end
     STATE_MEMORY: begin

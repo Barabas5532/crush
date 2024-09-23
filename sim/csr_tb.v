@@ -77,9 +77,18 @@ always begin
     count <= count + 1;
 end
 
+task static reset_registers();
+  integer i;
+  for (i = 0; i < 32; i++) begin
+    cpu.registers.memory[i] = 32'hxxxx_xxxx;
+  end
+endtask
+
 task static test_case(input string a_test_case_name);
   @(posedge clk)
   reset = 1;
+  reset_registers;
+
   test_case_name = a_test_case_name;
 
   @(posedge clk) reset = 0;
@@ -168,17 +177,31 @@ initial begin
 
     CSRRW(1, CSR_MEPC, 2);
 
-    #1
+    #1;
     @(cpu.state == cpu.STATE_FETCH);
     `fatal_assert (cpu.registers.x1 == 32'h0000_0000);
     `fatal_assert (cpu.mepc == 32'h0000_00B0);
 
     CSRRW(1, CSR_MEPC, 2);
 
-    #1
+    #1;
     @(cpu.state == cpu.STATE_FETCH);
     `fatal_assert (cpu.registers.x1 == 32'h0000_00B0);
     `fatal_assert (cpu.mepc == 32'h0000_00B0);
+    #1;
+
+    test_case("CSRRS");
+
+    cpu.mepc                = 32'h1010_0000;
+    cpu.registers.memory[2] = 32'h1100_0000;
+
+    CSRRS(1, CSR_MEPC, 2);
+
+    #1;
+    @(cpu.state == cpu.STATE_FETCH);
+    `fatal_assert (cpu.registers.x1 == 32'h1010_0000);
+    `fatal_assert (cpu.mepc         == 32'h1110_0000);
+    #1;
 
     $stop;
 end
