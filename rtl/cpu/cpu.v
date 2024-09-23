@@ -182,10 +182,21 @@ always @(posedge(clk_i)) begin
             state_change <= 0;
         end
         STATE_MEMORY:
+            begin
             if(ack_i | (!mem_r_en & !mem_w_en)) begin
                 state <= STATE_REG_WRITE;
                 read_data <= dat_i;
             end else state_change <= 0;
+
+            if(trap_taken) begin
+                mcause <= mcause_;
+                mepc <= pc;
+                state <= STATE_FETCH;
+
+                mstatus[7] <= 1;
+                mstatus[3] <= 0;
+            end
+        end
         STATE_REG_WRITE: begin
             state <= STATE_FETCH;
 
@@ -197,11 +208,6 @@ always @(posedge(clk_i)) begin
                 CSR_MCAUSE: mcause <= alu_out_r;
                 default: ;
                 endcase
-            end
-
-            if(trap_taken) begin
-                mcause <= mcause_;
-                mepc <= pc;
             end
         end
         default: state <= STATE_FETCH;
