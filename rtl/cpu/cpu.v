@@ -36,6 +36,8 @@ reg[31:0] read_data;
 wire [6:0] opcode = instruction[6:0];
 wire [2:0] funct3 = instruction[14:12];
 
+wire instruction_is_ecall = instruction == {{12'b0}, {5'b0}, {FUNCT3_PRIV}, {5'b0}, {OPCODE_SYSTEM}};
+
 reg pc_load;
 reg pc_count;
 reg[31:0] pc_value;
@@ -166,7 +168,7 @@ always @(posedge(clk_i)) begin
         STATE_REG_READ: begin
             state <= STATE_EXECUTE;
 
-            if(opcode == OPCODE_SYSTEM) begin
+            if(opcode == OPCODE_SYSTEM && funct3 != FUNCT3_PRIV) begin
                 case(csr_address)
                 CSR_MSTATUS: csr_read_value <= mstatus;
                 CSR_MIE: csr_read_value <= mie;
@@ -212,7 +214,7 @@ always @(posedge(clk_i)) begin
                 // MPIE
                 mstatus[7] <= 1;
             end
-            else case(csr_address)
+            else if (!instruction_is_ecall) case(csr_address)
                 CSR_MSTATUS: mstatus <= alu_out_r;
                 CSR_MIE: mie <= alu_out_r;
                 CSR_MEPC: mepc <= alu_out_r;
@@ -338,7 +340,8 @@ always @(*) begin
         end
 
        if((timer_interrupt && timer_interrupt_enable)
-              || (external_interrupt && external_interrupt_enable)) begin
+              || (external_interrupt && external_interrupt_enable)
+              || instruction_is_ecall) begin
           // Prevent memory writes if interrupted. This is the only side effect
           // of the instruction, so this effectively interrupts the instruction,
           // and it can be restarted after handling the interrupt.
@@ -352,6 +355,10 @@ always @(*) begin
            trap_taken = 1;
            pc_value = TRAP_PC;
            pc_load = 1;
+
+          if(instruction_is_ecall) begin
+              mcause_ = {1'b0, 31'd11};
+          end
 
           if(timer_interrupt) begin
              mcause_ = {1'b1, 31'd7};

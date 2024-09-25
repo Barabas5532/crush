@@ -123,7 +123,7 @@ always begin
 end
 
 always begin
-    #50_000_000 btn <= !btn;
+    #100_000_000 btn <= !btn;
 end
 
 initial begin
