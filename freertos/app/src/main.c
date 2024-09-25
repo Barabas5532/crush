@@ -15,8 +15,6 @@ void main( void )
     static StaticTask_t exampleTaskTCB;
     static StackType_t exampleTaskStack[ configMINIMAL_STACK_SIZE ];
     
-    // TODO: install freertos_risc_v_trap_handler as the interrupt handler
-
     ( void ) xTaskCreateStatic( task,
                                 "example",
                                 configMINIMAL_STACK_SIZE,

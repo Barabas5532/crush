@@ -1,21 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.120 (w)1999-2024 BSI
-[*] Wed Sep  4 22:23:38 2024
+[*] Wed Sep 25 11:43:30 2024
 [*]
 [dumpfile] "/home/barabas/data3/projects/hardware/risc-v/cpu.vcd"
-[dumpfile_mtime] "Wed Sep  4 22:20:59 2024"
-[dumpfile_size] 45274152
+[dumpfile_mtime] "Wed Sep 25 08:15:33 2024"
+[dumpfile_size] 517082934
 [savefile] "/home/barabas/data3/projects/hardware/risc-v/tools/cpu2.gtkw"
-[timestart] 0
-[size] 1910 1001
+[timestart] 3965930000
+[size] 2007 1343
 [pos] -1 -1
-*-32.421982 2990000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-21.112263 3979416000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] cpu_tb.
 [treeopen] cpu_tb.dut.
 [sst_width] 273
-[signals_width] 278
+[signals_width] 324
 [sst_expanded] 1
-[sst_vpaned_height] 296
+[sst_vpaned_height] 297
 @28
 cpu_tb.clk[0]
 cpu_tb.reset[0]
@@ -26,7 +26,43 @@ cpu_tb.stb_o[0]
 cpu_tb.cyc_o[0]
 @22
 cpu_tb.sel_o[3:0]
+@c00022
 cpu_tb.adr_o[31:0]
+@28
+(0)cpu_tb.adr_o[31:0]
+(1)cpu_tb.adr_o[31:0]
+(2)cpu_tb.adr_o[31:0]
+(3)cpu_tb.adr_o[31:0]
+(4)cpu_tb.adr_o[31:0]
+(5)cpu_tb.adr_o[31:0]
+(6)cpu_tb.adr_o[31:0]
+(7)cpu_tb.adr_o[31:0]
+(8)cpu_tb.adr_o[31:0]
+(9)cpu_tb.adr_o[31:0]
+(10)cpu_tb.adr_o[31:0]
+(11)cpu_tb.adr_o[31:0]
+(12)cpu_tb.adr_o[31:0]
+(13)cpu_tb.adr_o[31:0]
+(14)cpu_tb.adr_o[31:0]
+(15)cpu_tb.adr_o[31:0]
+(16)cpu_tb.adr_o[31:0]
+(17)cpu_tb.adr_o[31:0]
+(18)cpu_tb.adr_o[31:0]
+(19)cpu_tb.adr_o[31:0]
+(20)cpu_tb.adr_o[31:0]
+(21)cpu_tb.adr_o[31:0]
+(22)cpu_tb.adr_o[31:0]
+(23)cpu_tb.adr_o[31:0]
+(24)cpu_tb.adr_o[31:0]
+(25)cpu_tb.adr_o[31:0]
+(26)cpu_tb.adr_o[31:0]
+(27)cpu_tb.adr_o[31:0]
+(28)cpu_tb.adr_o[31:0]
+(29)cpu_tb.adr_o[31:0]
+(30)cpu_tb.adr_o[31:0]
+(31)cpu_tb.adr_o[31:0]
+@1401200
+-group_end
 @28
 cpu_tb.we_o[0]
 @22
@@ -41,8 +77,9 @@ cpu_tb.rty_i[0]
 @2028
 ^1 /home/barabas/data3/projects/hardware/risc-v/tools/cpu_state_filter.txt
 cpu_tb.dut.state[2:0]
-@22
+@23
 cpu_tb.dut.pc[31:0]
+@22
 cpu_tb.dut.instruction[31:0]
 cpu_tb.dut.registers.x0[31:0]
 cpu_tb.dut.registers.x1[31:0]
@@ -76,6 +113,10 @@ cpu_tb.dut.registers.x28[31:0]
 cpu_tb.dut.registers.x29[31:0]
 cpu_tb.dut.registers.x30[31:0]
 cpu_tb.dut.registers.x31[31:0]
+@28
+cpu_tb.dut.mstatus_mie[0]
+cpu_tb.dut.timer_interrupt_enable[0]
+cpu_tb.dut.trap_taken[0]
 @200
 -GPIO
 @28
@@ -89,8 +130,6 @@ cpu_tb.mtimer.mtime[63:0]
 cpu_tb.mtimer.mtimecmp[63:0]
 @28
 cpu_tb.mtimer.ack_o[0]
-cpu_tb.mtimer.interrupt_enable[0]
-@29
 cpu_tb.mtimer.interrupt[0]
 [pattern_trace] 1
 [pattern_trace] 0
