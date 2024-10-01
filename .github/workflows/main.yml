@@ -118,7 +118,7 @@ jobs:
         run: cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=TC-crush.cmake
       - name: Build
         run: cmake --build build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: firmware-elf
           path: |
