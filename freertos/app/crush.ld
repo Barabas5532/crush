@@ -3,13 +3,12 @@ ENTRY(start)
 
 MEMORY
 {
-    flash (rx): ORIGIN = 0x10000000, LENGTH = 0x10000
     ram (rwx): ORIGIN = 0x20000000, LENGTH = 0x10000
 }
 
 SECTIONS
 {
-    .flash : {
+    .text : {
         . = ALIGN(4);
         KEEP(*(.start))
         . = 0x100;
@@ -17,7 +16,7 @@ SECTIONS
         *(.text .text.*)
         *(.rodata .rodata* .srodata .srodata.*)
         . = ALIGN(4);
-    } > flash
+    } > ram
 
     .data : {
         . = ALIGN(4);
@@ -25,9 +24,7 @@ SECTIONS
         *(.data .data.* .sdata .sdata.*);
         . = ALIGN(4);
         __data_end = .;
-    } > ram AT> flash
-
-    __flash_data_start = LOADADDR(.data);
+    } > ram
 
     .bss (NOLOAD) : {
         . = ALIGN(4);

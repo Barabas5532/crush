@@ -1,6 +1,10 @@
-/* This file implements a test that is able to execute programs stored on the
- * host file system. It can be used along with RISCOF - The RISC-V
- * Compatibility Framework.
+/* This file implements a test that simulates the CPU configured with interrupts.
+ *
+ * It is capable of running the FreeRTOS demo app.
+ *
+ * The initial configuration of the simulation is equivalent to the SoC after it
+ * has been booted from flash by the boot ROM. The simulation skips the loading,
+ * and starts up with the program already stored in memory.
  */
 
 `default_nettype none
@@ -26,7 +30,7 @@ wire rty_i = 0;
 
 wire timer_interrupt;
 
-cpu #(.INITIAL_PC('h1000_0000), .TRAP_PC('h1000_0100)) dut (
+cpu #(.INITIAL_PC('h2000_0000), .TRAP_PC('h2000_0100)) dut (
     .clk_i(clk),
     .dat_i(dat_i),
     .dat_o(dat_o),
@@ -55,22 +59,6 @@ flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h1_0000)) flash_emulator (
     .dat_o(dat_i),
     .we_i(we_o),
     .ack_o(flash_ack_o),
-    .err_o(err_i),
-    .rty_o(rty_i)
-);
-
-wire memory_ack_o;
-memory_ice40_spram_wb #(.BASE_ADDRESS('h2000_0000)) memory (
-    .clk_i(clk),
-    .rst_i(reset),
-    .stb_i(stb_o),
-    .cyc_i(cyc_o),
-    .adr_i(adr_o),
-    .sel_i(sel_o),
-    .dat_i(dat_o),
-    .dat_o(dat_i),
-    .we_i(we_o),
-    .ack_o(memory_ack_o),
     .err_o(err_i),
     .rty_o(rty_i)
 );

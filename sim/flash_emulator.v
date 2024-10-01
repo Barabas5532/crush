@@ -21,10 +21,12 @@ module flash_emulator #(
     output reg rty_o
 );
 
-reg [31:0] data;
-assign dat_o = ack_o ? data : 32'hzzzz_zzzz;
+reg[31:0] mem[SIZE];
 
-reg[31:0] flash[SIZE];
+  wire[31:0] mask = {{8{sel_i[3]}}, {8{sel_i[2]}}, {8{sel_i[1]}}, {8{sel_i[0]}}};
+  wire[31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
+  wire[31:0] value = mem[memory_address];
+
 wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < (BASE_ADDRESS + SIZE));
 
 initial begin
@@ -36,7 +38,7 @@ initial begin
         $display("Reading flash contents from %s", binary_path);
 
         file = $fopen(binary_path, "rb");
-        length = $fread(flash, file);
+        length = $fread(mem, file);
         $fclose(file);
 
         $display("Read %0d bytes", length);
@@ -51,20 +53,18 @@ always @(posedge clk_i) begin
     ack_o <= 0;
     err_o <= 0;
     rty_o <= 0;
-    data <= 32'h0000_0000;
+    dat_o <= 32'hzzzz_zzzz;
 
-    if (stb_i & cyc_i & !we_i & !ack_o & addressed) begin
-        ack_o <= 1;
-
-        read_data = flash[(adr_i - BASE_ADDRESS) >> 2];
-        data <= {{read_data[ 7: 0]},
-                  {read_data[15: 8]},
-                  {read_data[23:16]},
-                  {read_data[31:24]}};
+    if (stb_i & cyc_i & !ack_o & addressed) begin
+      ack_o <= 1;
     end
 
-    if (stb_i & cyc_i & we_i & addressed) begin
-        $fatal(1, "Flash is not writable");
+    if (stb_i & cyc_i & addressed & we_i) begin
+     mem[memory_address] <= (value & ~mask) | (dat_i & mask);
+    end
+
+    if (stb_i & cyc_i & addressed & !we_i) begin
+      dat_o <= mem[memory_address];
     end
 end
 

@@ -12,11 +12,11 @@
 #endif
 
 #ifndef APP_SRAM_ADDR
-#define APP_SRAM_ADDR 0x00020000
+#define APP_SRAM_ADDR 0x20000000
 #endif
 
 #ifndef APP_SIZE
-#define APP_SIZE 0x00010000
+#define APP_SIZE 0x10000
 #endif
 
     .section .text.start
@@ -31,15 +31,11 @@ _start:
     li  a2, APP_FLASH_ADDR
     jal     spi_flash_read
 
-    // Setup reboot code
-    li  t0, 0x0002006f
-    sw  t0, 0(zero)
-
     // Jump to main code
     j   APP_SRAM_ADDR
 
 
-    .equ    SPI_BASE, 0x82000000
+    .equ    SPI_BASE, 0x50000000
     .equ    SPICR0,  4 * 0x08
     .equ    SPICR1,  4 * 0x09
     .equ    SPICR2,  4 * 0x0a
