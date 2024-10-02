@@ -16,7 +16,10 @@ add_custom_command(TARGET crush-blinky POST_BUILD
         COMMAND ${objcopy_program} -O binary crush-blinky crush-blinky.bin
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         )
+
+# Export firmware data with big endian byte ordering within each instruction.
+# This is the format expected by the hardware.
 add_custom_command(TARGET crush-blinky POST_BUILD
-        COMMAND ${objcopy_program} --verilog-data-width 4 -O verilog crush-blinky crush-blinky.data
+        COMMAND ${objcopy_program} -O verilog -j .mem -j .bss -j .stack --reverse-bytes=4 --adjust-vma -0x10000000 crush-blinky crush-blinky.data
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         )
