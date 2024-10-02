@@ -32,36 +32,34 @@ filesets:
 
   sim_inst_immediate_decode:
     files:
-     - sim/inst_immediate_decode.v
+     - sim/inst_immediate_decode_tb.v
     file_type: systemVerilogSource
 
   sim_memory:
     files:
-     - sim/memory.v
+     - sim/memory_tb.v
     file_type: systemVerilogSource
 
   sim_alu:
     files:
-     - sim/alu.v
+     - sim/alu_tb.v
     file_type: systemVerilogSource
 
   sim_load_store:
     files:
-     - sim/load_store.v
+     - sim/load_store_tb.v
     file_type: systemVerilogSource
 
   sim_cpu:
     files:
      - sim/control.v
-     - sim/cpu.v
-     - sim/flash_emulator.v
+     - sim/cpu_tb.v
     file_type: systemVerilogSource
 
   sim_cpu_freertos:
     files:
      - sim/control.v
      - sim/cpu_freertos_tb.v
-     - sim/flash_emulator.v
     file_type: systemVerilogSource
 
   sim_common:
@@ -71,7 +69,6 @@ filesets:
       # YOSYS_DATDIR must be defined in the calling environemnt. e.g.:
       # export YOSYS_DATDIR=$(yosys-config --datdir)
       - $YOSYS_DATDIR/ice40/cells_sim.v
-      - sim/sim_memory.v
     file_type: verilogSource
 
   sim_csr:
@@ -172,7 +169,7 @@ targets:
     filesets_append:
       - sim_common
       - sim_load_store
-    toplevel: load_store
+    toplevel: load_store_tb
     default_tool: icarus
 
   sim_cpu:

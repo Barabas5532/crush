@@ -14,22 +14,25 @@ ADD $oss_cad_suite_src /opt
 ENV PATH /opt/oss-cad-suite/bin:$PATH
 
 RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    curl \
+    gcc-riscv64-unknown-elf \
+    git \
+    libgmp-dev \
+    ninja-build \
+    pkg-config \
     python-is-python3 \
     python3-pip \
-    gcc-riscv64-unknown-elf \
-    opam \
-    build-essential \
-    libgmp-dev \
+    python3-venv \
     z3 \
-    pkg-config \
     zlib1g-dev
 
+
 # https://github.com/riscv/sail-riscv#building-the-model
-RUN opam init -y --disable-sandboxing && \
-    opam switch create ocaml-base-compiler.4.08.0 && \
-    opam install sail -y && \
-    eval $(opam config env) && \
-    cd /opt && \
+RUN curl --location https://github.com/rems-project/sail/releases/download/0.18-linux-binary/sail.tar.gz | tar xvz --directory=/usr/local --strip-components=1
+
+RUN cd /opt && \
     git clone --depth=1 https://github.com/riscv/sail-riscv.git && \
     cd sail-riscv && \
     ARCH=RV32 make csim && \
@@ -43,6 +46,3 @@ RUN opam init -y --disable-sandboxing && \
 RUN ln -s /usr/bin/riscv64-unknown-elf-gcc /usr/local/bin/riscv32-unknown-elf-gcc && \
     ln -s /usr/bin/riscv64-unknown-elf-objdump /usr/local/bin/riscv32-unknown-elf-objdump && \
     ln -s /usr/bin/riscv64-unknown-elf-objcopy /usr/local/bin/riscv32-unknown-elf-objcopy
-
-# Duplicated so that cache from eariler versions can be reused
-RUN apt-get install -y cmake ninja-build

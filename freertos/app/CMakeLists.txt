@@ -49,10 +49,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE gcc)
 string(REPLACE "-gcc" "-objcopy" objcopy_name ${CMAKE_C_COMPILER})
 find_program(objcopy_program ${objcopy_name} REQUIRED)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${objcopy_program} -O binary ${PROJECT_NAME} ${PROJECT_NAME}.bin
+        COMMAND ${objcopy_program} -O binary -j .text -j .data -j .bss -j .stack --reverse-bytes=4 ${PROJECT_NAME} ${PROJECT_NAME}.bin
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         )
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${objcopy_program} --verilog-data-width 4 -O verilog ${PROJECT_NAME} ${PROJECT_NAME}.data
+        COMMAND ${objcopy_program} -O verilog -j .mem -j .bss -j .stack --adjust-vma -0x10000000 --verilog-data-width 4 ${PROJECT_NAME} ${PROJECT_NAME}.data
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         )

@@ -42,7 +42,8 @@ wire memory_rty_o;
 wire memory_err_o;
   memory_infer #(
       .BASE_ADDRESS('h1000_0000),
-      .SIZE('h800)
+      .SIZE('h800),
+      .READMEMH_FILE("fw.data")
   ) memory (
       .clk_i(clk),
       .rst_i(rst_i),

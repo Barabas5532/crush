@@ -30,7 +30,7 @@ wire rty_i = 0;
 
 wire timer_interrupt;
 
-cpu #(.INITIAL_PC('h2000_0000), .TRAP_PC('h2000_0100)) dut (
+cpu #(.INITIAL_PC('h1000_0000), .TRAP_PC('h1000_0100)) dut (
     .clk_i(clk),
     .dat_i(dat_i),
     .dat_o(dat_o),
@@ -47,8 +47,8 @@ cpu #(.INITIAL_PC('h2000_0000), .TRAP_PC('h2000_0100)) dut (
     .external_interrupt(1'b0)
 );
 
-wire flash_ack_o;
-flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h1_0000)) flash_emulator (
+wire ram_ack_o;
+memory_infer #(.BASE_ADDRESS('h1000_0000), .SIZE('h1_0000)) ram (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),
@@ -58,10 +58,29 @@ flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h1_0000)) flash_emulator (
     .dat_i(dat_o),
     .dat_o(dat_i),
     .we_i(we_o),
-    .ack_o(flash_ack_o),
+    .ack_o(ram_ack_o),
     .err_o(err_i),
     .rty_o(rty_i)
 );
+
+initial begin
+    string binary_path;
+    if($value$plusargs("BINARY_PATH=%s", binary_path)) begin
+        integer file;
+        integer length;
+
+        $display("Reading ram contents from %s", binary_path);
+
+        file = $fopen(binary_path, "rb");
+        length = $fread(ram.mem, file);
+        $fclose(file);
+
+        $display("Read %0d bytes", length);
+    end else begin
+        $error("The BINARY_PATH plus arg must be set");
+        $stop;
+    end
+end
 
 wire mtimer_ack_o;
 mtimer #(.BASE_ADDRESS('h3000_0000)) mtimer (
@@ -104,7 +123,7 @@ gpio #(.BASE_ADDRESS('h4000_0000)) gpio (
     .pin_output({unused, led2, led1})
 );
 
-assign ack_i = flash_ack_o | memory_ack_o | mtimer_ack_o | gpio_ack_o;
+assign ack_i = ram_ack_o | mtimer_ack_o | gpio_ack_o;
 
 always begin
     #42 clk <= !clk;
@@ -115,7 +134,7 @@ always begin
 end
 
 initial begin
-    $dumpfile("cpu.vcd");
+    $dumpfile("cpu_freertos_tb.vcd");
     $dumpvars(0);
 
     #250 reset = 0;
