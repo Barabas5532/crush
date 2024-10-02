@@ -20,6 +20,7 @@ filesets:
       - rtl/soc/memory_ice40_spram.v
       - rtl/soc/memory_ice40_spram_wb.v
       - rtl/soc/gpio.v
+      - rtl/soc/spi.v: {file_type: systemVerilogSource}
     file_type: verilogSource
 
   pcf:

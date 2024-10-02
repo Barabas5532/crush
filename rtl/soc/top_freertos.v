@@ -5,7 +5,11 @@ module top_freertos (
     input wire BTN_N,
     input wire BTN1,
     output wire LED1,
-    output wire LED2
+    output wire LED2,
+    inout wire FLASH_SCK,
+    inout wire FLASH_SSB,
+    inout wire FLASH_IO0,
+    inout wire FLASH_IO1
 );
 
 wire rst_i = !BTN_N;
@@ -100,8 +104,30 @@ gpio #(.BASE_ADDRESS('h4000_0000)) gpio (
     .pin_output({unused, LED2, LED1})
 );
 
-assign ack_i = boot_rom_ack_o | ram_ack_o | gpio_ack_o;
-assign err_i = boot_rom_err_o | ram_err_o | gpio_err_o;
-assign rty_i = boot_rom_rty_o | ram_rty_o | gpio_rty_o;
+wire spi_ack_o;
+wire spi_rty_o;
+wire spi_err_o;
+spi #(.BASE_ADDRESS('h5000_0000)) spi (
+    .clk_i(clk),
+    .rst_i(rst_i),
+    .stb_i(stb_o),
+    .cyc_i(cyc_o),
+    .adr_i(adr_o),
+    .sel_i(sel_o),
+    .dat_i(dat_o),
+    .dat_o(dat_i),
+    .we_i(we_o),
+    .ack_o(spi_ack_o),
+    .err_o(spi_err_o),
+    .rty_o(spi_rty_o),
+    .flash_clk(FLASH_SCK),
+    .flash_miso(FLASH_IO1),
+    .flash_mosi(FLASH_IO0),
+    .flash_cs_n(FLASH_SSB),
+);
+
+assign ack_i = boot_rom_ack_o | ram_ack_o | gpio_ack_o | spi_ack_o;
+assign err_i = boot_rom_err_o | ram_err_o | gpio_err_o | spi_err_o;
+assign rty_i = boot_rom_rty_o | ram_rty_o | gpio_rty_o | spi_rty_o;
 
 endmodule
