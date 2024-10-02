@@ -55,7 +55,7 @@ always @(posedge clk_i) begin
     if (stb_i & cyc_i & !we_i & !ack_o & addressed) begin
         ack_o <= 1;
 
-        data = flash[(adr_i - BASE_ADDRESS) >> 2];
+        data <= flash[(adr_i - BASE_ADDRESS) >> 2];
     end
 
     if (stb_i & cyc_i & we_i & addressed) begin
