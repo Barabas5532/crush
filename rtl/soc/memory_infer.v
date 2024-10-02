@@ -31,18 +31,23 @@ module memory_infer #(
 
   wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + SIZE);
 
+  // depending on the size, some address bits are not going to be used
+  // verilator lint_off UNUSEDSIGNAL
+  wire [31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
+  // verilator lint_on UNUSEDSIGNAL
+
   // Individal signals so the memory can be observed in VCD output
   genvar i;
   generate
       for(i = 0; i < SIZE && i < 8; i++) begin : g_scope
-          wire[31:0] m;
-          assign m = mem[i];
+          /* verilator lint_off UNUSEDSIGNAL */
+          wire[31:0] m = mem[i];
+          /* verilator lint_on UNUSEDSIGNAL */
       end
   endgenerate
 
-   initial if(READMEMH_FILE != "") $readmemh(READMEMH_FILE, mem);
+  initial if(READMEMH_FILE != "") $readmemh(READMEMH_FILE, mem);
 
-  wire[31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
   always @(posedge clk_i) begin
     ack_o <= 0;
     err_o <= 0;
