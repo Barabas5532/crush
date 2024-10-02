@@ -52,7 +52,6 @@ filesets:
     files:
      - sim/control.v
      - sim/cpu_tb.v
-     - sim/flash_emulator.v
     file_type: systemVerilogSource
 
   sim_common:

@@ -40,7 +40,7 @@ cpu #(.INITIAL_PC('h1000_0000)) dut (
 );
 
 wire flash_ack_o;
-flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h20_0000)) flash_emulator (
+memory_infer #(.BASE_ADDRESS('h1000_0000), .SIZE('h20_0000)) flash_emulator (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),
@@ -54,6 +54,25 @@ flash_emulator #(.BASE_ADDRESS('h1000_0000), .SIZE('h20_0000)) flash_emulator (
     .err_o(err_i),
     .rty_o(rty_i)
 );
+
+initial begin
+    string binary_path;
+    if($value$plusargs("BINARY_PATH=%s", binary_path)) begin
+        integer file;
+        integer length;
+
+        $display("Reading flash contents from %s", binary_path);
+
+        file = $fopen(binary_path, "rb");
+        length = $fread(flash_emulator.mem, file);
+        $fclose(file);
+
+        $display("Read %0d bytes", length);
+    end else begin
+        $error("The BINARY_PATH plus arg must be set");
+        $stop;
+    end
+end
 
 wire memory_ack_o;
 sim_memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
