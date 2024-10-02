@@ -25,7 +25,7 @@ module spi #(
     inout wire flash_clk,
     inout wire flash_miso,
     inout wire flash_mosi,
-    output wire flash_cs_n,
+    output wire flash_cs_n
 );
   reg [31:0] data = {24'h0, spi_sbdato};
 

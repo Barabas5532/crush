@@ -67,7 +67,7 @@ wire ram_ack_o;
 wire ram_rty_o;
 wire ram_err_o;
   memory_ice40_spram_wb #(
-      .BASE_ADDRESS('h1000_0000),
+      .BASE_ADDRESS('h1000_0000)
   ) ram (
       .clk_i(clk),
       .rst_i(rst_i),
@@ -123,7 +123,7 @@ spi #(.BASE_ADDRESS('h5000_0000)) spi (
     .flash_clk(FLASH_SCK),
     .flash_miso(FLASH_IO1),
     .flash_mosi(FLASH_IO0),
-    .flash_cs_n(FLASH_SSB),
+    .flash_cs_n(FLASH_SSB)
 );
 
 assign ack_i = boot_rom_ack_o | ram_ack_o | gpio_ack_o | spi_ack_o;

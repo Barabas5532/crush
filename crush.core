@@ -145,6 +145,8 @@ targets:
       - sim_cpu
       - sim_mtimer
       - sim_common
+      - top_default
+      - top_freertos
     tools:
       verilator:
         mode : lint-only
