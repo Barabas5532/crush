@@ -86,7 +86,7 @@ class crush(pluginTemplate):
         utils.shellCommand(cmd).run(cwd=working_directory)
 
         binary_path = os.path.join(working_directory, 'test.bin')
-        binary_cmd = f'{self.compiler_name_prefix}-objcopy -O binary test.elf {binary_path}'
+        binary_cmd = f'{self.compiler_name_prefix}-objcopy -O binary -j .text -j .data -j .bss --reverse-bytes=4 test.elf {binary_path}'
         utils.shellCommand(binary_cmd).run(cwd=working_directory)
 
         sim_cmd = f'vvp -n {self.dut_exe} +SIGNATURE_PATH={sig_file} +BINARY_PATH={binary_path}'

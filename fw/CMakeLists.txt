@@ -13,10 +13,6 @@ set_target_properties(crush-blinky PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURC
 string(REPLACE "-gcc" "-objcopy" objcopy_name ${CMAKE_C_COMPILER})
 find_program(objcopy_program ${objcopy_name} REQUIRED)
 add_custom_command(TARGET crush-blinky POST_BUILD
-        COMMAND ${objcopy_program} -O binary crush-blinky crush-blinky.bin
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        )
-add_custom_command(TARGET crush-blinky POST_BUILD
-        COMMAND ${objcopy_program} --verilog-data-width 4 -O verilog crush-blinky crush-blinky.data
+        COMMAND ${objcopy_program} -O verilog -j .mem -j .bss -j .stack --adjust-vma -0x10000000 --verilog-data-width 4 crush-blinky ${CMAKE_CURRENT_LIST_DIR}/binary/crush-blinky.data
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         )

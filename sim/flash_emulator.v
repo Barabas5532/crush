@@ -47,7 +47,6 @@ initial begin
 end
 
 always @(posedge clk_i) begin
-    reg[31:0] read_data = 32'hxxxx_xxxx;
     ack_o <= 0;
     err_o <= 0;
     rty_o <= 0;
@@ -56,11 +55,7 @@ always @(posedge clk_i) begin
     if (stb_i & cyc_i & !we_i & !ack_o & addressed) begin
         ack_o <= 1;
 
-        read_data = flash[(adr_i - BASE_ADDRESS) >> 2];
-        data <= {{read_data[ 7: 0]},
-                  {read_data[15: 8]},
-                  {read_data[23:16]},
-                  {read_data[31:24]}};
+        data <= flash[(adr_i - BASE_ADDRESS) >> 2];
     end
 
     if (stb_i & cyc_i & we_i & addressed) begin
