@@ -5,7 +5,8 @@
  */
 module memory_infer #(
     parameter integer BASE_ADDRESS,
-    parameter integer SIZE
+    parameter integer SIZE,
+    parameter READMEMH_FILE = ""
 ) (
     input wire clk_i,
     // The memory we are trying to infer can not be reset
@@ -17,7 +18,7 @@ module memory_infer #(
     input wire [31:0] adr_i,
     input wire [3:0] sel_i,
     input wire [31:0] dat_i,
-    output reg [31:0] dat_o,
+    output wire [31:0] dat_o,
     input wire we_i,
     output reg ack_o,
     output reg err_o,
@@ -25,8 +26,8 @@ module memory_infer #(
 );
   (* synthesis, ram_block *) reg [31:0] mem[SIZE];
 
-  wire[31:0] mask = {{8{sel_i[3]}}, {8{sel_i[2]}}, {8{sel_i[1]}}, {8{sel_i[0]}}};
-  wire[31:0] value = mem[memory_address];
+  reg [31:0] data;
+  assign dat_o = ack_o ? data : 32'hzzzz_zzzz;
 
   wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + SIZE);
 
@@ -39,25 +40,25 @@ module memory_infer #(
       end
   endgenerate
 
+   initial if(READMEMH_FILE != "") $readmemh(READMEMH_FILE, mem);
+
   wire[31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
   always @(posedge clk_i) begin
     ack_o <= 0;
     err_o <= 0;
     rty_o <= 0;
-    dat_o <= 32'hzzzz_zzzz;
 
     if (stb_i & cyc_i & !ack_o & addressed) begin
       ack_o <= 1;
-    end
-
-    if (stb_i & cyc_i & addressed & we_i) begin
-     mem[memory_address] <= (value & ~mask) | (dat_i & mask);
-    end
-
-    if (stb_i & cyc_i & addressed & !we_i) begin
-      dat_o <= mem[memory_address];
+      if (we_i) begin
+        if (sel_i[0]) mem[memory_address][7:0] <= dat_i[7:0];
+        if (sel_i[1]) mem[memory_address][15:8] <= dat_i[15:8];
+        if (sel_i[2]) mem[memory_address][23:16] <= dat_i[23:16];
+        if (sel_i[3]) mem[memory_address][31:24] <= dat_i[31:24];
+      end else begin
+        data <= mem[memory_address];
+      end
     end
   end
-
 
 endmodule

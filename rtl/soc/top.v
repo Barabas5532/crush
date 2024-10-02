@@ -42,7 +42,8 @@ wire memory_rty_o;
 wire memory_err_o;
   memory_infer #(
       .BASE_ADDRESS('h1000_0000),
-      .SIZE('h800)
+      .SIZE('h800),
+      .READMEMH_FILE("fw.data")
   ) memory (
       .clk_i(clk),
       .rst_i(rst_i),
@@ -57,8 +58,6 @@ wire memory_err_o;
       .err_o(memory_err_o),
       .rty_o(memory_rty_o)
   );
-
-  initial $readmemh("fw.data", memory.mem);
 
 wire gpio_ack_o;
 wire gpio_rty_o;
