@@ -75,7 +75,7 @@ initial begin
 end
 
 wire memory_ack_o;
-sim_memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
+memory_infer #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),

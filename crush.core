@@ -61,7 +61,6 @@ filesets:
       # YOSYS_DATDIR must be defined in the calling environemnt. e.g.:
       # export YOSYS_DATDIR=$(yosys-config --datdir)
       - $YOSYS_DATDIR/ice40/cells_sim.v
-      - sim/sim_memory.v
     file_type: verilogSource
 
   sim_top:

@@ -39,20 +39,6 @@ module memory_infer #(
       end
   endgenerate
 
-  // FIXME: does this break inference? reset to don't care should be OK, since a
-  // noop is a valid implementation
-  // It breaks initialising the memory from outside, so it's going
-  /*
-  always @(posedge clk_i) begin
-      integer i;
-      if(rst_i) begin
-        for(i = 0; i < SIZE; i++) begin
-            mem[i] = 32'hxxxx_xxxx;
-        end
-      end
-  end
-  */
-
   wire[31:0] memory_address = (adr_i - BASE_ADDRESS) >> 2;
   always @(posedge clk_i) begin
     ack_o <= 0;
