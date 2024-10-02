@@ -19,16 +19,28 @@ filesets:
       - rtl/soc/memory_infer.v: {file_type: systemVerilogSource}
       - rtl/soc/memory_ice40_spram.v
       - rtl/soc/memory_ice40_spram_wb.v
-      - rtl/soc/top.v
       - rtl/soc/gpio.v
-      - fw/binary/crush-blinky.data:
-         file_type: user
-         copyto: fw.data
     file_type: verilogSource
 
   pcf:
     files:
       - data/icebreaker.pcf: {file_type: PCF}
+
+  top_default:
+    files:
+      - rtl/soc/top.v
+      - fw/binary/crush-blinky.data:
+         file_type: user
+         copyto: fw.data
+    file_type: verilogSource
+
+  top_freertos:
+    files:
+      - rtl/soc/top_freertos.v
+      - boot_fw/build/crush-boot.data:
+         file_type: user
+         copyto: boot.data
+    file_type: verilogSource
 
   sim_inst_immediate_decode:
     files:
@@ -95,6 +107,7 @@ targets:
   default: &default
     filesets:
       - rtl
+      - top_default
       - pcf
     toplevel: top
     default_tool: icestorm
@@ -110,6 +123,14 @@ targets:
           - "-gassertions"
     hooks:
       post_run: [iceprog_hint]
+
+  top_freertos:
+    <<: *default
+    filesets:
+      - rtl
+      - top_freertos
+      - pcf
+    toplevel: top_freertos
 
   lint:
     default_tool : verilator
@@ -200,6 +221,7 @@ targets:
     <<: *default
     filesets_append:
       - sim_top
+      - top_default
     toplevel: top_tb
     default_tool: icarus
 
