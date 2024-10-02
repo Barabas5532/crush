@@ -11,7 +11,7 @@
 
 `timescale 1ns/1ps
 
-module cpu_tb;
+module cpu_freertos_tb;
 
 `include "params.vh"
 

@@ -57,6 +57,13 @@ filesets:
      - sim/flash_emulator.v
     file_type: systemVerilogSource
 
+  sim_cpu_freertos:
+    files:
+     - sim/control.v
+     - sim/cpu_freertos_tb.v
+     - sim/flash_emulator.v
+    file_type: systemVerilogSource
+
   sim_common:
     files:
       - sim/fatal_assert.vh:
@@ -174,6 +181,14 @@ targets:
       - sim_common
       - sim_cpu
     toplevel: cpu_tb
+    default_tool: icarus
+
+  sim_cpu_freertos:
+    <<: *default
+    filesets_append:
+      - sim_common
+      - sim_cpu_freertos
+    toplevel: cpu_freertos_tb
     default_tool: icarus
 
   sim_mtimer:
