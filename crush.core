@@ -20,6 +20,7 @@ filesets:
       - rtl/soc/memory_ice40_spram.v
       - rtl/soc/memory_ice40_spram_wb.v
       - rtl/soc/gpio.v
+      - rtl/soc/spi.v: {file_type: systemVerilogSource}
     file_type: verilogSource
 
   pcf:
@@ -98,6 +99,11 @@ filesets:
       - sim/top_tb.v
     file_type: systemVerilogSource
 
+  sim_top_freertos:
+    files:
+      - sim/top_freertos_tb.v
+    file_type: systemVerilogSource
+
   verilator_waiver:
     files:
       - data/verilator_waiver.vlt
@@ -121,6 +127,7 @@ targets:
         iverilog_options:
           - "-g2012"
           - "-gassertions"
+          - "-DSIM"
     hooks:
       post_run: [iceprog_hint]
 
@@ -144,6 +151,8 @@ targets:
       - sim_cpu
       - sim_mtimer
       - sim_common
+      - top_default
+      - top_freertos
     tools:
       verilator:
         mode : lint-only
@@ -223,6 +232,15 @@ targets:
       - sim_top
       - top_default
     toplevel: top_tb
+    default_tool: icarus
+
+  sim_top_freertos:
+    <<: *default
+    filesets_append:
+      - sim_top_freertos
+      - sim_common
+      - top_freertos
+    toplevel: top_freertos_tb
     default_tool: icarus
 
 scripts:
