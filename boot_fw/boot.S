@@ -32,7 +32,8 @@ _start:
     jal     spi_flash_read
 
     // Jump to main code
-    j   APP_SRAM_ADDR
+    li t0, APP_SRAM_ADDR
+    jr t0
 
 
     .equ    SPI_BASE, 0x50000000
