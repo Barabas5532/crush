@@ -58,6 +58,8 @@ wire memory_err_o;
       .rty_o(memory_rty_o)
   );
 
+  initial $readmemh("fw.data", memory.mem);
+
 wire gpio_ack_o;
 wire gpio_rty_o;
 wire gpio_err_o;
