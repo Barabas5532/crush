@@ -3,7 +3,7 @@
 
 `include "fatal_assert.vh"
 
-module load_store;
+module load_store_tb;
 
 `include "params.vh"
 
