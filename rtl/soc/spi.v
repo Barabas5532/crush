@@ -27,7 +27,7 @@ module spi #(
     inout wire flash_mosi,
     output wire flash_cs_n
 );
-  reg [31:0] data = {24'h0, spi_sbdato};
+  wire [31:0] data = {24'h0, spi_sbdato};
 
   assign ack_o = spi_sbacko;
 
@@ -57,6 +57,7 @@ wire spi_sckoe;
 wire [3:0] spi_mcsno;
 wire [3:0] spi_mcsnoe;
 
+`ifndef SIM
 SB_SPI #(.BUS_ADDR74("0b0010")) spi (
   .SBCLKI(spi_sbclki),
   .SBRWI(spi_sbrwi),
@@ -107,6 +108,10 @@ SB_SPI #(.BUS_ADDR74("0b0010")) spi (
   .MCSNOE1(spi_mcsnoe[1]),
   .MCSNOE0(spi_mcsnoe[0])
 );
+`else
+    assign spi_sbacko = spi_sbstbi;
+    assign spi_sbdato = 8'h00;
+`endif
 
   SB_IO #(
     .PIN_TYPE(6'b101001),
