@@ -4,7 +4,7 @@
 
 `default_nettype none
 
-`timescale 1ns/1ns
+`timescale 1ns/1ps
 
 module top_freertos_tb;
 
@@ -30,9 +30,23 @@ top_freertos dut(
     .FLASH_IO1(flash_io1)
 );
 
+s25fl128s
+ #(.mem_file_name ("crush_freertos.data"),
+   .AddrRANGE     (24'h1F_FFFF))
+flash
+ (
+  .SCK     (flash_sck),
+  .SI      (flash_io0),
+  .CSNeg   (flash_ssb),
+  .HOLDNeg (), //Internal pull-up
+  .WPNeg   (), //Internal pull-up
+  .SO      (flash_io1),
+  .RSTNeg (1'b1));
+
 initial begin
     btn_n = 0;
-    #400 btn_n = 1;
+    // Wait for flash to power up
+    #500_000 btn_n = 1;
 end
 
 initial clk = 0;

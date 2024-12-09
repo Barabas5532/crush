@@ -29,8 +29,8 @@ Goals:
 
 The SPI flash bootloader is based on the following open source libraries:
 
-https://github.com/no2fpga/no2bootloader/
+https://github.com/no2fpga/no2bootloader
 
-https://github.com/chipsalliance/VeeRwolf/tree/main
+https://github.com/chipsalliance/VeeRwolf
 
 https://github.com/olofk/simple_spi

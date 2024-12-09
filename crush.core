@@ -104,6 +104,10 @@ filesets:
   sim_top_freertos:
     files:
       - sim/top_freertos_tb.v
+      - sim/s25fl128s.v
+      - freertos/app/build/crush_freertos.data:
+          file_type: user
+          copyto: crush_freertos.data
     file_type: systemVerilogSource
 
   verilator_waiver:
