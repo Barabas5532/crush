@@ -32,7 +32,6 @@ module spi #(
   wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + 4 * 32'h10);
   wire[31:0] address = adr_i - BASE_ADDRESS;
 
-`ifndef SIM
   // Interrupt output is ignored. The CPU is programmed to send commands slow
   // enough that we will not overflow the FIFOs without using the interrupt.
   simple_spi spi (
@@ -42,8 +41,8 @@ module spi #(
       .adr_i  (address[9-:8]),
       .dat_i  (dat_i[7:0]),
       .we_i   (we_i),
-      .cyc_i  (cyc_i),
-      .stb_i  (stb_i),
+      .cyc_i  (addressed & cyc_i),
+      .stb_i  (addressed & stb_i),
       .dat_o  (spi_dat_o),
       .ack_o  (ack_o),
       // SPI flash chip
@@ -55,10 +54,6 @@ module spi #(
 
   assign err_o = 0;
   assign rty_o = 0;
-`else
-    assign spi_sbacko = spi_sbstbi;
-    assign spi_sbdato = 8'h00;
-`endif
 
 /*
   SB_IO #(

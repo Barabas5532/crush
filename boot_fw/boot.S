@@ -30,6 +30,12 @@
     t3 temp register
     */
 
+    .equ    SPI_BASE, 0x50000000
+    .equ    SPI_SPCR, 4 * 0x00
+    .equ    SPI_SPSR, 4 * 0x01
+    .equ    SPI_SPDR, 4 * 0x02
+    .equ    SPI_SPER, 4 * 0x03
+    .equ    SPI_SPSS, 4 * 0x04
 
     .section .text.start
     .global _start
@@ -57,13 +63,6 @@ spi_init:
     /* Get magic word */
     // TODO maybe need this read for this whole thing to work correctly
     // jal  spi_xfer
-
-    .equ    SPI_BASE, 0x50000000
-    .equ    SPI_SPCR, 4 * 0x00
-    .equ    SPI_SPSR, 4 * 0x01
-    .equ    SPI_SPDR, 4 * 0x02
-    .equ    SPI_SPER, 4 * 0x03
-    .equ    SPI_SPSS, 4 * 0x04
 
 read_header:
     // TODO do not read a header, use the compile time constant for this configuration

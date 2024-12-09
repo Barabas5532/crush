@@ -1,0 +1,61 @@
+[*]
+[*] GTKWave Analyzer v3.3.120 (w)1999-2024 BSI
+[*] Mon Dec  9 15:07:21 2024
+[*]
+[dumpfile] "/home/barabas/data3/projects/hardware/risc-v/build/crush_0.0.1/sim_top_freertos-icarus/top_freertos.vcd"
+[dumpfile_mtime] "Mon Dec  9 14:53:36 2024"
+[dumpfile_size] 8541932
+[savefile] "/home/barabas/data3/projects/hardware/risc-v/tools/freertos_top.gtkw"
+[timestart] 0
+[size] 2560 1371
+[pos] -1 -1
+*-21.114246 630000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top_freertos_tb.
+[treeopen] top_freertos_tb.dut.
+[treeopen] top_freertos_tb.dut.boot_rom.
+[sst_width] 447
+[signals_width] 376
+[sst_expanded] 1
+[sst_vpaned_height] 425
+@200
+-flash
+@28
+top_freertos_tb.flash_io0[0]
+top_freertos_tb.flash_io1[0]
+top_freertos_tb.flash_sck[0]
+top_freertos_tb.flash_ssb[0]
+@200
+-wb
+@28
+top_freertos_tb.dut.rst_i[0]
+top_freertos_tb.dut.clk[0]
+top_freertos_tb.dut.cyc_o[0]
+top_freertos_tb.dut.stb_o[0]
+top_freertos_tb.dut.ack_i[0]
+top_freertos_tb.dut.err_i[0]
+top_freertos_tb.dut.rty_i[0]
+@22
+top_freertos_tb.dut.dat_o[31:0]
+top_freertos_tb.dut.adr_o[31:0]
+top_freertos_tb.dut.dat_i[31:0]
+top_freertos_tb.dut.sel_o[3:0]
+@28
+top_freertos_tb.dut.we_o[0]
+@200
+-spi
+@22
+top_freertos_tb.dut.spi.address[31:0]
+@28
+top_freertos_tb.dut.spi.addressed[0]
+@200
+-
+@22
+top_freertos_tb.dut.boot_rom.g_scope[0].m[31:0]
+top_freertos_tb.dut.boot_rom.g_scope[1].m[31:0]
+@28
+top_freertos_tb.dut.boot_rom.addressed[0]
+@22
+top_freertos_tb.dut.boot_rom.adr_i[31:0]
+top_freertos_tb.dut.boot_rom.dat_o[31:0]
+[pattern_trace] 1
+[pattern_trace] 0
