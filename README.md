@@ -24,3 +24,13 @@ Goals:
 | [verible](https://github.com/chipsalliance/verible) | Standard LSP linter that can integrate with most text editors. |
 | [FuseSoC](https://github.com/olofk/fusesoc) | Build tool that simplifies running the testbenches and synthesis tools. |
 | [RISCOF, a RISC-V Architectural Test Framework](https://github.com/riscv-software-src/riscof) | The design passes all tests provided by RISCOF. See the `tools/compliance` folder. |
+
+## References
+
+The SPI flash bootloader is based on the following open source libraries:
+
+https://github.com/no2fpga/no2bootloader/
+
+https://github.com/chipsalliance/VeeRwolf/tree/main
+
+https://github.com/olofk/simple_spi

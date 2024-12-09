@@ -22,6 +22,8 @@ filesets:
       - rtl/soc/gpio.v
       - rtl/soc/spi.v: {file_type: systemVerilogSource}
     file_type: verilogSource
+    depend:
+      - simple_spi
 
   pcf:
     files:
