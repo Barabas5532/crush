@@ -43,7 +43,7 @@ module alu (
   assign geu = op_a >= op_b;
 
   always @* begin
-    out = 32'hxxxx_xxxx;
+    out = 0;
 
     case (opcode)
       OPCODE_OP_IMM:
