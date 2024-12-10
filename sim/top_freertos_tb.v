@@ -32,7 +32,7 @@ top_freertos dut(
 
 s25fl128s
  #(.mem_file_name ("crush_freertos.data"),
-   .AddrRANGE     (24'h1F_FFFF))
+   .AddrRANGE     (24'h2F_FFFF))
 flash
  (
   .SCK     (flash_sck),

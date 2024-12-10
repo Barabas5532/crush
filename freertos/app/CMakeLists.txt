@@ -53,9 +53,9 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         )
         
-# Output is loaded to flash at offset 0x10_000. the adjust-vma makes sure it
+# Output is loaded to flash at offset 0x20_000. the adjust-vma makes sure it
 # will be loaded into the simulation at the correct address.
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${objcopy_program} -O verilog --adjust-vma -0x0fff0000 --verilog-data-width 1 ${PROJECT_NAME} ${PROJECT_NAME}.data
+        COMMAND ${objcopy_program} -O verilog --adjust-vma -0x0ffe0000 --verilog-data-width 1 ${PROJECT_NAME} ${PROJECT_NAME}.data
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         )

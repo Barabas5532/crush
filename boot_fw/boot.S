@@ -5,7 +5,7 @@
  */
 
 #ifndef APP_FLASH_ADDR
-#define APP_FLASH_ADDR 0x00100000
+#define APP_FLASH_ADDR 0x20000
 #endif
 
 #ifndef APP_SRAM_ADDR
