@@ -59,7 +59,7 @@ initial begin
     $dumpfile("top_freertos.vcd");
     $dumpvars(0);
 
-    #(300_000 * 80)
+    #(1_300_000_000)
 
     $display("finishing now");
     $finish;

@@ -9,7 +9,7 @@
 #endif
 
 #ifndef APP_SRAM_ADDR
-#define APP_SRAM_ADDR 0x20000000
+#define APP_SRAM_ADDR 0x10000000
 #endif
 
 #ifndef APP_SIZE
@@ -58,7 +58,7 @@ spi_init:
 
     /* Set command to READ at APP_FLASH_ADDR */
     li      a0, ((APP_FLASH_ADDR & 0xFF) <<24) | ((APP_FLASH_ADDR & 0xFF00) << 8) | ((APP_FLASH_ADDR & 0xFF0000) >> 8) | 0x3
-    jal     spi_xfer
+    //jal     spi_xfer
 
     /* Get magic word */
     // TODO maybe need this read for this whole thing to work correctly
@@ -67,36 +67,36 @@ spi_init:
 read_header:
     // TODO do not read a header, use the compile time constant for this configuration
     /* Dummy read two words */
-    jal     spi_xfer
-    jal     spi_xfer
+    //jal     spi_xfer
+    //jal     spi_xfer
 
     /* Load image size to s0 */
-    jal     spi_xfer
-    jal     endian_swap
-    mv  s0, a2
+    //jal     spi_xfer
+    //jal     endian_swap
+    li  s0, APP_SIZE
 
     /* Load RAM base address to s1 */
-    jal     spi_xfer
-    jal     endian_swap
-    mv  s1, a2
+    //jal     spi_xfer
+    //jal     endian_swap
+    li  s1, APP_SRAM_ADDR
 
     /* Load reset vector to s2 */
-    jal     spi_xfer
-    jal     endian_swap
-    mv  s2, a2
+    //jal     spi_xfer
+    //jal     endian_swap
+    li  s2, APP_SRAM_ADDR
 
     /* Dummy read rest of header */
-    jal     spi_xfer //dcrc
-    jal     spi_xfer //os, arch, type, comp
+    //jal     spi_xfer //dcrc
+    //jal     spi_xfer //os, arch, type, comp
 
-    jal     spi_xfer
-    jal     spi_xfer
-    jal     spi_xfer
-    jal     spi_xfer
-    jal     spi_xfer
-    jal     spi_xfer
-    jal     spi_xfer
-    jal     spi_xfer
+    //jal     spi_xfer
+    //jal     spi_xfer
+    //jal     spi_xfer
+    //jal     spi_xfer
+    //jal     spi_xfer
+    //jal     spi_xfer
+    //jal     spi_xfer
+    //jal     spi_xfer
 
     /* Clear number of copied bytes */
     addi    s4, zero, 0
