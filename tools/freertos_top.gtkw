@@ -1,18 +1,17 @@
 [*]
 [*] GTKWave Analyzer v3.3.120 (w)1999-2024 BSI
-[*] Tue Dec 10 14:07:31 2024
+[*] Tue Dec 10 15:40:39 2024
 [*]
 [dumpfile] "/home/barabas/data3/projects/hardware/risc-v/build/crush_0.0.1/sim_top_freertos-icarus/top_freertos.vcd"
-[dumpfile_mtime] "Tue Dec 10 12:30:11 2024"
-[dumpfile_size] 15680629
+[dumpfile_mtime] "Tue Dec 10 15:38:03 2024"
+[dumpfile_size] 38981521
 [savefile] "/home/barabas/data3/projects/hardware/risc-v/tools/freertos_top.gtkw"
-[timestart] 575193000
+[timestart] 879600000000
 [size] 2560 1371
 [pos] -1 -1
-*-19.443506 578400000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-35.443504 1241200000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top_freertos_tb.
 [treeopen] top_freertos_tb.dut.
-[treeopen] top_freertos_tb.dut.ram.
 [treeopen] top_freertos_tb.dut.ram.memory.
 [sst_width] 447
 [signals_width] 290
@@ -38,9 +37,8 @@ top_freertos_tb.dut.sel_o[3:0]
 top_freertos_tb.dut.spi.address[31:0]
 @200
 -RAM
-@23
-top_freertos_tb.dut.ram.adr_i[31:0]
 @22
+top_freertos_tb.dut.ram.adr_i[31:0]
 top_freertos_tb.dut.ram.dat_i[31:0]
 top_freertos_tb.dut.ram.dat_o[31:0]
 @28
@@ -53,54 +51,10 @@ top_freertos_tb.dut.boot_rom.g_scope[0].m[31:0]
 top_freertos_tb.dut.boot_rom.g_scope[1].m[31:0]
 top_freertos_tb.dut.boot_rom.adr_i[31:0]
 top_freertos_tb.dut.boot_rom.dat_o[31:0]
-@c00022
-top_freertos_tb.dut.dut.registers.x20[31:0]
 @28
-(0)top_freertos_tb.dut.dut.registers.x20[31:0]
-(1)top_freertos_tb.dut.dut.registers.x20[31:0]
-(2)top_freertos_tb.dut.dut.registers.x20[31:0]
-(3)top_freertos_tb.dut.dut.registers.x20[31:0]
-(4)top_freertos_tb.dut.dut.registers.x20[31:0]
-(5)top_freertos_tb.dut.dut.registers.x20[31:0]
-(6)top_freertos_tb.dut.dut.registers.x20[31:0]
-(7)top_freertos_tb.dut.dut.registers.x20[31:0]
-(8)top_freertos_tb.dut.dut.registers.x20[31:0]
-(9)top_freertos_tb.dut.dut.registers.x20[31:0]
-(10)top_freertos_tb.dut.dut.registers.x20[31:0]
-(11)top_freertos_tb.dut.dut.registers.x20[31:0]
-(12)top_freertos_tb.dut.dut.registers.x20[31:0]
-(13)top_freertos_tb.dut.dut.registers.x20[31:0]
-(14)top_freertos_tb.dut.dut.registers.x20[31:0]
-(15)top_freertos_tb.dut.dut.registers.x20[31:0]
-(16)top_freertos_tb.dut.dut.registers.x20[31:0]
-(17)top_freertos_tb.dut.dut.registers.x20[31:0]
-(18)top_freertos_tb.dut.dut.registers.x20[31:0]
-(19)top_freertos_tb.dut.dut.registers.x20[31:0]
-(20)top_freertos_tb.dut.dut.registers.x20[31:0]
-(21)top_freertos_tb.dut.dut.registers.x20[31:0]
-(22)top_freertos_tb.dut.dut.registers.x20[31:0]
-(23)top_freertos_tb.dut.dut.registers.x20[31:0]
-(24)top_freertos_tb.dut.dut.registers.x20[31:0]
-(25)top_freertos_tb.dut.dut.registers.x20[31:0]
-(26)top_freertos_tb.dut.dut.registers.x20[31:0]
-(27)top_freertos_tb.dut.dut.registers.x20[31:0]
-(28)top_freertos_tb.dut.dut.registers.x20[31:0]
-(29)top_freertos_tb.dut.dut.registers.x20[31:0]
-(30)top_freertos_tb.dut.dut.registers.x20[31:0]
-(31)top_freertos_tb.dut.dut.registers.x20[31:0]
-@1401200
--group_end
-@22
-top_freertos_tb.flash.Address_in[31:0]
-@28
-top_freertos_tb.flash.FREEZE
-@22
-top_freertos_tb.flash.Instruct[6:0]
-@420
-top_freertos_tb.flash.MemSize
-@22
-top_freertos_tb.flash.addr_bytes[31:0]
-top_freertos_tb.flash.hiaddr_bytes[31:0]
-top_freertos_tb.flash.data_out[7:0]
+top_freertos_tb.btn1
+top_freertos_tb.btn_n
+top_freertos_tb.led1
+top_freertos_tb.led2
 [pattern_trace] 1
 [pattern_trace] 0
