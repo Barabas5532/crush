@@ -58,7 +58,7 @@ spi_init:
 
     /* Set command to READ at APP_FLASH_ADDR */
     li      a0, ((APP_FLASH_ADDR & 0xFF) <<24) | ((APP_FLASH_ADDR & 0xFF00) << 8) | ((APP_FLASH_ADDR & 0xFF0000) >> 8) | 0x3
-    //jal     spi_xfer
+    jal     spi_xfer
 
     /* Get magic word */
     // TODO maybe need this read for this whole thing to work correctly
@@ -113,13 +113,14 @@ copy_to_ram:
     addi    s4, s4, 4
 
     /* Check if file is completely copied */
-    bge     s0, s4, copy_to_ram
+    bgt     s0, s4, copy_to_ram
 
     /* Jump to entry point */
 goto_reset:
     jr  s2
 
     /* Reads ddccbbaa from a1, stores aabbccdd to a2 */
+    /*
 endian_swap:
     slli    a2, a1, 24   // a2 = aa000000
     srli    t1, a1, 8    // t1 = 00ddccbb
@@ -136,6 +137,7 @@ endian_swap:
     or  a2, a2, t1   // a2 = aabbccdd
 
     ret
+   */ 
 
 spi_xfer:
     /* Loop four times */
