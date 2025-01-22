@@ -50,7 +50,7 @@ module mtimer #(
       err_o <= 0;
       rty_o <= 0;
 
-      if(rst_i) begin
+      if(rst_i) begin : reset
          integer i;
          for(i = 0; i < 4; i++) mem[i] <= 0;
          interrupt <= 0;

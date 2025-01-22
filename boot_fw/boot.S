@@ -2,140 +2,164 @@
  * boot.S
  *
  * SPI boot code
- *
- * Copyright (C) 2020 Sylvain Munaut <tnt@246tNt.com>
- * SPDX-License-Identifier: MIT
  */
 
 #ifndef APP_FLASH_ADDR
-#define APP_FLASH_ADDR 0x00100000
+#define APP_FLASH_ADDR 0x20000
 #endif
 
 #ifndef APP_SRAM_ADDR
-#define APP_SRAM_ADDR 0x20000000
+#define APP_SRAM_ADDR 0x10000000
 #endif
 
 #ifndef APP_SIZE
 #define APP_SIZE 0x10000
 #endif
 
+#define SPI_SPSR_RX_CHECK 0x01 /* Check bit 0 is cleared, fifo !empty*/
+
+    /* Registers used
+    ra link register
+    t1 temp register
+    t2 temp register
+    s0 Image size
+    s1 Load address
+    s2 Reset vector
+    gp SPI master base address
+    a3 get_rx_data return value
+    t3 temp register
+    */
+
+    .equ    SPI_BASE, 0x50000000
+    .equ    SPI_SPCR, 4 * 0x00
+    .equ    SPI_SPSR, 4 * 0x01
+    .equ    SPI_SPDR, 4 * 0x02
+    .equ    SPI_SPER, 4 * 0x03
+    .equ    SPI_SPSS, 4 * 0x04
+
     .section .text.start
     .global _start
 _start:
-    // SPI init
-    jal     spi_init
-
-    // Read from flash to SRAM
-    li  a0, APP_SRAM_ADDR
-    li  a1, APP_SIZE
-    li  a2, APP_FLASH_ADDR
-    jal     spi_flash_read
-
-    // Jump to main code
-    li t0, APP_SRAM_ADDR
-    jr t0
-
-
-    .equ    SPI_BASE, 0x50000000
-    .equ    SPICR0,  4 * 0x08
-    .equ    SPICR1,  4 * 0x09
-    .equ    SPICR2,  4 * 0x0a
-    .equ    SPIBR,   4 * 0x0b
-    .equ    SPISR,   4 * 0x0c
-    .equ    SPITXDR, 4 * 0x0d
-    .equ    SPIRXDR, 4 * 0x0e
-    .equ    SPICSR,  4 * 0x0f
-
+    /* Load SPI base address to gp */
+    li gp, SPI_BASE
 
 spi_init:
-    li  a0, SPI_BASE
+    /* Clear slave selects */
+    sb  zero, SPI_SPSS(gp)
 
-    li  a1, 0xff
-    sw  a1, SPICR0(a0)
+    /* Set clock divider to 4 (arbitrarily chosen value)
+    and enable controller */
+    addi    t1, zero, 0x40 | 0x01
+    sb  t1, SPI_SPCR(gp)
 
-    li  a1, 0x80
-    sw  a1, SPICR1(a0)
+    /* Set appropriate slave select */
+    addi    t1, zero, 1
+    sb      t1, SPI_SPSS(gp)
 
-    li  a1, 0xc0
-    sw  a1, SPICR2(a0)
+    /* Set command to READ at APP_FLASH_ADDR */
+    li      a0, ((APP_FLASH_ADDR & 0xFF) <<24) | ((APP_FLASH_ADDR & 0xFF00) << 8) | ((APP_FLASH_ADDR & 0xFF0000) >> 8) | 0x3
+    jal     spi_xfer
 
-    li  a1, 0x03
-    sw  a1, SPIBR(a0)
+    /* Get magic word */
+    // TODO maybe need this read for this whole thing to work correctly
+    // jal  spi_xfer
 
-    li  a1, 0x0f
-    sw  a1, SPICSR(a0)
+read_header:
+    // TODO do not read a header, use the compile time constant for this configuration
+    /* Dummy read two words */
+    //jal     spi_xfer
+    //jal     spi_xfer
 
-    ret
+    /* Load image size to s0 */
+    //jal     spi_xfer
+    //jal     endian_swap
+    li  s0, APP_SIZE
 
+    /* Load RAM base address to s1 */
+    //jal     spi_xfer
+    //jal     endian_swap
+    li  s1, APP_SRAM_ADDR
 
-// Params:
-//  a0 - destination pointer
-//  a1 - length (bytes)
-//  a2 - flash offset
-//
+    /* Load reset vector to s2 */
+    //jal     spi_xfer
+    //jal     endian_swap
+    li  s2, APP_SRAM_ADDR
 
-spi_flash_read:
-    // Save params
-    mv  s0, a0
-    mv  s1, a1
-    mv  s2, ra
+    /* Dummy read rest of header */
+    //jal     spi_xfer //dcrc
+    //jal     spi_xfer //os, arch, type, comp
 
-    // Setup CS
-    li  t0, SPI_BASE
-    li  t1, 0x0e
-    sw  t1, SPICSR(t0)
+    //jal     spi_xfer
+    //jal     spi_xfer
+    //jal     spi_xfer
+    //jal     spi_xfer
+    //jal     spi_xfer
+    //jal     spi_xfer
+    //jal     spi_xfer
+    //jal     spi_xfer
 
-    // Send command
-    li  a0, 0x03
-    jal     _spi_do_one
+    /* Clear number of copied bytes */
+    addi    s4, zero, 0
+copy_to_ram:
+    jal     spi_xfer
 
-    srli    a0, a2, 16
-    and     a0, a0, 0xff
-    jal     _spi_do_one
+    /* Set memory store address */
+    add     t1, s1, s4
 
-    srli    a0, a2, 8
-    and     a0, a0, 0xff
-    jal     _spi_do_one
+    /* Write word to RAM */
+    sw  a1, 0(t1)
 
-    and     a0, a2, 0xff
-    jal     _spi_do_one
+    /* Increase counter */
+    addi    s4, s4, 4
 
-    // Read loop
-_spi_loop:
-    li  a0, 0x00
-    jal     _spi_do_one
-    sb  a0, 0(s0)
-    addi    s0, s0,  1
-    addi    s1, s1, -1
-    bne     s1, zero, _spi_loop
+    /* Check if file is completely copied */
+    bgt     s0, s4, copy_to_ram
 
-    // Release CS
-    li  t0, SPI_BASE
-    li  t1, 0x0f
-    sw  t1, SPICSR(t0)
-
-    // Done
+    /* Jump to entry point */
+goto_reset:
     jr  s2
 
+    /* Reads ddccbbaa from a1, stores aabbccdd to a2 */
+    /*
+endian_swap:
+    slli    a2, a1, 24   // a2 = aa000000
+    srli    t1, a1, 8    // t1 = 00ddccbb
+    andi    t1, t1, 0xff // t1 = 000000bb
+    slli    t1, t1, 16   // t1 = 00bb0000
+    or  a2, a2, t1   // a2 = aabb0000
 
-// Params:  a0 - Data to TX
-// Returns: a0 - RX data
-// Clobbers t0, t1
-_spi_do_one:
-    li  t0, SPI_BASE
-    li  t1, 0x08
+    srli    t1, a1, 16   // t1 = 0000ddcc
+    andi    t1, t1, 0xff // t1 = 000000cc
+    slli    t1, t1, 8    // t1 = 0000cc00
+    or  a2, a2, t1   // a2 = aabbcc00
 
-    // Write TX data
-    sw  a0, SPITXDR(t0)
+    srli    t1, a1, 24   // t1 = 000000dd
+    or  a2, a2, t1   // a2 = aabbccdd
 
-    // Wait for RXRDY
-1:
-    lw  a0, SPISR(t0)
-    and     a0, a0, t1
-    bne     a0, t1, 1b
+    ret
+   */ 
 
-    // Read RX data
-    lw  a0, SPIRXDR(t0)
+spi_xfer:
+    /* Loop four times */
+    addi    t0, zero, 4
 
-    // Done
+spi_xfer_loop:
+    /* Send data in a0[7:0] */
+    sb  a0, SPI_SPDR(gp)
+
+spi_xfer_poll:
+    /* Wait for data in RX FIFO */
+    lbu     t1, SPI_SPSR(gp)
+    andi    t1, t1, SPI_SPSR_RX_CHECK
+    bnez    t1, spi_xfer_poll
+
+    srli    a1, a1, 8
+    lbu     t1, SPI_SPDR(gp)
+    slli    t1, t1, 24
+    or  a1, a1, t1
+
+    srli    a0, a0, 8
+    addi    t0, t0, -1
+    bnez    t0, spi_xfer_loop
+
     ret

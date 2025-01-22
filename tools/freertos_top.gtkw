@@ -1,0 +1,60 @@
+[*]
+[*] GTKWave Analyzer v3.3.120 (w)1999-2024 BSI
+[*] Tue Dec 10 15:40:39 2024
+[*]
+[dumpfile] "/home/barabas/data3/projects/hardware/risc-v/build/crush_0.0.1/sim_top_freertos-icarus/top_freertos.vcd"
+[dumpfile_mtime] "Tue Dec 10 15:38:03 2024"
+[dumpfile_size] 38981521
+[savefile] "/home/barabas/data3/projects/hardware/risc-v/tools/freertos_top.gtkw"
+[timestart] 879600000000
+[size] 2560 1371
+[pos] -1 -1
+*-35.443504 1241200000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top_freertos_tb.
+[treeopen] top_freertos_tb.dut.
+[treeopen] top_freertos_tb.dut.ram.memory.
+[sst_width] 447
+[signals_width] 290
+[sst_expanded] 1
+[sst_vpaned_height] 425
+@200
+-flash
+@28
+top_freertos_tb.dut.FLASH_IO0
+top_freertos_tb.dut.FLASH_IO1
+top_freertos_tb.dut.FLASH_SCK
+top_freertos_tb.dut.FLASH_SSB
+@200
+-wb
+@22
+top_freertos_tb.dut.dat_o[31:0]
+top_freertos_tb.dut.adr_o[31:0]
+top_freertos_tb.dut.dat_i[31:0]
+top_freertos_tb.dut.sel_o[3:0]
+@200
+-spi
+@22
+top_freertos_tb.dut.spi.address[31:0]
+@200
+-RAM
+@22
+top_freertos_tb.dut.ram.adr_i[31:0]
+top_freertos_tb.dut.ram.dat_i[31:0]
+top_freertos_tb.dut.ram.dat_o[31:0]
+@28
+top_freertos_tb.dut.ram.we_i
+top_freertos_tb.dut.ram.ack_o
+@200
+-
+@22
+top_freertos_tb.dut.boot_rom.g_scope[0].m[31:0]
+top_freertos_tb.dut.boot_rom.g_scope[1].m[31:0]
+top_freertos_tb.dut.boot_rom.adr_i[31:0]
+top_freertos_tb.dut.boot_rom.dat_o[31:0]
+@28
+top_freertos_tb.btn1
+top_freertos_tb.btn_n
+top_freertos_tb.led1
+top_freertos_tb.led2
+[pattern_trace] 1
+[pattern_trace] 0
