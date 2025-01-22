@@ -4,7 +4,7 @@
 
 void delay()
 {
-    vTaskDelay(pdMS_TO_TICKS(50));
+    vTaskDelay(pdMS_TO_TICKS(1000));
 }
 
 #define GPIO_BASE_ADDRESS ((int *)0x40000000)

@@ -49,7 +49,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE gcc)
 string(REPLACE "-gcc" "-objcopy" objcopy_name ${CMAKE_C_COMPILER})
 find_program(objcopy_program ${objcopy_name} REQUIRED)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${objcopy_program} -O binary -j .text -j .data -j .bss -j .stack --reverse-bytes=4 ${PROJECT_NAME} ${PROJECT_NAME}.bin
+        COMMAND ${objcopy_program} -O binary -j .text -j .data -j .bss -j .stack ${PROJECT_NAME} ${PROJECT_NAME}.bin
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         )
         

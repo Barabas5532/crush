@@ -1,0 +1,40 @@
+[*]
+[*] GTKWave Analyzer v3.3.120 (w)1999-2024 BSI
+[*] Tue Jan 21 16:23:16 2025
+[*]
+[dumpfile] "/home/barabas/data3/projects/hardware/risc-v/build/crush_0.0.1/sim_top_freertos-icarus/top_freertos.vcd"
+[dumpfile_mtime] "Tue Jan 21 16:16:56 2025"
+[dumpfile_size] 38982023
+[savefile] "/home/barabas/data3/projects/hardware/risc-v/tools/freertos_top_debug.gtkw"
+[timestart] 0
+[size] 2560 1371
+[pos] -1 -1
+*-34.057491 2860000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top_freertos_tb.
+[treeopen] top_freertos_tb.dut.
+[sst_width] 273
+[signals_width] 207
+[sst_expanded] 1
+[sst_vpaned_height] 425
+@28
+top_freertos_tb.clk
+top_freertos_tb.btn1
+top_freertos_tb.btn_n
+top_freertos_tb.led1
+top_freertos_tb.led2
+top_freertos_tb.flash_io0
+top_freertos_tb.flash_io1
+top_freertos_tb.flash_sck
+top_freertos_tb.flash_ssb
+@200
+-BUS
+@28
+top_freertos_tb.dut.ack_i
+@22
+top_freertos_tb.dut.adr_o[31:0]
+@200
+-PC
+@22
+top_freertos_tb.dut.cpu.pc[31:0]
+[pattern_trace] 1
+[pattern_trace] 0

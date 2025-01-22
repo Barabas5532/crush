@@ -145,6 +145,8 @@ targets:
       - top_freertos
       - pcf
     toplevel: top_freertos
+    hooks:
+      post_run: [iceprog_hint_freertos]
 
   lint:
     default_tool : verilator
@@ -254,4 +256,4 @@ scripts:
   iceprog_hint:
     cmd:
       - echo
-      - "Run 'iceprog ...' in the build folder to program the board"
+      - "Run 'iceprog -o 0x20000 freertos/app/build/crush_freertos.bin' to load firmware to flash."
