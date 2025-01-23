@@ -4,7 +4,6 @@ module spi #(
     parameter integer BASE_ADDRESS
 ) (
     input wire clk_i,
-    // The memory we are trying to infer can not be reset
     // verilator lint_off UNUSEDSIGNAL
     input wire rst_i,
     // verilator lint_on UNUSEDSIGNAL

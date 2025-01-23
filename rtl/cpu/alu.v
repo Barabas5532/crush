@@ -80,6 +80,7 @@ module alu (
       OPCODE_STORE:  out = op_a + S_immediate;
       OPCODE_JAL:    out = pc + J_immediate;
       OPCODE_JALR:   out = (op_a + I_immediate) & ~1;
+`ifdef MACHINE_MODE
       OPCODE_SYSTEM: case(funct3)
             FUNCT3_CSRRW: out = op_a;
             FUNCT3_CSRRWI: out = CSR_immediate;
@@ -88,6 +89,7 @@ module alu (
             FUNCT3_CSRRS: out = op_a | op_b;
             FUNCT3_CSRRSI: out = op_a | CSR_immediate;
       endcase
+`endif
       default: ;
     endcase
   end

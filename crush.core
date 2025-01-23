@@ -252,6 +252,12 @@ targets:
     toplevel: top_freertos_tb
     default_tool: icarus
 
+parameters:
+  MACHINE_MODE:
+    datatype   : bool
+    description: Enables machine privilege mode features
+    paramtype  : vlogdefine
+
 scripts:
   iceprog_bitstream_hint:
     cmd:

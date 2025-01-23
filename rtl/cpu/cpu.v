@@ -15,9 +15,12 @@ module cpu #(
     output reg cyc_o,
     output reg[31:0] adr_o,
     output reg[3:0] sel_o,
-    output reg we_o,
+    output reg we_o
+`ifdef MACHINE_MODE
+    ,
     input wire timer_interrupt,
     input wire external_interrupt
+`endif
 );
 
 `include "params.vh"
@@ -36,13 +39,14 @@ reg[31:0] read_data;
 wire [6:0] opcode = instruction[6:0];
 wire [2:0] funct3 = instruction[14:12];
 
-wire instruction_is_ecall = instruction == {{12'b0}, {5'b0}, {FUNCT3_PRIV}, {5'b0}, {OPCODE_SYSTEM}};
-
 reg pc_load;
 reg pc_count;
 reg[31:0] pc_value;
 wire[31:0] pc;
 wire[31:0] pc_inc;
+
+`ifdef MACHINE_MODE
+wire instruction_is_ecall = instruction == {{12'b0}, {5'b0}, {FUNCT3_PRIV}, {5'b0}, {OPCODE_SYSTEM}};
 
 reg trap_taken;
 reg [31:0] mcause_;
@@ -62,6 +66,7 @@ wire mie_meie = mie[11];
 
 wire timer_interrupt_enable = mstatus_mie && mie_mtie;
 wire external_interrupt_enable = mstatus_mie && mie_meie;
+`endif
 
 program_counter #(.INITIAL_PC(INITIAL_PC)) program_counter(
     .reset(rst_i),
@@ -154,10 +159,12 @@ always @(posedge(clk_i)) begin
     if(rst_i) begin
         state <= STATE_RESET;
         instruction <= 32'hxxxx_xxxx;
+`ifdef MACHINE_MODE
         mcause <= 0;
         mepc <= 0;
         mie <= 0;
         mstatus <= 0;
+`endif
     end else begin
         case(state)
         STATE_FETCH:
@@ -167,7 +174,7 @@ always @(posedge(clk_i)) begin
             end
         STATE_REG_READ: begin
             state <= STATE_EXECUTE;
-
+`ifdef MACHINE_MODE
             if(opcode == OPCODE_SYSTEM && funct3 != FUNCT3_PRIV) begin
                 case(csr_address)
                 CSR_MSTATUS: csr_read_value <= mstatus;
@@ -177,7 +184,7 @@ always @(posedge(clk_i)) begin
                 default: ;
                 endcase
             end
-
+`endif
         end
         STATE_EXECUTE: begin
             state <= STATE_MEMORY;
@@ -190,6 +197,7 @@ always @(posedge(clk_i)) begin
                 read_data <= dat_i;
             end else state_change <= 0;
 
+`ifdef MACHINE_MODE
             if(trap_taken) begin
                 mcause <= mcause_;
                 mepc <= pc;
@@ -200,10 +208,12 @@ always @(posedge(clk_i)) begin
                 // MPIE
                 mstatus[7] <= 1;
             end
+`endif
         end
         STATE_REG_WRITE: begin
             state <= STATE_FETCH;
 
+`ifdef MACHINE_MODE
             if(opcode == OPCODE_SYSTEM) begin
                if(w_address == 0 &&
                funct3 == FUNCT3_PRIV &&
@@ -222,6 +232,7 @@ always @(posedge(clk_i)) begin
                 default: ;
                 endcase
             end
+`endif
         end
         default: state <= STATE_FETCH;
         endcase
@@ -239,6 +250,7 @@ always @(*) begin
     OPCODE_JAL,
     OPCODE_JALR,
     OPCODE_LOAD: reg_w_en = 1;
+`ifdef MACHINE_MODE
     OPCODE_SYSTEM:
         case(funct3)
             FUNCT3_CSRRW,
@@ -249,6 +261,7 @@ always @(*) begin
             FUNCT3_CSRRSI: reg_w_en = 1;
             default: reg_w_en = 0;
         endcase
+`endif
     default: reg_w_en = 0;
     endcase
 end
@@ -276,8 +289,10 @@ always @(*) begin
     pc_load = 0;
     pc_value = 32'hxxxx_xxxx;
 
+`ifdef MACHINE_MODE
     trap_taken = 0;
     mcause_ = 32'hxxxx_xxxx;
+`endif
 
     stb_o = 0;
     cyc_o = 0;
@@ -306,10 +321,12 @@ always @(*) begin
         alu_op_a = r_out1;
         alu_op_b = r_out2;
 
+`ifdef MACHINE_MODE
         if((opcode == OPCODE_SYSTEM) && (funct3 != FUNCT3_CSRRW)) begin
             alu_op_a = csr_read_value;
             alu_op_b = r_out1;
         end
+`endif
     end
     STATE_MEMORY: begin
         if(mem_r_en) begin
@@ -339,6 +356,7 @@ always @(*) begin
             endcase
         end
 
+`ifdef MACHINE_MODE
        if((timer_interrupt && timer_interrupt_enable)
               || (external_interrupt && external_interrupt_enable)
               || instruction_is_ecall) begin
@@ -368,6 +386,7 @@ always @(*) begin
              mcause_ = {1'b1, 31'd11};
           end
        end
+`endif
     end
     STATE_REG_WRITE: begin
         w_enable = reg_w_en;
@@ -387,7 +406,9 @@ always @(*) begin
             OPCODE_JALR: begin
                 w_data = pc_inc;
             end
+`ifdef MACHINE_MODE
             OPCODE_SYSTEM: w_data = csr_read_value;
+`endif
             default: w_data = alu_out_r;
         endcase
 
@@ -421,6 +442,7 @@ always @(*) begin
             end
         endcase
 
+`ifdef MACHINE_MODE
         if(opcode == OPCODE_SYSTEM &&
            w_address == 0 &&
            funct3 == FUNCT3_PRIV &&
@@ -429,6 +451,7 @@ always @(*) begin
             pc_load = 1;
             pc_value = mepc;
         end
+`endif
     end
     default: ;
     endcase
