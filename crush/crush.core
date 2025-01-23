@@ -10,10 +10,10 @@ filesets:
       - rtl/cpu.v
       - rtl/inst_decode_registers.v
       - rtl/inst_immediate_decode.v
+      - rtl/memory_infer.v: {file_type: systemVerilogSource}
+      - rtl/params.vh: {is_include_file: true}
       - rtl/program_counter.v
       - rtl/registers.v
-      - rtl/params.vh:
-          is_include_file: true
     file_type: verilogSource
 
   sim_inst_immediate_decode:

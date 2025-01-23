@@ -6,14 +6,13 @@ name: ::crush_example:0.0.1
 filesets:
   rtl:
     files:
-      - rtl/soc/memory.v
-      - rtl/soc/memory_infer.v: {file_type: systemVerilogSource}
-      - rtl/soc/memory_ice40_spram.v
-      - rtl/soc/top.v
-      - rtl/soc/gpio.v
       - fw/binary/crush-blinky.data:
          file_type: user
          copyto: fw.data
+      - rtl/memory.v
+      - rtl/memory_ice40_spram.v
+      - rtl/top.v
+      - rtl/gpio.v
     file_type: verilogSource
     depend: [crush]
 

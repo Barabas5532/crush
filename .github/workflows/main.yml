@@ -8,11 +8,10 @@ jobs:
     strategy:
       matrix:
         target:
+          - sim_alu
           - sim_inst_immediate_decode
           - sim_memory
-          - sim_alu
           - sim_load_store
-          - sim_top
           # sim_cpu is not a testbench, but a target for RISCOF testing, so it
           # is not included here
     uses: ./.github/workflows/simulate.yml
@@ -23,13 +22,7 @@ jobs:
     strategy:
       matrix:
         target:
-          - sim_inst_immediate_decode
-          - sim_memory
-          - sim_alu
-          - sim_load_store
           - sim_top
-          # sim_cpu is not a testbench, but a target for RISCOF testing, so it
-          # is not included here
     uses: ./.github/workflows/simulate.yml
     with:
       project: crush_example
