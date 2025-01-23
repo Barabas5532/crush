@@ -61,10 +61,10 @@ targets:
     filesets:
       - verilator_waiver
       - rtl
-      - sim_inst_immediate_decode
       - sim_alu
-      - sim_load_store
       - sim_cpu
+      - sim_inst_immediate_decode
+      - sim_load_store
     tools:
       verilator:
         mode : lint-only
@@ -72,7 +72,7 @@ targets:
           - "-Wall -timing"
           # Disable default values in yosys's simulation modules.
           - "-DNO_ICE40_DEFAULT_ASSIGNMENTS"
-    toplevel: crush_cpu
+    toplevel: cpu_tb
 
   sim_inst_immediate_decode:
     <<: *default
