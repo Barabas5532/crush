@@ -60,43 +60,15 @@ spi_init:
     li      a0, ((APP_FLASH_ADDR & 0xFF) <<24) | ((APP_FLASH_ADDR & 0xFF00) << 8) | ((APP_FLASH_ADDR & 0xFF0000) >> 8) | 0x3
     jal     spi_xfer
 
-    /* Get magic word */
-    // TODO maybe need this read for this whole thing to work correctly
-    // jal  spi_xfer
-
 read_header:
-    // TODO do not read a header, use the compile time constant for this configuration
-    /* Dummy read two words */
-    //jal     spi_xfer
-    //jal     spi_xfer
-
     /* Load image size to s0 */
-    //jal     spi_xfer
-    //jal     endian_swap
     li  s0, APP_SIZE
 
     /* Load RAM base address to s1 */
-    //jal     spi_xfer
-    //jal     endian_swap
     li  s1, APP_SRAM_ADDR
 
     /* Load reset vector to s2 */
-    //jal     spi_xfer
-    //jal     endian_swap
     li  s2, APP_SRAM_ADDR
-
-    /* Dummy read rest of header */
-    //jal     spi_xfer //dcrc
-    //jal     spi_xfer //os, arch, type, comp
-
-    //jal     spi_xfer
-    //jal     spi_xfer
-    //jal     spi_xfer
-    //jal     spi_xfer
-    //jal     spi_xfer
-    //jal     spi_xfer
-    //jal     spi_xfer
-    //jal     spi_xfer
 
     /* Clear number of copied bytes */
     addi    s4, zero, 0
@@ -118,26 +90,6 @@ copy_to_ram:
     /* Jump to entry point */
 goto_reset:
     jr  s2
-
-    /* Reads ddccbbaa from a1, stores aabbccdd to a2 */
-    /*
-endian_swap:
-    slli    a2, a1, 24   // a2 = aa000000
-    srli    t1, a1, 8    // t1 = 00ddccbb
-    andi    t1, t1, 0xff // t1 = 000000bb
-    slli    t1, t1, 16   // t1 = 00bb0000
-    or  a2, a2, t1   // a2 = aabb0000
-
-    srli    t1, a1, 16   // t1 = 0000ddcc
-    andi    t1, t1, 0xff // t1 = 000000cc
-    slli    t1, t1, 8    // t1 = 0000cc00
-    or  a2, a2, t1   // a2 = aabbcc00
-
-    srli    t1, a1, 24   // t1 = 000000dd
-    or  a2, a2, t1   // a2 = aabbccdd
-
-    ret
-   */ 
 
 spi_xfer:
     /* Loop four times */
