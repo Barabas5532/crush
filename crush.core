@@ -256,7 +256,7 @@ scripts:
   iceprog_bitstream_hint:
     cmd:
       - echo
-      - "Run 'iceprog -o 0x20000 freertos/app/build/crush_freertos.bin' to load firmware to flash."
+      - "Run 'iceprog ...' in the build folder to program the board."
   iceprog_app_hint:
     cmd:
       - echo
