@@ -7,7 +7,7 @@ filesets:
   rtl:
     files:
       - rtl/alu.v
-      - rtl/cpu.v
+      - rtl/crush_cpu.v
       - rtl/inst_decode_registers.v
       - rtl/inst_immediate_decode.v
       - rtl/memory_infer.v: {file_type: systemVerilogSource}
@@ -72,7 +72,7 @@ targets:
           - "-Wall -timing"
           # Disable default values in yosys's simulation modules.
           - "-DNO_ICE40_DEFAULT_ASSIGNMENTS"
-    toplevel: crush
+    toplevel: crush_cpu
 
   sim_inst_immediate_decode:
     <<: *default
