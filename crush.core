@@ -147,6 +147,10 @@ targets:
     toplevel: top_freertos
     hooks:
       post_run: [iceprog_app_hint]
+    tools_append:
+      icestorm:
+        yosys_synth_options:
+          - "-DMACHINE_MODE"
 
   lint:
     default_tool : verilator
@@ -226,6 +230,10 @@ targets:
       - sim_cpu_freertos
     toplevel: cpu_freertos_tb
     default_tool: icarus
+    tools_append:
+      icarus:
+        iverilog_options:
+          - "-DMACHINE_MODE"
 
   sim_mtimer:
     <<: *default
@@ -251,6 +259,10 @@ targets:
       - top_freertos
     toplevel: top_freertos_tb
     default_tool: icarus
+    tools_append:
+      icarus:
+        iverilog_options:
+          - "-DMACHINE_MODE"
 
 parameters:
   MACHINE_MODE:
