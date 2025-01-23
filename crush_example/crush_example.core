@@ -1,0 +1,61 @@
+CAPI=2:
+# vim:syntax=yaml:
+
+name: ::crush_example:0.0.1
+
+filesets:
+  rtl:
+    files:
+      - rtl/soc/memory.v
+      - rtl/soc/memory_infer.v: {file_type: systemVerilogSource}
+      - rtl/soc/memory_ice40_spram.v
+      - rtl/soc/top.v
+      - rtl/soc/gpio.v
+      - fw/binary/crush-blinky.data:
+         file_type: user
+         copyto: fw.data
+    file_type: verilogSource
+    depend: [crush]
+
+  pcf:
+    files:
+      - data/icebreaker.pcf: {file_type: PCF}
+
+  sim_top:
+    files:
+      - sim/top_tb.v
+    file_type: systemVerilogSource
+    depend: [crush]
+
+targets:
+  default: &default
+    filesets:
+      - rtl
+      - pcf
+    toplevel: top
+    default_tool: icestorm
+    tools:
+      icestorm:
+        nextpnr_options : [ "--up5k", "--package", "sg48" ]
+        yosys_synth_options:
+          - "-dsp"
+      icarus:
+        timescale: "1s/100ms"
+        iverilog_options:
+          - "-g2012"
+          - "-gassertions"
+    hooks:
+      post_run: [iceprog_hint]
+
+  sim_top:
+    <<: *default
+    filesets_append:
+      - sim_top
+    toplevel: top_tb
+    default_tool: icarus
+
+scripts:
+  iceprog_hint:
+    cmd:
+      - echo
+      - "Run 'iceprog ...' in the build folder to program the board"
