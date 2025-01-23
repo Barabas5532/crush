@@ -50,10 +50,6 @@ targets:
     filesets:
       - rtl
     tools:
-      icestorm:
-        nextpnr_options : [ "--up5k", "--package", "sg48" ]
-        yosys_synth_options:
-          - "-dsp"
       icarus:
         timescale: "1s/100ms"
         iverilog_options:
