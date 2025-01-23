@@ -16,8 +16,9 @@ jobs:
           - sim_alu
           - sim_csr
           - sim_load_store
-          - sim_top
           - sim_mtimer
+          - sim_top
+          - sim_top_freertos
           # sim_cpu is not a testbench, but a target for RISCOF testing, so it
           # is not included here
     steps:
