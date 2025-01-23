@@ -20,36 +20,25 @@ filesets:
     files:
      - sim/inst_immediate_decode_tb.v
     file_type: systemVerilogSource
-
-  sim_memory:
-    files:
-     - sim/memory_tb.v
-    file_type: systemVerilogSource
+    depend: [crush_support]
 
   sim_alu:
     files:
      - sim/alu_tb.v
     file_type: systemVerilogSource
+    depend: [crush_support]
 
   sim_load_store:
     files:
      - sim/load_store_tb.v
     file_type: systemVerilogSource
+    depend: [crush_support]
 
   sim_cpu:
     files:
      - sim/control.v
      - sim/cpu_tb.v
     file_type: systemVerilogSource
-
-  sim_common:
-    files:
-      - sim/fatal_assert.vh:
-          is_include_file: true
-      # YOSYS_DATDIR must be defined in the calling environemnt. e.g.:
-      # export YOSYS_DATDIR=$(yosys-config --datdir)
-      - $YOSYS_DATDIR/ice40/cells_sim.v
-    file_type: verilogSource
 
   verilator_waiver:
     files:
@@ -77,11 +66,9 @@ targets:
       - verilator_waiver
       - rtl
       - sim_inst_immediate_decode
-      - sim_memory
       - sim_alu
       - sim_load_store
       - sim_cpu
-      - sim_common
     tools:
       verilator:
         mode : lint-only
@@ -94,23 +81,13 @@ targets:
   sim_inst_immediate_decode:
     <<: *default
     filesets_append:
-      - sim_common
       - sim_inst_immediate_decode
     toplevel: inst_immediate_decode_tb
-    default_tool: icarus
-
-  sim_memory:
-    <<: *default
-    filesets_append:
-      - sim_common
-      - sim_memory
-    toplevel: memory_tb
     default_tool: icarus
 
   sim_alu:
     <<: *default
     filesets_append:
-      - sim_common
       - sim_alu
     toplevel: alu_tb
     default_tool: icarus
@@ -118,7 +95,6 @@ targets:
   sim_load_store:
     <<: *default
     filesets_append:
-      - sim_common
       - sim_load_store
     toplevel: load_store_tb
     default_tool: icarus
@@ -126,7 +102,6 @@ targets:
   sim_cpu:
     <<: *default
     filesets_append:
-      - sim_common
       - sim_cpu
     toplevel: cpu_tb
     default_tool: icarus

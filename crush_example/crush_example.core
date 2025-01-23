@@ -20,6 +20,20 @@ filesets:
     files:
       - data/icebreaker.pcf: {file_type: PCF}
 
+  sim_common:
+    files:
+      # YOSYS_DATDIR must be defined in the calling environemnt. e.g.:
+      # export YOSYS_DATDIR=$(yosys-config --datdir)
+      - $YOSYS_DATDIR/ice40/cells_sim.v
+    file_type: verilogSource
+    depend: [crush_support]
+
+  sim_memory:
+    files:
+     - sim/memory_tb.v
+    file_type: systemVerilogSource
+    depend: [crush]
+
   sim_top:
     files:
       - sim/top_tb.v
@@ -45,6 +59,14 @@ targets:
           - "-gassertions"
     hooks:
       post_run: [iceprog_hint]
+
+  sim_memory:
+    <<: *default
+    filesets_append:
+      - sim_common
+      - sim_memory
+    toplevel: memory_tb
+    default_tool: icarus
 
   sim_top:
     <<: *default

@@ -10,7 +10,6 @@ jobs:
         target:
           - sim_alu
           - sim_inst_immediate_decode
-          - sim_memory
           - sim_load_store
           # sim_cpu is not a testbench, but a target for RISCOF testing, so it
           # is not included here
@@ -22,6 +21,7 @@ jobs:
     strategy:
       matrix:
         target:
+          - sim_memory
           - sim_top
     uses: ./.github/workflows/simulate.yml
     with:
