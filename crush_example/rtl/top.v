@@ -22,7 +22,7 @@ wire ack_i;
 wire err_i;
 wire rty_i;
 
-cpu #(.INITIAL_PC('h1000_0000)) dut (
+crush_cpu #(.INITIAL_PC('h1000_0000)) cpu (
     .clk_i(clk),
     .dat_i(dat_i),
     .dat_o(dat_o),

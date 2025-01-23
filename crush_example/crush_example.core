@@ -1,76 +1,48 @@
 CAPI=2:
 # vim:syntax=yaml:
 
-name: ::crush:0.0.1
+name: ::crush_example:0.0.1
 
 filesets:
   rtl:
     files:
-      - rtl/cpu/alu.v
-      - rtl/cpu/cpu.v
-      - rtl/cpu/inst_decode_registers.v
-      - rtl/cpu/inst_immediate_decode.v
-      - rtl/cpu/program_counter.v
-      - rtl/cpu/registers.v
-      - rtl/cpu/params.vh:
-          is_include_file: true
-      - rtl/soc/memory.v
-      - rtl/soc/memory_infer.v: {file_type: systemVerilogSource}
-      - rtl/soc/memory_ice40_spram.v
-      - rtl/soc/top.v
-      - rtl/soc/gpio.v
       - fw/binary/crush-blinky.data:
          file_type: user
          copyto: fw.data
+      - rtl/memory.v
+      - rtl/memory_ice40_spram.v
+      - rtl/top.v
+      - rtl/gpio.v
     file_type: verilogSource
+    depend: [crush]
 
   pcf:
     files:
       - data/icebreaker.pcf: {file_type: PCF}
 
-  sim_inst_immediate_decode:
+  sim_common:
     files:
-     - sim/inst_immediate_decode_tb.v
-    file_type: systemVerilogSource
+      # YOSYS_DATDIR must be defined in the calling environemnt. e.g.:
+      # export YOSYS_DATDIR=$(yosys-config --datdir)
+      - $YOSYS_DATDIR/ice40/cells_sim.v
+    file_type: verilogSource
+    depend: [crush_support]
 
   sim_memory:
     files:
      - sim/memory_tb.v
     file_type: systemVerilogSource
-
-  sim_alu:
-    files:
-     - sim/alu_tb.v
-    file_type: systemVerilogSource
-
-  sim_load_store:
-    files:
-     - sim/load_store_tb.v
-    file_type: systemVerilogSource
-
-  sim_cpu:
-    files:
-     - sim/control.v
-     - sim/cpu_tb.v
-    file_type: systemVerilogSource
-
-  sim_common:
-    files:
-      - sim/fatal_assert.vh:
-          is_include_file: true
-      # YOSYS_DATDIR must be defined in the calling environemnt. e.g.:
-      # export YOSYS_DATDIR=$(yosys-config --datdir)
-      - $YOSYS_DATDIR/ice40/cells_sim.v
-    file_type: verilogSource
+    depend: [crush]
 
   sim_top:
     files:
       - sim/top_tb.v
     file_type: systemVerilogSource
+    depend: [crush]
 
   verilator_waiver:
     files:
-      - data/verilator_waiver.vlt
+      - ../data/verilator_waiver.vlt
     file_type: vlt
 
 targets:
@@ -98,11 +70,8 @@ targets:
     filesets:
       - verilator_waiver
       - rtl
-      - sim_inst_immediate_decode
+      - sim_top
       - sim_memory
-      - sim_alu
-      - sim_load_store
-      - sim_cpu
       - sim_common
     tools:
       verilator:
@@ -111,15 +80,7 @@ targets:
           - "-Wall -timing"
           # Disable default values in yosys's simulation modules.
           - "-DNO_ICE40_DEFAULT_ASSIGNMENTS"
-    toplevel: top
-
-  sim_inst_immediate_decode:
-    <<: *default
-    filesets_append:
-      - sim_common
-      - sim_inst_immediate_decode
-    toplevel: inst_immediate_decode_tb
-    default_tool: icarus
+    toplevel: top_tb
 
   sim_memory:
     <<: *default
@@ -127,30 +88,6 @@ targets:
       - sim_common
       - sim_memory
     toplevel: memory_tb
-    default_tool: icarus
-
-  sim_alu:
-    <<: *default
-    filesets_append:
-      - sim_common
-      - sim_alu
-    toplevel: alu_tb
-    default_tool: icarus
-
-  sim_load_store:
-    <<: *default
-    filesets_append:
-      - sim_common
-      - sim_load_store
-    toplevel: load_store_tb
-    default_tool: icarus
-
-  sim_cpu:
-    <<: *default
-    filesets_append:
-      - sim_common
-      - sim_cpu
-    toplevel: cpu_tb
     default_tool: icarus
 
   sim_top:

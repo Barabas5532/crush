@@ -27,7 +27,7 @@ class crush(pluginTemplate):
         config = kwargs['config']
         self.compiler_name_prefix = config['compiler_name_prefix']
 
-        with open('../../crush.core') as f:
+        with open('../../crush/crush.core') as f:
             core = yaml.load(f, Loader=yaml.Loader)
 
         core_name = core['name']

@@ -11,8 +11,11 @@ module top_tb;
 reg clk;
 reg btn_n;
 reg btn1;
+/* false positive */
+/* verilator lint_off UNUSEDSIGNAL */
 wire led1;
 wire led2;
+/* verilator lint_on UNUSEDSIGNAL */
 
 top top(
     .CLK(clk),

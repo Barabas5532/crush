@@ -1,0 +1,104 @@
+CAPI=2:
+# vim:syntax=yaml:
+
+name: ::crush:0.0.1
+
+filesets:
+  rtl:
+    files:
+      - rtl/alu.v
+      - rtl/crush_cpu.v
+      - rtl/inst_decode_registers.v
+      - rtl/inst_immediate_decode.v
+      - rtl/memory_infer.v: {file_type: systemVerilogSource}
+      - rtl/params.vh: {is_include_file: true}
+      - rtl/program_counter.v
+      - rtl/registers.v
+    file_type: verilogSource
+
+  sim_inst_immediate_decode:
+    files:
+     - sim/inst_immediate_decode_tb.v
+    file_type: systemVerilogSource
+    depend: [crush_support]
+
+  sim_alu:
+    files:
+     - sim/alu_tb.v
+    file_type: systemVerilogSource
+    depend: [crush_support]
+
+  sim_load_store:
+    files:
+     - sim/load_store_tb.v
+    file_type: systemVerilogSource
+    depend: [crush_support]
+
+  sim_cpu:
+    files:
+     - sim/control.v
+     - sim/cpu_tb.v
+    file_type: systemVerilogSource
+
+  verilator_waiver:
+    files:
+      - ../data/verilator_waiver.vlt
+    file_type: vlt
+
+targets:
+  default: &default
+    filesets:
+      - rtl
+    tools:
+      icarus:
+        timescale: "1s/100ms"
+        iverilog_options:
+          - "-g2012"
+          - "-gassertions"
+
+  lint:
+    default_tool : verilator
+    filesets:
+      - verilator_waiver
+      - rtl
+      - sim_alu
+      - sim_cpu
+      - sim_inst_immediate_decode
+      - sim_load_store
+    tools:
+      verilator:
+        mode : lint-only
+        verilator_options:
+          - "-Wall -timing"
+          # Disable default values in yosys's simulation modules.
+          - "-DNO_ICE40_DEFAULT_ASSIGNMENTS"
+    toplevel: cpu_tb
+
+  sim_inst_immediate_decode:
+    <<: *default
+    filesets_append:
+      - sim_inst_immediate_decode
+    toplevel: inst_immediate_decode_tb
+    default_tool: icarus
+
+  sim_alu:
+    <<: *default
+    filesets_append:
+      - sim_alu
+    toplevel: alu_tb
+    default_tool: icarus
+
+  sim_load_store:
+    <<: *default
+    filesets_append:
+      - sim_load_store
+    toplevel: load_store_tb
+    default_tool: icarus
+
+  sim_cpu:
+    <<: *default
+    filesets_append:
+      - sim_cpu
+    toplevel: cpu_tb
+    default_tool: icarus
+
