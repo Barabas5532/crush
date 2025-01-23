@@ -15,10 +15,10 @@ jobs:
           - sim_top
           # sim_cpu is not a testbench, but a target for RISCOF testing, so it
           # is not included here
-      uses: ./.github/workflows/simulate.yml
-      with:
-        project: crush
-        target: ${{ matrix.target }}
+    uses: ./.github/workflows/simulate.yml
+    with:
+      project: crush
+      target: ${{ matrix.target }}
   verilog-sim-crush-example:
     strategy:
       matrix:
@@ -30,10 +30,10 @@ jobs:
           - sim_top
           # sim_cpu is not a testbench, but a target for RISCOF testing, so it
           # is not included here
-      uses: ./.github/workflows/simulate.yml
-      with:
-        project: crush_example
-        target: ${{ matrix.target }}
+    uses: ./.github/workflows/simulate.yml
+    with:
+      project: crush_example
+      target: ${{ matrix.target }}
   verilog-lint:
     runs-on: ubuntu-22.04
     container:
