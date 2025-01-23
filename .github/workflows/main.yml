@@ -31,6 +31,9 @@ jobs:
     runs-on: ubuntu-22.04
     container:
       image: barabas5532/crush-ci:4
+    strategy:
+      matrix:
+        project: [crush, crush_example]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -47,7 +50,7 @@ jobs:
       - name: Run lint
         run: |
           . script/init.sh
-          fusesoc run --target lint --resolve-env-vars-early crush
+          fusesoc run --target lint --resolve-env-vars-early ${{ matrix.project }}
   riscof-test:
     runs-on: ubuntu-22.04
     container:
