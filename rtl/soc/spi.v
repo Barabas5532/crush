@@ -55,16 +55,4 @@ module spi #(
   assign err_o = 0;
   assign rty_o = 0;
 
-/*
-  SB_IO #(
-    .PIN_TYPE(6'b101001),
-    .PULLUP(1'b1)
-  ) io[2:0] (
-    .PACKAGE_PIN  ({flash_mosi,    flash_miso,    flash_clk   }),
-    .OUTPUT_ENABLE({spi_moe, spi_soe, spi_sckoe}),
-    .D_OUT_0      ({spi_mo,  spi_so,  spi_scko }),
-    .D_IN_0       ({spi_si,  spi_mi,  spi_scki })
-  );
-*/
-
 endmodule
