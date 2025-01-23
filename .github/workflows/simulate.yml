@@ -11,7 +11,7 @@ on:
         type: string
 
 jobs:
-  triage:
+  simulate:
     runs-on: ubuntu-22.04
     container:
       image: barabas5532/crush-ci:4
