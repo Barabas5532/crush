@@ -136,7 +136,7 @@ targets:
           - "-gassertions"
           - "-DSIM"
     hooks:
-      post_run: [iceprog_hint]
+      post_run: [iceprog_bitstream_hint]
 
   top_freertos:
     <<: *default
@@ -146,7 +146,7 @@ targets:
       - pcf
     toplevel: top_freertos
     hooks:
-      post_run: [iceprog_hint_freertos]
+      post_run: [iceprog_app_hint]
 
   lint:
     default_tool : verilator
@@ -253,7 +253,11 @@ targets:
     default_tool: icarus
 
 scripts:
-  iceprog_hint:
+  iceprog_bitstream_hint:
+    cmd:
+      - echo
+      - "Run 'iceprog -o 0x20000 freertos/app/build/crush_freertos.bin' to load firmware to flash."
+  iceprog_app_hint:
     cmd:
       - echo
       - "Run 'iceprog -o 0x20000 freertos/app/build/crush_freertos.bin' to load firmware to flash."
