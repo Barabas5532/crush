@@ -30,7 +30,7 @@ wire rty_i = 0;
 
 wire timer_interrupt;
 
-cpu #(.INITIAL_PC('h1000_0000), .TRAP_PC('h1000_0100)) dut (
+crush_cpu #(.INITIAL_PC('h1000_0000), .TRAP_PC('h1000_0100)) dut (
     .clk_i(clk),
     .dat_i(dat_i),
     .dat_o(dat_o),
