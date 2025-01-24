@@ -11,6 +11,7 @@ filesets:
       - rtl/inst_decode_registers.v
       - rtl/inst_immediate_decode.v
       - rtl/memory_infer.v: {file_type: systemVerilogSource}
+      - rtl/mtimer.v
       - rtl/params.vh: {is_include_file: true}
       - rtl/program_counter.v
       - rtl/registers.v
@@ -38,6 +39,16 @@ filesets:
     files:
      - sim/control.v
      - sim/cpu_tb.v
+    file_type: systemVerilogSource
+
+  sim_csr:
+    files:
+     - sim/csr_tb.v
+    file_type: systemVerilogSource
+
+  sim_mtimer:
+    files:
+     - sim/mtimer_tb.v
     file_type: systemVerilogSource
 
   verilator_waiver:
@@ -102,3 +113,16 @@ targets:
     toplevel: cpu_tb
     default_tool: icarus
 
+  sim_csr:
+    <<: *default
+    filesets_append:
+      - sim_csr
+    toplevel: csr_tb
+    default_tool: icarus
+
+  sim_mtimer:
+    <<: *default
+    filesets_append:
+      - sim_mtimer
+    toplevel: mtimer_tb
+    default_tool: icarus

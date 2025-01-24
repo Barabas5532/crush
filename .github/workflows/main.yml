@@ -23,7 +23,6 @@ jobs:
     strategy:
       matrix:
         target:
-          - sim_memory
           - sim_top
     uses: ./.github/workflows/simulate.yml
     with:

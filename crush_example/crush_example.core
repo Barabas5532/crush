@@ -80,10 +80,6 @@ targets:
     toplevel: top_tb
     default_tool: icarus
 
-parameters:
-  crush:
-    MACHINE_MODE: false
-
 scripts:
   iceprog_hint:
     cmd:

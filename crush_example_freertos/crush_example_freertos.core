@@ -97,10 +97,6 @@ targets:
     toplevel: top_freertos_tb
     default_tool: icarus
 
-parameters:
-  crush:
-    MACHINE_MODE: true
-
 scripts:
   iceprog_hint:
     cmd:
