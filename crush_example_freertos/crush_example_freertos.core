@@ -6,9 +6,9 @@ name: ::crush_example_freertos:0.0.1
 filesets:
   rtl:
     files:
-      - fw/binary/crush-blinky.data:
+      - fw/spi_bootloader/binary/crush-boot.data:
          file_type: user
-         copyto: fw.data
+         copyto: boot.data
       - rtl/memory_ice40_spram.v
       - rtl/memory_ice40_spram_wb.v
       - rtl/spi.v
@@ -37,6 +37,9 @@ filesets:
   sim_top:
     files:
       - sim/top_tb.v
+      - fw/app/binary/crush_freertos.data:
+         file_type: user
+         copyto: crush_freertos.data
     file_type: systemVerilogSource
     depend: [crush]
 
