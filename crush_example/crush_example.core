@@ -81,6 +81,8 @@ targets:
       - sim_top
     toplevel: top_tb
     default_tool: icarus
+    parameters:
+      - MACHINE_MODE=false
 
 scripts:
   iceprog_hint:

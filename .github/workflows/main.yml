@@ -33,6 +33,7 @@ jobs:
       matrix:
         target:
           - sim_top
+          - sim_cpu
     uses: ./.github/workflows/simulate.yml
     with:
       project: crush_example_freertos

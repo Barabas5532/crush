@@ -130,6 +130,8 @@ targets:
       - sim_mtimer
     toplevel: mtimer_tb
     default_tool: icarus
+    parameters:
+      - MACHINE_MODE=true
 
 parameters:
   MACHINE_MODE:

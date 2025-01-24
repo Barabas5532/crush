@@ -94,6 +94,8 @@ targets:
       - sim_cpu
     toplevel: cpu_freertos_tb
     default_tool: icarus
+    parameters:
+      - MACHINE_MODE=true
 
   sim_top:
     <<: *default
@@ -101,6 +103,8 @@ targets:
       - sim_top
     toplevel: top_freertos_tb
     default_tool: icarus
+    parameters:
+      - MACHINE_MODE=true
 
 scripts:
   iceprog_hint:
