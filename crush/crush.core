@@ -68,6 +68,8 @@ targets:
         iverilog_options:
           - "-g2012"
           - "-gassertions"
+    parameters:
+      - MACHINE_MODE
 
   lint:
     default_tool : verilator
