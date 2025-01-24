@@ -1,7 +1,7 @@
 `default_nettype none
 
 module spi #(
-    parameter integer BASE_ADDRESS
+    parameter integer BASE_ADDRESS=0
 ) (
     input wire clk_i,
     // verilator lint_off UNUSEDSIGNAL
