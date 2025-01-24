@@ -34,7 +34,7 @@ string test_case_name = "";
 reg flash_ack_o = 0;
 reg[31:0] flash_dat_o = 32'hzzzz_zzzz;
 
-cpu #(.INITIAL_PC('h1000_0000)) cpu (
+crush_cpu #(.INITIAL_PC('h1000_0000)) cpu (
     .clk_i(clk),
     .dat_i(dat_i),
     .dat_o(dat_o),
@@ -50,7 +50,7 @@ cpu #(.INITIAL_PC('h1000_0000)) cpu (
 );
 
 wire memory_ack_o;
-sim_memory #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
+memory_infer #(.BASE_ADDRESS('h2000_0000), .SIZE('h4000)) memory (
     .clk_i(clk),
     .rst_i(reset),
     .stb_i(stb_o),

@@ -67,6 +67,8 @@ targets:
           - "-gassertions"
     hooks:
       post_run: [iceprog_hint]
+    parameters:
+      - MACHINE_MODE=true
 
   lint:
     default_tool : verilator

@@ -45,11 +45,13 @@ filesets:
     files:
      - sim/csr_tb.v
     file_type: systemVerilogSource
+    depend: [crush_support]
 
   sim_mtimer:
     files:
      - sim/mtimer_tb.v
     file_type: systemVerilogSource
+    depend: [crush_support]
 
   verilator_waiver:
     files:
@@ -119,6 +121,8 @@ targets:
       - sim_csr
     toplevel: csr_tb
     default_tool: icarus
+    parameters:
+      - MACHINE_MODE=true
 
   sim_mtimer:
     <<: *default
@@ -126,3 +130,9 @@ targets:
       - sim_mtimer
     toplevel: mtimer_tb
     default_tool: icarus
+
+parameters:
+  MACHINE_MODE:
+    datatype   : bool
+    description: Enables machine privilege mode features
+    paramtype  : vlogdefine
