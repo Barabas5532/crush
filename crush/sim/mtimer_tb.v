@@ -21,7 +21,6 @@ wire err_i;
 wire rty_i;
 
 wire interrupt;
-reg interrupt_enable = 0;
 
 localparam BASE_ADDRESS = 32'h100;
 
@@ -39,7 +38,6 @@ mtimer #(.BASE_ADDRESS(BASE_ADDRESS)) dut (
     .ack_o(ack_i),
     .err_o(err_i),
     .rty_o(rty_i),
-    .interrupt_enable(interrupt_enable),
     .interrupt(interrupt)
 );
 
@@ -122,7 +120,6 @@ initial begin
    // Set mtimecmp to a very large value to ensure interrupt doesn't trigger
    // immediately
    write_register(BASE_ADDRESS + 12, 1);
-   #0 interrupt_enable = 1;
    #0 `fatal_assert(!interrupt);
    // mtime = 1000
    write_register(BASE_ADDRESS + 0, 1000);
