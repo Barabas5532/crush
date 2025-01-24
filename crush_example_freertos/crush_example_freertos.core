@@ -14,7 +14,7 @@ filesets:
       - rtl/spi.v
       - rtl/top.v
     file_type: verilogSource
-    depend: [crush]
+    depend: [crush, crush_util, simple_spi]
 
   pcf:
     files:
@@ -26,11 +26,11 @@ filesets:
       # export YOSYS_DATDIR=$(yosys-config --datdir)
       - $YOSYS_DATDIR/ice40/cells_sim.v
     file_type: verilogSource
-    depend: [crush_support]
+    depend: [crush_testing]
 
   sim_cpu:
     files:
-      - sim/cpu_freertos_tb.v
+      - sim/cpu_tb.v
     file_type: systemVerilogSource
     depend: [crush]
 
@@ -40,6 +40,7 @@ filesets:
       - fw/app/binary/crush_freertos.data:
          file_type: user
          copyto: crush_freertos.data
+      - sim/s25fl128s.v
     file_type: systemVerilogSource
     depend: [crush]
 
@@ -53,7 +54,7 @@ targets:
     filesets:
       - rtl
       - pcf
-    toplevel: top_freertos
+    toplevel: top
     default_tool: icestorm
     tools:
       icestorm:
@@ -85,14 +86,14 @@ targets:
           - "-Wall -timing"
           # Disable default values in yosys's simulation modules.
           - "-DNO_ICE40_DEFAULT_ASSIGNMENTS"
-    toplevel: top_freertos_tb
+    toplevel: top_tb
 
   sim_cpu:
     <<: *default
     filesets_append:
       - sim_common
       - sim_cpu
-    toplevel: cpu_freertos_tb
+    toplevel: cpu_tb
     default_tool: icarus
     parameters:
       - MACHINE_MODE=true
@@ -100,8 +101,9 @@ targets:
   sim_top:
     <<: *default
     filesets_append:
+      - sim_common
       - sim_top
-    toplevel: top_freertos_tb
+    toplevel: top_tb
     default_tool: icarus
     parameters:
       - MACHINE_MODE=true

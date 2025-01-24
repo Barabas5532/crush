@@ -1,7 +1,7 @@
 CAPI=2:
 # vim:syntax=yaml:
 
-name: ::crush_support:0.0.1
+name: ::crush_testing:0.0.1
 
 filesets:
   sim_common:
@@ -14,7 +14,3 @@ targets:
   default: &default
     filesets:
       - sim_common
-    tools:
-      icarus:
-        iverilog_options:
-          - "-gassertions"

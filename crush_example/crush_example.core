@@ -10,9 +10,8 @@ filesets:
          file_type: user
          copyto: fw.data
       - rtl/top.v
-      - rtl/gpio.v
     file_type: verilogSource
-    depend: [crush]
+    depend: [crush, crush_util]
 
   pcf:
     files:
@@ -24,7 +23,7 @@ filesets:
       # export YOSYS_DATDIR=$(yosys-config --datdir)
       - $YOSYS_DATDIR/ice40/cells_sim.v
     file_type: verilogSource
-    depend: [crush_support]
+    depend: [crush_testing]
 
   sim_top:
     files:

@@ -6,7 +6,7 @@
 
 `timescale 1ns/1ps
 
-module top_freertos_tb;
+module top_tb;
 
 reg clk;
 reg btn_n;
@@ -18,7 +18,7 @@ wire flash_ssb;
 wire flash_io0;
 wire flash_io1;
 
-top_freertos dut(
+top dut(
     .CLK(clk),
     .BTN_N(btn_n),
     .BTN1(btn1),

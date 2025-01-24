@@ -21,19 +21,19 @@ filesets:
     files:
      - sim/inst_immediate_decode_tb.v
     file_type: systemVerilogSource
-    depend: [crush_support]
+    depend: [crush_testing]
 
   sim_alu:
     files:
      - sim/alu_tb.v
     file_type: systemVerilogSource
-    depend: [crush_support]
+    depend: [crush_testing]
 
   sim_load_store:
     files:
      - sim/load_store_tb.v
     file_type: systemVerilogSource
-    depend: [crush_support]
+    depend: [crush_testing]
 
   sim_cpu:
     files:
@@ -45,13 +45,13 @@ filesets:
     files:
      - sim/csr_tb.v
     file_type: systemVerilogSource
-    depend: [crush_support]
+    depend: [crush_testing]
 
   sim_mtimer:
     files:
      - sim/mtimer_tb.v
     file_type: systemVerilogSource
-    depend: [crush_support]
+    depend: [crush_testing]
 
   verilator_waiver:
     files:

@@ -1,6 +1,6 @@
 `default_nettype none
 
-module top_freertos (
+module top (
     input wire CLK,
     input wire BTN_N,
     input wire BTN1,
@@ -28,7 +28,7 @@ wire rty_i;
 
 wire timer_interrupt;
 
-cpu #(.INITIAL_PC('h0000_0000), .TRAP_PC('h1000_0100)) cpu (
+crush_cpu #(.INITIAL_PC('h0000_0000), .TRAP_PC('h1000_0100)) cpu (
     .clk_i(clk),
     .dat_i(dat_i),
     .dat_o(dat_o),
