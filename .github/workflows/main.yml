@@ -44,7 +44,7 @@ jobs:
       image: barabas5532/crush-ci:4
     strategy:
       matrix:
-        project: [crush, crush_example]
+        project: [crush, crush_example, crush_example_freertos]
     steps:
       - uses: actions/checkout@v4
         with:

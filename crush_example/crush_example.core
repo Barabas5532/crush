@@ -9,8 +9,6 @@ filesets:
       - fw/binary/crush-blinky.data:
          file_type: user
          copyto: fw.data
-      - rtl/memory.v
-      - rtl/memory_ice40_spram.v
       - rtl/top.v
       - rtl/gpio.v
     file_type: verilogSource
@@ -27,12 +25,6 @@ filesets:
       - $YOSYS_DATDIR/ice40/cells_sim.v
     file_type: verilogSource
     depend: [crush_support]
-
-  sim_memory:
-    files:
-     - sim/memory_tb.v
-    file_type: systemVerilogSource
-    depend: [crush]
 
   sim_top:
     files:
@@ -71,7 +63,6 @@ targets:
       - verilator_waiver
       - rtl
       - sim_top
-      - sim_memory
       - sim_common
     tools:
       verilator:
@@ -82,20 +73,16 @@ targets:
           - "-DNO_ICE40_DEFAULT_ASSIGNMENTS"
     toplevel: top_tb
 
-  sim_memory:
-    <<: *default
-    filesets_append:
-      - sim_common
-      - sim_memory
-    toplevel: memory_tb
-    default_tool: icarus
-
   sim_top:
     <<: *default
     filesets_append:
       - sim_top
     toplevel: top_tb
     default_tool: icarus
+
+parameters:
+  crush:
+    MACHINE_MODE: false
 
 scripts:
   iceprog_hint:
