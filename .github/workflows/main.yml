@@ -36,7 +36,7 @@ jobs:
           - sim_top
     uses: ./.github/workflows/simulate.yml
     with:
-      project: crush_example
+      project: crush_example_freertos
       target: ${{ matrix.target }}
   verilog-lint:
     runs-on: ubuntu-22.04
@@ -90,7 +90,7 @@ jobs:
       image: barabas5532/crush-ci:4
     strategy:
       matrix:
-        target: [crush, crush_machine]
+        project: [crush_example, crush_example_freertos]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -108,7 +108,7 @@ jobs:
         timeout-minutes: 1
         run: |
           . script/init.sh
-          fusesoc --verbose run --target ${{ matrix.target }}
+          fusesoc --verbose run ${{ matrix.project }}
   firmware:
     runs-on: ubuntu-22.04
     container:
