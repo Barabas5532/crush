@@ -1,6 +1,6 @@
 `default_nettype none
 
-module cpu #(
+module crush_cpu #(
     parameter integer INITIAL_PC = 0,
     parameter integer TRAP_PC = 0
 ) (

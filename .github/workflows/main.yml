@@ -4,45 +4,47 @@ on:
     branches: [ master ]
 
 jobs:
-  verilog-test:
+  verilog-sim-crush:
+    strategy:
+      matrix:
+        target:
+          - sim_alu
+          - sim_inst_immediate_decode
+          - sim_load_store
+          - sim_csr
+          - sim_mtimer
+          # sim_cpu is not a testbench, but a target for RISCOF testing, so it
+          # is not included here
+    uses: ./.github/workflows/simulate.yml
+    with:
+      project: crush
+      target: ${{ matrix.target }}
+  verilog-sim-crush-example:
+    strategy:
+      matrix:
+        target:
+          - sim_memory
+          - sim_top
+    uses: ./.github/workflows/simulate.yml
+    with:
+      project: crush_example
+      target: ${{ matrix.target }}
+  verilog-sim-crush-example-freertos:
+    strategy:
+      matrix:
+        target:
+          - sim_top
+    uses: ./.github/workflows/simulate.yml
+    with:
+      project: crush_example
+      target: ${{ matrix.target }}
+  verilog-lint:
     runs-on: ubuntu-22.04
     container:
       image: barabas5532/crush-ci:4
     strategy:
       matrix:
-        target:
-          - sim_inst_immediate_decode
-          - sim_memory
-          - sim_alu
-          - sim_csr
-          - sim_load_store
-          - sim_mtimer
-          - sim_top
-          - sim_top_freertos
-          # sim_cpu is not a testbench, but a target for RISCOF testing, so it
-          # is not included here
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - name: Set up python environment
-        run: |
-          python -m venv .venv
-          . .venv/bin/activate
-          python -m pip install -r requirements.txt
-          # Every step runs in its own shell. Activating the venv really just
-          # modifies the path. Persist the modified path, so that other steps
-          # also use the venv.
-          echo PATH=$PATH >> $GITHUB_ENV
-      - name: Run test
-        timeout-minutes: 1
-        run: |
-          . script/init.sh
-          fusesoc run --target ${{ matrix.target }} --resolve-env-vars-early crush
-  verilog-lint:
-    runs-on: ubuntu-22.04
-    container:
-      image: barabas5532/crush-ci:4
+        project: [crush, crush_example]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -59,7 +61,7 @@ jobs:
       - name: Run lint
         run: |
           . script/init.sh
-          fusesoc run --target lint --resolve-env-vars-early crush
+          fusesoc run --target lint --resolve-env-vars-early ${{ matrix.project }}
   riscof-test:
     runs-on: ubuntu-22.04
     container:
@@ -113,7 +115,7 @@ jobs:
       image: barabas5532/crush-ci:4
     defaults:
       run:
-        working-directory: fw
+        working-directory: crush_example/fw
     steps:
       - uses: actions/checkout@v4
       - name: Configure

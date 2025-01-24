@@ -25,7 +25,7 @@ string test_case_name = "";
 reg flash_ack_o = 0;
 reg[31:0] flash_dat_o = 32'hzzzz_zzzz;
 
-cpu #(.INITIAL_PC('h1000_0000)) cpu (
+crush_cpu #(.INITIAL_PC('h1000_0000)) cpu (
     .clk_i(clk),
     .dat_i(dat_i),
     .dat_o(dat_o),

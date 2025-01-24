@@ -1,0 +1,104 @@
+CAPI=2:
+# vim:syntax=yaml:
+
+name: ::crush_example:0.0.1
+
+filesets:
+  rtl:
+    files:
+      - fw/binary/crush-blinky.data:
+         file_type: user
+         copyto: fw.data
+      - rtl/memory.v
+      - rtl/memory_ice40_spram.v
+      - rtl/top.v
+      - rtl/gpio.v
+    file_type: verilogSource
+    depend: [crush]
+
+  pcf:
+    files:
+      - data/icebreaker.pcf: {file_type: PCF}
+
+  sim_common:
+    files:
+      # YOSYS_DATDIR must be defined in the calling environemnt. e.g.:
+      # export YOSYS_DATDIR=$(yosys-config --datdir)
+      - $YOSYS_DATDIR/ice40/cells_sim.v
+    file_type: verilogSource
+    depend: [crush_support]
+
+  sim_memory:
+    files:
+     - sim/memory_tb.v
+    file_type: systemVerilogSource
+    depend: [crush]
+
+  sim_top:
+    files:
+      - sim/top_tb.v
+    file_type: systemVerilogSource
+    depend: [crush]
+
+  verilator_waiver:
+    files:
+      - ../data/verilator_waiver.vlt
+    file_type: vlt
+
+targets:
+  default: &default
+    filesets:
+      - rtl
+      - pcf
+    toplevel: top
+    default_tool: icestorm
+    tools:
+      icestorm:
+        nextpnr_options : [ "--up5k", "--package", "sg48" ]
+        yosys_synth_options:
+          - "-dsp"
+      icarus:
+        timescale: "1s/100ms"
+        iverilog_options:
+          - "-g2012"
+          - "-gassertions"
+    hooks:
+      post_run: [iceprog_hint]
+
+  lint:
+    default_tool : verilator
+    filesets:
+      - verilator_waiver
+      - rtl
+      - sim_top
+      - sim_memory
+      - sim_common
+    tools:
+      verilator:
+        mode : lint-only
+        verilator_options:
+          - "-Wall -timing"
+          # Disable default values in yosys's simulation modules.
+          - "-DNO_ICE40_DEFAULT_ASSIGNMENTS"
+    toplevel: top_tb
+
+  sim_memory:
+    <<: *default
+    filesets_append:
+      - sim_common
+      - sim_memory
+    toplevel: memory_tb
+    default_tool: icarus
+
+  sim_top:
+    <<: *default
+    filesets_append:
+      - sim_top
+    toplevel: top_tb
+    default_tool: icarus
+
+scripts:
+  iceprog_hint:
+    cmd:
+      - echo
+      - "Run 'iceprog ...' in the build folder to program the board"
