@@ -1,7 +1,7 @@
 CAPI=2:
 # vim:syntax=yaml:
 
-name: ::crush_example:0.0.1
+name: ::crush_example_freertos:0.0.1
 
 filesets:
   rtl:
