@@ -122,7 +122,7 @@ jobs:
       image: barabas5532/crush-ci:4
     defaults:
       run:
-        working-directory: crush_example/fw
+        working-directory: ${{ matrix.path }}
     steps:
       - uses: actions/checkout@v4
       - name: Configure
