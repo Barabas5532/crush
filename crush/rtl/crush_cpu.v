@@ -1,8 +1,11 @@
 `default_nettype none
 
 module crush_cpu #(
-    parameter integer INITIAL_PC = 0,
+    parameter integer INITIAL_PC = 0
+`ifdef MACHINE_MODE
+    ,
     parameter integer TRAP_PC = 0
+`endif
 ) (
     input wire clk_i,
     input wire[31:0] dat_i,

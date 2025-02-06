@@ -21,7 +21,9 @@ module alu (
   wire [31:0] B_immediate;
   wire [31:0] U_immediate;
   wire [31:0] J_immediate;
+  // verilator lint_off UNUSEDSIGNAL
   wire [31:0] CSR_immediate;
+  // verilator lint_on UNUSEDSIGNAL
 
   inst_immediate_decode immediate_decode (
       .inst(instruction),
