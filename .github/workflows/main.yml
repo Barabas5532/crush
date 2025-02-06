@@ -112,6 +112,12 @@ jobs:
           fusesoc --verbose run ${{ matrix.project }}
   firmware:
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        path:
+          - crush_example/fw
+          - crush_example_freertos/fw/spi_bootloader
+          - crush_example_freertos/fw/app
     container:
       image: barabas5532/crush-ci:4
     defaults:
@@ -123,10 +129,3 @@ jobs:
         run: cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=TC-crush.cmake
       - name: Build
         run: cmake --build build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: firmware-elf
-          path: |
-            fw/build/crush-blinky
-            fw/build/crush-blinky.bin
-            fw/build/crush-blinky.data
