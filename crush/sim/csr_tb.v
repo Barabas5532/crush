@@ -1,15 +1,4 @@
 /* Test bench for CSR instructions CSRRW, CSRRS, CSRRC, CSRRWI, CSRRSI, CSRRCI */
-    test_case("CSRRCI");
-
-    cpu.mepc = 32'h0000_0014;
-
-    CSRRCI(1, CSR_MEPC, 5'h18);
-
-    #1;
-    @(cpu.state == cpu.STATE_FETCH);
-    `fatal_assert (cpu.registers.x1 == 32'h0000_0014);
-    `fatal_assert (cpu.mepc         == 32'h0000_0004);
-    #1;
 
 /* Most of the implemented CSRs are not arbitrary read/write registers. Instead
  * they are WARL etc.
@@ -45,7 +34,7 @@ string test_case_name = "";
 reg flash_ack_o = 0;
 reg[31:0] flash_dat_o = 32'hzzzz_zzzz;
 
-crush_cpu #(.INITIAL_PC('h1000_0000), .TRAP_PC('h1234_5678) cpu (
+crush_cpu #(.INITIAL_PC('h1000_0000), .TRAP_PC('h1234_5678)) cpu (
     .clk_i(clk),
     .dat_i(dat_i),
     .dat_o(dat_o),
