@@ -31,8 +31,6 @@ module spi #(
   wire addressed = (adr_i >= BASE_ADDRESS) & (adr_i < BASE_ADDRESS + 4 * 32'h10);
   wire[31:0] address = adr_i - BASE_ADDRESS;
 
-  // Interrupt output is ignored. The CPU is programmed to send commands slow
-  // enough that we will not overflow the FIFOs without using the interrupt.
   simple_spi spi (
       // Wishbone
       .clk_i  (clk_i),
@@ -48,7 +46,12 @@ module spi #(
       .sck_o  (flash_clk),
       .ss_o   (flash_cs_n),
       .mosi_o (flash_mosi),
-      .miso_i (flash_miso)
+      .miso_i (flash_miso),
+      // Interrupt output is ignored. The CPU is programmed to send commands
+      // slow enough that we will not overflow the FIFOs.
+      // verilator lint_off PINCONNECTEMPTY
+      .inta_o ()
+      // verilator lint_on PINCONNECTEMPTY
   );
 
   assign err_o = 0;

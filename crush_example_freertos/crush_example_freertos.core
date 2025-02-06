@@ -76,7 +76,9 @@ targets:
     filesets:
       - verilator_waiver
       - rtl
-      - sim_top
+      # Can't lint because verilator fails on flash simulator:
+      # https://github.com/verilator/verilator/issues/5767
+      # - sim_top
       - sim_cpu
       - sim_common
     tools:
@@ -86,7 +88,9 @@ targets:
           - "-Wall -timing"
           # Disable default values in yosys's simulation modules.
           - "-DNO_ICE40_DEFAULT_ASSIGNMENTS"
-    toplevel: top_tb
+    toplevel: cpu_tb
+    parameters:
+      - MACHINE_MODE=true
 
   sim_cpu:
     <<: *default
