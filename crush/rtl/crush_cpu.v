@@ -100,7 +100,9 @@ registers registers(
 assign r_address1 = instruction[19:15];
 assign r_address2 = instruction[24:20];
 assign w_address = instruction[11:7];
+`ifdef MACHINE_MODE
 wire [11:0] csr_address = instruction[31:20];
+`endif
 
 reg[31:0] alu_op_a;
 reg[31:0] alu_op_b;
