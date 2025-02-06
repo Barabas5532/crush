@@ -21,6 +21,7 @@ module alu (
   wire [31:0] B_immediate;
   wire [31:0] U_immediate;
   wire [31:0] J_immediate;
+  // False positive, because only used in machine mode
   // verilator lint_off UNUSEDSIGNAL
   wire [31:0] CSR_immediate;
   // verilator lint_on UNUSEDSIGNAL
