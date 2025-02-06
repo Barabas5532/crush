@@ -91,6 +91,7 @@ module alu (
             FUNCT3_CSRRCI: out = op_a & ~CSR_immediate;
             FUNCT3_CSRRS: out = op_a | op_b;
             FUNCT3_CSRRSI: out = op_a | CSR_immediate;
+            default: ;
       endcase
 `endif
       default: ;

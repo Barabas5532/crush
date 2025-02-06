@@ -25,8 +25,8 @@ wire[31:0] dat_i;
 wire[31:0] dat_o;
 wire we_o;
 wire ack_i;
-wire err_i = 0;
-wire rty_i = 0;
+wire err_i;
+wire rty_i;
 
 wire timer_interrupt;
 
@@ -48,6 +48,8 @@ crush_cpu #(.INITIAL_PC('h1000_0000), .TRAP_PC('h1000_0100)) dut (
 );
 
 wire ram_ack_o;
+wire ram_err_o;
+wire ram_rty_o;
 memory_infer #(.BASE_ADDRESS('h1000_0000), .SIZE('h1_0000)) ram (
     .clk_i(clk),
     .rst_i(reset),
@@ -59,8 +61,8 @@ memory_infer #(.BASE_ADDRESS('h1000_0000), .SIZE('h1_0000)) ram (
     .dat_o(dat_i),
     .we_i(we_o),
     .ack_o(ram_ack_o),
-    .err_o(err_i),
-    .rty_o(rty_i)
+    .err_o(ram_err_o),
+    .rty_o(ram_rty_o)
 );
 
 initial begin
@@ -83,6 +85,8 @@ initial begin
 end
 
 wire mtimer_ack_o;
+wire mtimer_err_o;
+wire mtimer_rty_o;
 mtimer #(.BASE_ADDRESS('h3000_0000)) mtimer (
     .clk_i(clk),
     .rst_i(reset),
@@ -94,8 +98,8 @@ mtimer #(.BASE_ADDRESS('h3000_0000)) mtimer (
     .dat_o(dat_i),
     .we_i(we_o),
     .ack_o(mtimer_ack_o),
-    .err_o(err_i),
-    .rty_o(rty_i),
+    .err_o(mtimer_err_o),
+    .rty_o(mtimer_rty_o),
     .interrupt(timer_interrupt)
 );
 
@@ -104,8 +108,11 @@ wire gpio_rty_o;
 wire gpio_err_o;
 wire [5:0] unused;
 reg btn = 0;
+// verilator lint_off UNUSEDSIGNAL
+// standin for GPIO going off the board
 reg led1;
 reg led2;
+// verilator lint_on UNUSEDSIGNAL
 gpio #(.BASE_ADDRESS('h4000_0000)) gpio (
     .clk_i(clk),
     .rst_i(reset),
@@ -124,6 +131,8 @@ gpio #(.BASE_ADDRESS('h4000_0000)) gpio (
 );
 
 assign ack_i = ram_ack_o | mtimer_ack_o | gpio_ack_o;
+assign rty_i = ram_rty_o | mtimer_rty_o | gpio_rty_o;
+assign err_i = ram_err_o | mtimer_err_o | gpio_err_o;
 
 always begin
     #42 clk <= !clk;
