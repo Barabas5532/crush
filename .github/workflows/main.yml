@@ -29,15 +29,16 @@ jobs:
       project: crush_example
       target: ${{ matrix.target }}
   verilog-sim-crush-example-freertos:
-    strategy:
-      matrix:
-        target:
-          - sim_top
-          - sim_cpu
     uses: ./.github/workflows/simulate.yml
     with:
       project: crush_example_freertos
-      target: ${{ matrix.target }}
+      target: sim_cpu
+  verilog-sim-crush-example-freertos:
+    uses: ./.github/workflows/simulate.yml
+    with:
+      project: crush_example_freertos
+      target: sim_top
+      timeout-minutes: 10
   verilog-lint:
     runs-on: ubuntu-22.04
     container:
