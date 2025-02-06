@@ -28,12 +28,12 @@ jobs:
     with:
       project: crush_example
       target: ${{ matrix.target }}
-  verilog-sim-crush-example-freertos:
+  verilog-sim-crush-example-freertos-cpu:
     uses: ./.github/workflows/simulate.yml
     with:
       project: crush_example_freertos
       target: sim_cpu
-  verilog-sim-crush-example-freertos:
+  verilog-sim-crush-example-freertos-top:
     uses: ./.github/workflows/simulate.yml
     with:
       project: crush_example_freertos
