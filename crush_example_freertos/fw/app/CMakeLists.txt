@@ -45,6 +45,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE freertos_kernel)
 
 # Since we use -nostdlib, we must link to libgcc manually
 target_link_libraries(${PROJECT_NAME} PRIVATE gcc)
+target_link_libraries(freertos_kernel PRIVATE gcc)
 
 string(REPLACE "-gcc" "-objcopy" objcopy_name ${CMAKE_C_COMPILER})
 find_program(objcopy_program ${objcopy_name} REQUIRED)
