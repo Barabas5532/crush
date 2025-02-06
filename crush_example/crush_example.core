@@ -87,4 +87,4 @@ scripts:
   iceprog_hint:
     cmd:
       - echo
-      - "Run 'iceprog ...' in the build folder to program the board"
+      - "Run 'iceprog build/crush_example_0.0.1/default-icestorm/crush_example_0.0.1.bin' to program the board."
