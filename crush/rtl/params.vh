@@ -59,6 +59,7 @@ localparam FUNCT3_PRIV = 3'b000;
 
 localparam CSR_MSTATUS  = 12'h300;
 localparam CSR_MIE      = 12'h304;
+localparam CSR_MTVEC    = 12'h305;
 localparam CSR_MEPC     = 12'h341;
 localparam CSR_MCAUSE   = 12'h342;
 

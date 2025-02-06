@@ -186,6 +186,7 @@ always @(posedge(clk_i)) begin
                 CSR_MIE: csr_read_value <= mie;
                 CSR_MEPC: csr_read_value <= mepc;
                 CSR_MCAUSE: csr_read_value <= mcause;
+                CSR_MTVEC: csr_read_value <= mtvec;
                 default: ;
                 endcase
             end
@@ -376,7 +377,7 @@ always @(*) begin
            we_o = 1'hx;
 
            trap_taken = 1;
-           pc_value = TRAP_PC;
+           pc_value = mtvec;
            pc_load = 1;
 
           if(instruction_is_ecall) begin
