@@ -30,7 +30,7 @@ jobs:
   verilog-lint:
     runs-on: ubuntu-22.04
     container:
-      image: barabas5532/crush-ci:4
+      image: barabas5532/crush-ci:5
     strategy:
       matrix:
         project: [crush, crush_example]
@@ -54,7 +54,7 @@ jobs:
   riscof-test:
     runs-on: ubuntu-22.04
     container:
-      image: barabas5532/crush-ci:4
+      image: barabas5532/crush-ci:5
     steps:
       - uses: actions/checkout@v4
         with:
@@ -76,7 +76,7 @@ jobs:
   synthesis:
     runs-on: ubuntu-22.04
     container:
-      image: barabas5532/crush-ci:4
+      image: barabas5532/crush-ci:5
     steps:
       - uses: actions/checkout@v4
         with:
@@ -98,7 +98,7 @@ jobs:
   firmware:
     runs-on: ubuntu-22.04
     container:
-      image: barabas5532/crush-ci:4
+      image: barabas5532/crush-ci:5
     defaults:
       run:
         working-directory: crush_example/fw
