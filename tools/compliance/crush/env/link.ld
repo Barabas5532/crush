@@ -13,7 +13,6 @@ SECTIONS
     .text : {
         . = ALIGN(4);
         *(.text .text.*)
-        *(.rodata .rodata*)
         . = ALIGN(4);
     } > rom
 
@@ -21,6 +20,7 @@ SECTIONS
        . = ALIGN(4);
        _srelocate = .;
        *(.data .data.*);
+       *(.rodata .rodata*)
        . = ALIGN(4);
        _erelocate = .;
     } > ram AT> data

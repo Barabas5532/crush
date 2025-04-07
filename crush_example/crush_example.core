@@ -6,9 +6,12 @@ name: ::crush_example:0.0.1
 filesets:
   rtl:
     files:
-      - fw/binary/crush-blinky.data:
+      - fw/binary/crush-blinky-instruction.data:
          file_type: user
-         copyto: fw.data
+         copyto: inst.data
+      - fw/binary/crush-blinky-data.data:
+         file_type: user
+         copyto: data.data
       - rtl/memory.v
       - rtl/memory_ice40_spram.v
       - rtl/top.v

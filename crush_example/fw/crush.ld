@@ -3,29 +3,28 @@ ENTRY(start)
 
 MEMORY
 {
-    mem (rwx): ORIGIN = 0x10000000, LENGTH = 0x800 * 4
+    instruction_memory (x): ORIGIN = 0x00000000, LENGTH = 0x400 * 4
+    memory (rw): ORIGIN = 0x10000000, LENGTH = 0x400 * 4
 }
 
 SECTIONS
 {
-    .mem : {
+    .instruction_memory : {
         . = ALIGN(4);
         KEEP(*(.start))
         *(.text .text.*)
-        *(.rodata .rodata*)
         . = ALIGN(4);
-        *(.data .data.*);
-    } > mem
+    } > instruction_memory
 
-    .bss (NOLOAD) : {
+    .memory : {
         . = ALIGN(4);
-        bss_start = .;
         *(.bss .bss.*)
         *(COMMON)
+        *(.data .data.*);
+        *(.rodata .rodata*)
         . = ALIGN(4);
-        bss_end = .;
-    } > mem
-
+    } > memory
+    
     .stack : {
         . = 1K; /* stack size */
         /* Calling conventions require 16 byte aligned stack pointer
@@ -33,6 +32,6 @@ SECTIONS
          */
         . = ALIGN(16);
         stack_start = .;
-    } > mem
+    } > memory
 }
 
