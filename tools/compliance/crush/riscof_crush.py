@@ -85,9 +85,16 @@ class crush(pluginTemplate):
               )
         utils.shellCommand(cmd).run(cwd=working_directory)
 
+        # The executable binary
         binary_path = os.path.join(working_directory, 'test.bin')
-        binary_cmd = f'{self.compiler_name_prefix}-objcopy -O binary -j .text -j .data -j .bss --reverse-bytes=4 test.elf {binary_path}'
+        binary_cmd = f'{self.compiler_name_prefix}-objcopy -O binary -j .text -j .bss --reverse-bytes=4 test.elf {binary_path}'
         utils.shellCommand(binary_cmd).run(cwd=working_directory)
 
-        sim_cmd = f'vvp -n {self.dut_exe} +SIGNATURE_PATH={sig_file} +BINARY_PATH={binary_path}'
+        # The initialised data
+        init_data_path = os.path.join(working_directory, 'init_data.bin')
+        init_data_cmd = f'{self.compiler_name_prefix}-objcopy -O binary -j .data --reverse-bytes=4 test.elf {init_data_path}'
+        utils.shellCommand(init_data_cmd).run(cwd=working_directory)
+
+
+        sim_cmd = f'vvp -n {self.dut_exe} +SIGNATURE_PATH={sig_file} +BINARY_PATH={binary_path} +INIT_DATA_PATH={init_data_path}'
         utils.shellCommand(sim_cmd).run(cwd=working_directory)

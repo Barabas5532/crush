@@ -33,7 +33,7 @@
  */
 #define RVMODEL_HALT \
     la x1, rvtest_sig_begin; \
-    la x2, 0x30000000; \
+    la x2, 0x40000000; \
     sw x1, 0(x2); \
     la x1, rvtest_sig_end; \
     sw x1, 4(x2); \
@@ -47,7 +47,7 @@
  * needs to be run prior to running the tests.
  */
 #define RVMODEL_BOOT \
-    /* Copy data section from flash to RAM */ \
+    /* Copy data section from initialised data memory to RAM */ \
     la x1, _srelocate; \
     la x2, _erelocate; \
     la x3, _etext; \

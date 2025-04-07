@@ -3,18 +3,30 @@
 module crush_cpu #(
     parameter integer INITIAL_PC = 0
 ) (
-    input wire clk_i,
-    input wire[31:0] dat_i,
-    output reg[31:0] dat_o,
-    input wire rst_i,
-    input wire ack_i,
-    input wire err_i,
-    input wire rty_i,
-    output reg stb_o,
-    output reg cyc_o,
-    output reg[31:0] adr_o,
-    output reg[3:0] sel_o,
-    output reg we_o
+    input wire          clk_i,
+    input wire          rst_i,
+    // Instruction wishbone bus
+    input wire[31:0]    wb_inst_dat_i,
+    output reg[31:0]    wb_inst_dat_o,
+    input wire          wb_inst_ack_i,
+    input wire          wb_inst_err_i,
+    input wire          wb_inst_rty_i,
+    output reg          wb_inst_stb_o,
+    output reg          wb_inst_cyc_o,
+    output reg[31:0]    wb_inst_adr_o,
+    output reg[3:0]     wb_inst_sel_o,
+    output reg          wb_inst_we_o,
+    // Data wishbone bus
+    input wire[31:0]    wb_data_dat_i,
+    output reg[31:0]    wb_data_dat_o,
+    input wire          wb_data_ack_i,
+    input wire          wb_data_err_i,
+    input wire          wb_data_rty_i,
+    output reg          wb_data_stb_o,
+    output reg          wb_data_cyc_o,
+    output reg[31:0]    wb_data_adr_o,
+    output reg[3:0]     wb_data_sel_o,
+    output reg          wb_data_we_o
 );
 
 `include "params.vh"
@@ -132,9 +144,9 @@ always @(posedge(clk_i)) begin
     end else begin
         case(state)
         STATE_FETCH:
-            if(ack_i) begin
+            if(wb_inst_ack_i) begin
                 state <= STATE_REG_READ;
-                instruction <= dat_i;
+                instruction <= wb_inst_dat_i;
             end
         STATE_REG_READ: state <= STATE_EXECUTE;
         STATE_EXECUTE: begin
@@ -142,9 +154,9 @@ always @(posedge(clk_i)) begin
             state_change <= 0;
         end
         STATE_MEMORY:
-            if(ack_i | (!mem_r_en & !mem_w_en)) begin
+            if(wb_data_ack_i | (!mem_r_en & !mem_w_en)) begin
                 state <= STATE_REG_WRITE;
-                read_data <= dat_i;
+                read_data <= wb_data_dat_i;
             end else state_change <= 0;
         STATE_REG_WRITE: state <= STATE_FETCH;
         default: state <= STATE_FETCH;
@@ -190,12 +202,19 @@ always @(*) begin
     pc_load = 0;
     pc_value = 32'hxxxx_xxxx;
 
-    stb_o = 0;
-    cyc_o = 0;
-    sel_o = 4'hx;
-    dat_o = 32'hxxxx_xxxx;
-    adr_o = 32'hxxxx_xxxx;
-    we_o = 1'hx;
+    wb_inst_stb_o = 0;
+    wb_inst_cyc_o = 0;
+    wb_inst_sel_o = 4'hx;
+    wb_inst_dat_o = 32'hxxxx_xxxx;
+    wb_inst_adr_o = 32'hxxxx_xxxx;
+    wb_inst_we_o = 1'hx;
+
+    wb_data_stb_o = 0;
+    wb_data_cyc_o = 0;
+    wb_data_sel_o = 4'hx;
+    wb_data_dat_o = 32'hxxxx_xxxx;
+    wb_data_adr_o = 32'hxxxx_xxxx;
+    wb_data_we_o = 1'hx;
 
     alu_op_a = 32'hxxxx_xxxx;
     alu_op_b = 32'hxxxx_xxxx;
@@ -205,11 +224,11 @@ always @(*) begin
 
     case(state)
     STATE_FETCH: begin
-        stb_o = 1;
-        cyc_o = 1;
-        adr_o = pc;
-        we_o = 0;
-        sel_o = 4'b1111;
+        wb_inst_stb_o = 1;
+        wb_inst_cyc_o = 1;
+        wb_inst_adr_o = pc;
+        wb_inst_we_o = 0;
+        wb_inst_sel_o = 4'b1111;
     end
     STATE_REG_READ: begin
     end
@@ -219,29 +238,29 @@ always @(*) begin
     end
     STATE_MEMORY: begin
         if(mem_r_en) begin
-            stb_o = 1;
-            cyc_o = 1;
-            adr_o = alu_out_r & ~32'h0000_0003;
-            we_o = 0;
-            sel_o = 4'b1111;
+            wb_data_stb_o = 1;
+            wb_data_cyc_o = 1;
+            wb_data_adr_o = alu_out_r & ~32'h0000_0003;
+            wb_data_we_o = 0;
+            wb_data_sel_o = 4'b1111;
         end
 
         if(mem_w_en) begin
-            stb_o = 1;
-            cyc_o = 1;
-            adr_o = alu_out_r & ~32'h0000_0003;
+            wb_data_stb_o = 1;
+            wb_data_cyc_o = 1;
+            wb_data_adr_o = alu_out_r & ~32'h0000_0003;
             case(funct3)
-                FUNCT3_SW: dat_o = r_out2;
-                FUNCT3_SH: dat_o = r_out2 << (16 * alu_out_r[1]);
-                FUNCT3_SB: dat_o = r_out2 << (8 * alu_out_r[0 +: 2]);
-                default: dat_o = r_out2;
+                FUNCT3_SW: wb_data_dat_o = r_out2;
+                FUNCT3_SH: wb_data_dat_o = r_out2 << (16 * alu_out_r[1]);
+                FUNCT3_SB: wb_data_dat_o = r_out2 << (8 * alu_out_r[0 +: 2]);
+                default: wb_data_dat_o = r_out2;
             endcase
-            we_o = 1;
+            wb_data_we_o = 1;
             case(funct3)
-                FUNCT3_SW: sel_o = 4'b1111;
-                FUNCT3_SH: sel_o = 4'b0011 << (2 * alu_out_r[1]);
-                FUNCT3_SB: sel_o = 4'b0001 << alu_out_r[0 +: 2];
-                default: sel_o = 4'bxxxx;
+                FUNCT3_SW: wb_data_sel_o = 4'b1111;
+                FUNCT3_SH: wb_data_sel_o = 4'b0011 << (2 * alu_out_r[1]);
+                FUNCT3_SB: wb_data_sel_o = 4'b0001 << alu_out_r[0 +: 2];
+                default: wb_data_sel_o = 4'bxxxx;
             endcase
         end
     end
