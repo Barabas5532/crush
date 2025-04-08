@@ -11,6 +11,7 @@ filesets:
       - rtl/inst_decode_registers.v
       - rtl/inst_immediate_decode.v
       - rtl/memory_infer.v: {file_type: systemVerilogSource}
+      - rtl/mtimer.v
       - rtl/params.vh: {is_include_file: true}
       - rtl/program_counter.v
       - rtl/registers.v
@@ -20,25 +21,37 @@ filesets:
     files:
      - sim/inst_immediate_decode_tb.v
     file_type: systemVerilogSource
-    depend: [crush_support]
+    depend: [crush_testing]
 
   sim_alu:
     files:
      - sim/alu_tb.v
     file_type: systemVerilogSource
-    depend: [crush_support]
+    depend: [crush_testing]
 
   sim_load_store:
     files:
      - sim/load_store_tb.v
     file_type: systemVerilogSource
-    depend: [crush_support]
+    depend: [crush_testing]
 
   sim_cpu:
     files:
      - sim/control.v
      - sim/cpu_tb.v
     file_type: systemVerilogSource
+
+  sim_csr:
+    files:
+     - sim/csr_tb.v
+    file_type: systemVerilogSource
+    depend: [crush_testing]
+
+  sim_mtimer:
+    files:
+     - sim/mtimer_tb.v
+    file_type: systemVerilogSource
+    depend: [crush_testing]
 
   verilator_waiver:
     files:
@@ -55,6 +68,8 @@ targets:
         iverilog_options:
           - "-g2012"
           - "-gassertions"
+    parameters:
+      - MACHINE_MODE
 
   lint:
     default_tool : verilator
@@ -102,3 +117,24 @@ targets:
     toplevel: cpu_tb
     default_tool: icarus
 
+  sim_csr:
+    <<: *default
+    filesets_append:
+      - sim_csr
+    toplevel: csr_tb
+    default_tool: icarus
+    parameters:
+      - MACHINE_MODE=true
+
+  sim_mtimer:
+    <<: *default
+    filesets_append:
+      - sim_mtimer
+    toplevel: mtimer_tb
+    default_tool: icarus
+
+parameters:
+  MACHINE_MODE:
+    datatype   : bool
+    description: Enables machine privilege mode features
+    paramtype  : vlogdefine

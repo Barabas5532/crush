@@ -1,0 +1,15 @@
+CAPI=2:
+# vim:syntax=yaml:
+
+name: ::crush_util:0.0.1
+
+filesets:
+  rtl:
+    files:
+      - rtl/gpio.v
+    file_type: verilogSource
+
+targets:
+  default: &default
+    filesets:
+      - rtl

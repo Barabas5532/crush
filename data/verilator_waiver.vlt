@@ -30,5 +30,7 @@ lint_off -rule UNUSEDSIGNAL -file "*/sim/control.v" -match "Signal is not used: 
 lint_off -rule UNUSEDSIGNAL -file "*/sim/control.v" -match "Signal is not used: 'we_i'"
 
 lint_off -file "*/yosys/ice40/cells_sim.v"
+lint_off -file "*/simple_spi_top.v"
 
 lint_off -rule TIMESCALEMOD
+

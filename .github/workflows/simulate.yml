@@ -9,6 +9,10 @@ on:
       target:
         required: true
         type: string
+      timeout-minutes:
+        default: 1
+        required: false
+        type: number
 
 jobs:
   simulate:
@@ -29,7 +33,7 @@ jobs:
           # also use the venv.
           echo PATH=$PATH >> $GITHUB_ENV
       - name: Run simulation
-        timeout-minutes: 1
+        timeout-minutes: ${{ inputs.timeout-minutes }}
         run: |
           . script/init.sh
           fusesoc run --target ${{ inputs.target }} --resolve-env-vars-early ${{ inputs.project }}

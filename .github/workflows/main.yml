@@ -11,6 +11,8 @@ jobs:
           - sim_alu
           - sim_inst_immediate_decode
           - sim_load_store
+          - sim_csr
+          - sim_mtimer
           # sim_cpu is not a testbench, but a target for RISCOF testing, so it
           # is not included here
     uses: ./.github/workflows/simulate.yml
@@ -21,19 +23,29 @@ jobs:
     strategy:
       matrix:
         target:
-          - sim_memory
           - sim_top
     uses: ./.github/workflows/simulate.yml
     with:
       project: crush_example
       target: ${{ matrix.target }}
+  verilog-sim-crush-example-freertos-cpu:
+    uses: ./.github/workflows/simulate.yml
+    with:
+      project: crush_example_freertos
+      target: sim_cpu
+  verilog-sim-crush-example-freertos-top:
+    uses: ./.github/workflows/simulate.yml
+    with:
+      project: crush_example_freertos
+      target: sim_top
+      timeout-minutes: 10
   verilog-lint:
     runs-on: ubuntu-22.04
     container:
       image: barabas5532/crush-ci:5
     strategy:
       matrix:
-        project: [crush, crush_example]
+        project: [crush, crush_example, crush_example_freertos]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -77,6 +89,9 @@ jobs:
     runs-on: ubuntu-22.04
     container:
       image: barabas5532/crush-ci:5
+    strategy:
+      matrix:
+        project: [crush_example, crush_example_freertos]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -94,24 +109,23 @@ jobs:
         timeout-minutes: 1
         run: |
           . script/init.sh
-          fusesoc --verbose run crush_example
+          fusesoc --verbose run ${{ matrix.project }}
   firmware:
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        path:
+          - crush_example/fw
+          - crush_example_freertos/fw/spi_bootloader
+          - crush_example_freertos/fw/app
     container:
       image: barabas5532/crush-ci:5
     defaults:
       run:
-        working-directory: crush_example/fw
+        working-directory: ${{ matrix.path }}
     steps:
       - uses: actions/checkout@v4
       - name: Configure
         run: cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=TC-crush.cmake
       - name: Build
         run: cmake --build build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: firmware-elf
-          path: |
-            fw/build/crush-blinky
-            fw/build/crush-blinky.bin
-            fw/build/crush-blinky.data

@@ -10,6 +10,7 @@ wire[31:0] S_immediate;
 wire[31:0] B_immediate;
 wire[31:0] U_immediate;
 wire[31:0] J_immediate;
+wire[31:0] CSR_immediate;
 
 inst_immediate_decode dut (
     .inst(inst),
@@ -17,7 +18,8 @@ inst_immediate_decode dut (
     .S_immediate(S_immediate),
     .B_immediate(B_immediate),
     .U_immediate(U_immediate),
-    .J_immediate(J_immediate)
+    .J_immediate(J_immediate),
+    .CSR_immediate(CSR_immediate)
 );
 
 initial begin

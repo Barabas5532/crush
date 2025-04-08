@@ -2,6 +2,10 @@
 
 module crush_cpu #(
     parameter integer INITIAL_PC = 0
+`ifdef MACHINE_MODE
+    ,
+    parameter integer TRAP_PC = 0
+`endif
 ) (
     input wire clk_i,
     input wire[31:0] dat_i,
@@ -15,6 +19,11 @@ module crush_cpu #(
     output reg[31:0] adr_o,
     output reg[3:0] sel_o,
     output reg we_o
+`ifdef MACHINE_MODE
+    ,
+    input wire timer_interrupt,
+    input wire external_interrupt
+`endif
 );
 
 `include "params.vh"
@@ -38,6 +47,29 @@ reg pc_count;
 reg[31:0] pc_value;
 wire[31:0] pc;
 wire[31:0] pc_inc;
+
+`ifdef MACHINE_MODE
+wire instruction_is_ecall = instruction == {{12'b0}, {5'b0}, {FUNCT3_PRIV}, {5'b0}, {OPCODE_SYSTEM}};
+
+reg trap_taken;
+reg [31:0] mcause_;
+
+reg [31:0] mcause;
+reg [31:0] mepc;
+reg [31:0] mie;
+reg [31:0] mstatus;
+wire [31:0] mtvec = TRAP_PC;
+
+reg [31:0]  csr_read_value;
+
+wire mstatus_mie = mstatus[3];
+
+wire mie_mtie = mie[7];
+wire mie_meie = mie[11];
+
+wire timer_interrupt_enable = mstatus_mie && mie_mtie;
+wire external_interrupt_enable = mstatus_mie && mie_meie;
+`endif
 
 program_counter #(.INITIAL_PC(INITIAL_PC)) program_counter(
     .reset(rst_i),
@@ -71,6 +103,9 @@ registers registers(
 assign r_address1 = instruction[19:15];
 assign r_address2 = instruction[24:20];
 assign w_address = instruction[11:7];
+`ifdef MACHINE_MODE
+wire [11:0] csr_address = instruction[31:20];
+`endif
 
 reg[31:0] alu_op_a;
 reg[31:0] alu_op_b;
@@ -129,6 +164,12 @@ always @(posedge(clk_i)) begin
     if(rst_i) begin
         state <= STATE_RESET;
         instruction <= 32'hxxxx_xxxx;
+`ifdef MACHINE_MODE
+        mcause <= 0;
+        mepc <= 0;
+        mie <= 0;
+        mstatus <= 0;
+`endif
     end else begin
         case(state)
         STATE_FETCH:
@@ -136,17 +177,69 @@ always @(posedge(clk_i)) begin
                 state <= STATE_REG_READ;
                 instruction <= dat_i;
             end
-        STATE_REG_READ: state <= STATE_EXECUTE;
+        STATE_REG_READ: begin
+            state <= STATE_EXECUTE;
+`ifdef MACHINE_MODE
+            if(opcode == OPCODE_SYSTEM && funct3 != FUNCT3_PRIV) begin
+                case(csr_address)
+                CSR_MSTATUS: csr_read_value <= mstatus;
+                CSR_MIE: csr_read_value <= mie;
+                CSR_MEPC: csr_read_value <= mepc;
+                CSR_MCAUSE: csr_read_value <= mcause;
+                CSR_MTVEC: csr_read_value <= mtvec;
+                default: ;
+                endcase
+            end
+`endif
+        end
         STATE_EXECUTE: begin
             state <= STATE_MEMORY;
             state_change <= 0;
         end
         STATE_MEMORY:
+            begin
             if(ack_i | (!mem_r_en & !mem_w_en)) begin
                 state <= STATE_REG_WRITE;
                 read_data <= dat_i;
             end else state_change <= 0;
-        STATE_REG_WRITE: state <= STATE_FETCH;
+
+`ifdef MACHINE_MODE
+            if(trap_taken) begin
+                mcause <= mcause_;
+                mepc <= pc;
+                state <= STATE_FETCH;
+
+                // MIE
+                mstatus[3] <= 0;
+                // MPIE
+                mstatus[7] <= 1;
+            end
+`endif
+        end
+        STATE_REG_WRITE: begin
+            state <= STATE_FETCH;
+
+`ifdef MACHINE_MODE
+            if(opcode == OPCODE_SYSTEM) begin
+               if(w_address == 0 &&
+               funct3 == FUNCT3_PRIV &&
+               r_address1 == 0 &&
+               instruction[31:20] == FUNCT12_MRET) begin
+                // MIE
+                mstatus[3] <= 1;
+                // MPIE
+                mstatus[7] <= 1;
+            end
+            else if (!instruction_is_ecall) case(csr_address)
+                CSR_MSTATUS: mstatus <= alu_out_r;
+                CSR_MIE: mie <= alu_out_r;
+                CSR_MEPC: mepc <= alu_out_r;
+                CSR_MCAUSE: mcause <= alu_out_r;
+                default: ;
+                endcase
+            end
+`endif
+        end
         default: state <= STATE_FETCH;
         endcase
     end
@@ -163,6 +256,18 @@ always @(*) begin
     OPCODE_JAL,
     OPCODE_JALR,
     OPCODE_LOAD: reg_w_en = 1;
+`ifdef MACHINE_MODE
+    OPCODE_SYSTEM:
+        case(funct3)
+            FUNCT3_CSRRW,
+            FUNCT3_CSRRWI,
+            FUNCT3_CSRRC,
+            FUNCT3_CSRRCI,
+            FUNCT3_CSRRS,
+            FUNCT3_CSRRSI: reg_w_en = 1;
+            default: reg_w_en = 0;
+        endcase
+`endif
     default: reg_w_en = 0;
     endcase
 end
@@ -190,6 +295,11 @@ always @(*) begin
     pc_load = 0;
     pc_value = 32'hxxxx_xxxx;
 
+`ifdef MACHINE_MODE
+    trap_taken = 0;
+    mcause_ = 32'hxxxx_xxxx;
+`endif
+
     stb_o = 0;
     cyc_o = 0;
     sel_o = 4'hx;
@@ -216,6 +326,13 @@ always @(*) begin
     STATE_EXECUTE: begin
         alu_op_a = r_out1;
         alu_op_b = r_out2;
+
+`ifdef MACHINE_MODE
+        if((opcode == OPCODE_SYSTEM) && (funct3 != FUNCT3_CSRRW)) begin
+            alu_op_a = csr_read_value;
+            alu_op_b = r_out1;
+        end
+`endif
     end
     STATE_MEMORY: begin
         if(mem_r_en) begin
@@ -244,6 +361,38 @@ always @(*) begin
                 default: sel_o = 4'bxxxx;
             endcase
         end
+
+`ifdef MACHINE_MODE
+       if((timer_interrupt && timer_interrupt_enable)
+              || (external_interrupt && external_interrupt_enable)
+              || instruction_is_ecall) begin
+          // Prevent memory writes if interrupted. This is the only side effect
+          // of the instruction, so this effectively interrupts the instruction,
+          // and it can be restarted after handling the interrupt.
+           stb_o = 0;
+           cyc_o = 0;
+           sel_o = 4'hx;
+           dat_o = 32'hxxxx_xxxx;
+           adr_o = 32'hxxxx_xxxx;
+           we_o = 1'hx;
+
+           trap_taken = 1;
+           pc_value = mtvec;
+           pc_load = 1;
+
+          if(instruction_is_ecall) begin
+              mcause_ = {1'b0, 31'd11};
+          end
+
+          if(timer_interrupt) begin
+             mcause_ = {1'b1, 31'd7};
+          end
+
+          if(external_interrupt) begin
+             mcause_ = {1'b1, 31'd11};
+          end
+       end
+`endif
     end
     STATE_REG_WRITE: begin
         w_enable = reg_w_en;
@@ -263,6 +412,9 @@ always @(*) begin
             OPCODE_JALR: begin
                 w_data = pc_inc;
             end
+`ifdef MACHINE_MODE
+            OPCODE_SYSTEM: w_data = csr_read_value;
+`endif
             default: w_data = alu_out_r;
         endcase
 
@@ -295,6 +447,17 @@ always @(*) begin
                 pc_value = 32'hxxxx_xxxx;
             end
         endcase
+
+`ifdef MACHINE_MODE
+        if(opcode == OPCODE_SYSTEM &&
+           w_address == 0 &&
+           funct3 == FUNCT3_PRIV &&
+           r_address1 == 0 &&
+           instruction[31:20] == FUNCT12_MRET) begin
+            pc_load = 1;
+            pc_value = mepc;
+        end
+`endif
     end
     default: ;
     endcase

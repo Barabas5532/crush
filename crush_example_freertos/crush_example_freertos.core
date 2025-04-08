@@ -1,17 +1,20 @@
 CAPI=2:
 # vim:syntax=yaml:
 
-name: ::crush_example:0.0.1
+name: ::crush_example_freertos:0.0.1
 
 filesets:
   rtl:
     files:
-      - fw/binary/crush-blinky.data:
+      - fw/spi_bootloader/binary/crush-boot.data:
          file_type: user
-         copyto: fw.data
+         copyto: boot.data
+      - rtl/memory_ice40_spram.v
+      - rtl/memory_ice40_spram_wb.v
+      - rtl/spi.v
       - rtl/top.v
     file_type: verilogSource
-    depend: [crush, crush_util]
+    depend: [crush, crush_util, simple_spi]
 
   pcf:
     files:
@@ -25,9 +28,19 @@ filesets:
     file_type: verilogSource
     depend: [crush_testing]
 
+  sim_cpu:
+    files:
+      - sim/cpu_tb.v
+    file_type: systemVerilogSource
+    depend: [crush]
+
   sim_top:
     files:
       - sim/top_tb.v
+      - fw/app/binary/crush_freertos.data:
+         file_type: user
+         copyto: crush_freertos.data
+      - sim/s25fl128s.v
     file_type: systemVerilogSource
     depend: [crush]
 
@@ -46,6 +59,8 @@ targets:
     tools:
       icestorm:
         nextpnr_options : [ "--up5k", "--package", "sg48" ]
+        # disable final deep-sleep SPI flash command after bitstream is loaded
+        icepack_options : [ "-s" ]
         yosys_synth_options:
           - "-dsp"
       icarus:
@@ -54,16 +69,21 @@ targets:
           - "-g2012"
           - "-gassertions"
     hooks:
-      post_run: [iceprog_hint]
+      post_run:
+        - iceprog_hint
+        - iceprog_app_hint
     parameters:
-      - MACHINE_MODE=false
+      - MACHINE_MODE=true
 
   lint:
     default_tool : verilator
     filesets:
       - verilator_waiver
       - rtl
-      - sim_top
+      # Can't lint because verilator fails on flash simulator:
+      # https://github.com/verilator/verilator/issues/5767
+      # - sim_top
+      - sim_cpu
       - sim_common
     tools:
       verilator:
@@ -72,19 +92,36 @@ targets:
           - "-Wall -timing"
           # Disable default values in yosys's simulation modules.
           - "-DNO_ICE40_DEFAULT_ASSIGNMENTS"
-    toplevel: top_tb
+    toplevel: cpu_tb
+    parameters:
+      - MACHINE_MODE=true
+
+  sim_cpu:
+    <<: *default
+    filesets_append:
+      - sim_common
+      - sim_cpu
+    toplevel: cpu_tb
+    default_tool: icarus
+    parameters:
+      - MACHINE_MODE=true
 
   sim_top:
     <<: *default
     filesets_append:
+      - sim_common
       - sim_top
     toplevel: top_tb
     default_tool: icarus
     parameters:
-      - MACHINE_MODE=false
+      - MACHINE_MODE=true
 
 scripts:
   iceprog_hint:
     cmd:
       - echo
-      - "Run 'iceprog build/crush_example_0.0.1/default-icestorm/crush_example_0.0.1.bin' to program the board."
+      - "Run 'iceprog build/crush_example_freertos_0.0.1/default-icestorm/crush_example_freertos_0.0.1.bin' to program the board."
+  iceprog_app_hint:
+    cmd:
+      - echo
+      - "Run 'iceprog -o 0x20000 crush_example_freertos/fw/app/binary/crush_freertos.bin' to load firmware to flash."
